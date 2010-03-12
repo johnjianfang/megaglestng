@@ -1,4 +1,7 @@
-        			Glest linux port
+					Mega-Glest
+        	        	by Titus Tscharntke and Mark Vejvoda
+
+        			original Glest linux port
         	        	by Matthias Braun
 
 1. System requirements

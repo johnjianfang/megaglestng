@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
+			OutputDirectory=".\"
+			IntermediateDirectory="$(ConfigurationName)/$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="0"
 			>
@@ -86,8 +86,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
+			OutputDirectory=".\"
+			IntermediateDirectory="$(ConfigurationName)/$(ProjectName)"
 			ConfigurationType="4"
 			CharacterSet="0"
 			WholeProgramOptimization="1"

@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
+			OutputDirectory=".\..\..\..\data\glest_game"
+			IntermediateDirectory="$(ConfigurationName)/$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"
@@ -105,8 +105,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
-			IntermediateDirectory="../../build/$(ConfigurationName)/$(ProjectName)"
+			OutputDirectory=".\..\..\..\data\glest_game"
+			IntermediateDirectory="$(ConfigurationName)/$(ProjectName)"
 			ConfigurationType="1"
 			CharacterSet="0"
 			WholeProgramOptimization="1"

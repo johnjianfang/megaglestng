@@ -210,16 +210,16 @@ void Gui::mouseDownLeftGraphics(int x, int y){
 	}
 	//set meeting point
 	else if(selectingMeetingPoint){
-	    if(Socket::enableDebugText) printf("In [%s::%s] selectingMeetingPoint == true\n",__FILE__,__FUNCTION__);
+	    //if(Socket::enableDebugText) printf("In [%s::%s] selectingMeetingPoint == true\n",__FILE__,__FUNCTION__);
 
 		if(selection.isComandable()){
 
-		    if(Socket::enableDebugText) printf("In [%s::%s] selection.isComandable() == true\n",__FILE__,__FUNCTION__);
+		    //if(Socket::enableDebugText) printf("In [%s::%s] selection.isComandable() == true\n",__FILE__,__FUNCTION__);
 
 			Vec2i targetPos;
 			if(Renderer::getInstance().computePosition(Vec2i(x, y), targetPos)){
 
-			    if(Socket::enableDebugText) printf("In [%s::%s] computePosition() == true\n",__FILE__,__FUNCTION__);
+			    //if(Socket::enableDebugText) printf("In [%s::%s] computePosition() == true\n",__FILE__,__FUNCTION__);
 
 				commander->trySetMeetingPoint(selection.getFrontUnit(), targetPos);
 			}
@@ -227,7 +227,7 @@ void Gui::mouseDownLeftGraphics(int x, int y){
 		resetState();
 	}
 	else{
-	    if(Socket::enableDebugText) printf("In [%s::%s] selectionQuad()\n",__FILE__,__FUNCTION__);
+	    //if(Socket::enableDebugText) printf("In [%s::%s] selectionQuad()\n",__FILE__,__FUNCTION__);
 
 		selectionQuad.setPosDown(Vec2i(x, y));
 		computeSelected(false);
@@ -321,7 +321,7 @@ float Gui::getUnitTypeBuildRotation(int unitId) const {
 
 void Gui::hotKey(char key){
 
-    if(Socket::enableDebugText) printf("In [%s::%s] key = [%c]\n",__FILE__,__FUNCTION__,key);
+    //if(Socket::enableDebugText) printf("In [%s::%s] key = [%c]\n",__FILE__,__FUNCTION__,key);
 
 	if(key==' '){
 		centerCameraOnSelection();
@@ -334,7 +334,7 @@ void Gui::hotKey(char key){
 	}
 	else if(key=='R'){
 	    //!!!
-	    if(isPlacingBuilding()){
+	    if(0 && isPlacingBuilding()) {
 	        const UnitType *unitType = getBuilding();
 	        float unitTypeRotation = getUnitTypeBuildRotation(unitType->getId());
 

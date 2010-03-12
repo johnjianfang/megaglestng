@@ -25,7 +25,7 @@
 #include "game_util.h"
 #include "leak_dumper.h"
 #include "unit_particle_type.h"
-#include "socket.h"
+//#include "socket.h"
 
 using namespace Shared::Xml;
 using namespace Shared::Graphics;
@@ -172,6 +172,7 @@ void UnitType::load(int id,const string &dir, const TechTree *techTree, const Fa
 				}
 			}
 
+            /*
             if(Socket::enableDebugText) printf("In [%s::%s] Original Unit cellmap matrix below [%s] [%s]:\n",__FILE__,__FUNCTION__,getName().c_str(),path.c_str());
             for(int iRow = 0; iRow < size; ++iRow) {
 				const XmlNode *rowNode= cellMapNode->getChild("row", iRow);
@@ -183,6 +184,7 @@ void UnitType::load(int id,const string &dir, const TechTree *techTree, const Fa
                     if(Socket::enableDebugText) printf("In [%s::%s] matrix [%d,%d] = %d\n",__FILE__,__FUNCTION__,iRow,iCol,getCellResult);
                 }
             }
+            */
 
 		}
 

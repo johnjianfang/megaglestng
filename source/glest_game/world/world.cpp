@@ -312,9 +312,9 @@ void World::createUnit(const string &unitName, int factionIndex, const Vec2i &po
 		const UnitType* ut= ft->getUnitType(unitName);
 
         //!!!
-        if(Socket::enableDebugText) printf("In [%s::%s] A\n",__FILE__,__FUNCTION__);
+        //if(Socket::enableDebugText) printf("In [%s::%s] A\n",__FILE__,__FUNCTION__);
         float unitRotation = game->getGui()->getUnitTypeBuildRotation(ut->getId());
-        if(Socket::enableDebugText) printf("In [%s::%s] B\n",__FILE__,__FUNCTION__);
+        //if(Socket::enableDebugText) printf("In [%s::%s] B\n",__FILE__,__FUNCTION__);
 
 		Unit* unit= new Unit(getNextUnitId(), pos, ut, faction, &map, unitRotation);
 
@@ -575,9 +575,9 @@ void World::initUnits(){
 			for(int l=0; l<initNumber; l++){
 
                 //!!!
-                if(Socket::enableDebugText) printf("In [%s::%s] A\n",__FILE__,__FUNCTION__);
+                //if(Socket::enableDebugText) printf("In [%s::%s] A\n",__FILE__,__FUNCTION__);
                 float unitRotation = game->getGui()->getUnitTypeBuildRotation(ut->getId());
-                if(Socket::enableDebugText) printf("In [%s::%s] B\n",__FILE__,__FUNCTION__);
+                //if(Socket::enableDebugText) printf("In [%s::%s] B\n",__FILE__,__FUNCTION__);
 
 				Unit *unit= new Unit(getNextUnitId(), Vec2i(0), ut, f, &map, unitRotation);
 

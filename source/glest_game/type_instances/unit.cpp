@@ -24,7 +24,7 @@
 #include "core_data.h"
 #include "renderer.h"
 #include "leak_dumper.h"
-#include "socket.h"
+//#include "socket.h"
 
 using namespace Shared::Graphics;
 using namespace Shared::Util;
@@ -106,7 +106,7 @@ const int Unit::invalidId= -1;
 
 Unit::Unit(int id, const Vec2i &pos, const UnitType *type, Faction *faction, Map *map, float unitPlacementRotation) {
 
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    //if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
     Random random;
 
@@ -118,9 +118,9 @@ Unit::Unit(int id, const Vec2i &pos, const UnitType *type, Faction *faction, Map
 	level= NULL;
 	cellMap= NULL;
 
-	if(Socket::enableDebugText) printf("In [%s::%s] A\n",__FILE__,__FUNCTION__);
+	//if(Socket::enableDebugText) printf("In [%s::%s] A\n",__FILE__,__FUNCTION__);
     setRotateAmount(unitPlacementRotation);
-    if(Socket::enableDebugText) printf("In [%s::%s] B unit id = %d [%s] rotate amount = %f\n",__FILE__,__FUNCTION__,getId(), getFullName().c_str(),unitPlacementRotation);
+    //if(Socket::enableDebugText) printf("In [%s::%s] B unit id = %d [%s] rotate amount = %f\n",__FILE__,__FUNCTION__,getId(), getFullName().c_str(),unitPlacementRotation);
 
 	Config &config= Config::getInstance();
 	showUnitParticles= config.getBool("UnitParticles");
@@ -160,7 +160,7 @@ Unit::Unit(int id, const Vec2i &pos, const UnitType *type, Faction *faction, Map
 	//starting skill
 	this->currSkill=getType()->getFirstStOfClass(scStop);
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	//if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 Unit::~Unit(){
@@ -1119,7 +1119,7 @@ bool Unit::getCellMapCell(int x, int y) const {
 void Unit::setRotateAmount(float value) {
     rotateAmount = value;
 
-    if(Socket::enableDebugText) printf("In [%s::%s] unit id = %d [%s] rotate amount = %f\n",__FILE__,__FUNCTION__,getId(), getFullName().c_str(),rotateAmount);
+    //if(Socket::enableDebugText) printf("In [%s::%s] unit id = %d [%s] rotate amount = %f\n",__FILE__,__FUNCTION__,getId(), getFullName().c_str(),rotateAmount);
 
     const UnitType *ut= getType();
     if(ut != NULL && ut->hasCellMap() == true) {
@@ -1133,7 +1133,7 @@ void Unit::setRotateAmount(float value) {
             for(int iRow = 0; iRow < matrixSize; ++iRow) {
                 for(int iCol = 0; iCol < matrixSize; ++iCol) {
                     bool getCellResult = ut->getCellMapCell(iCol, iRow);
-                    if(Socket::enableDebugText) printf("In [%s::%s] [%d,%d] = %d\n",__FILE__,__FUNCTION__,iRow,iCol,getCellResult);
+                    //if(Socket::enableDebugText) printf("In [%s::%s] [%d,%d] = %d\n",__FILE__,__FUNCTION__,iRow,iCol,getCellResult);
 
                     int newRow = 0;
                     int newCol = 0;
@@ -1155,7 +1155,7 @@ void Unit::setRotateAmount(float value) {
 
                     }
 
-                    if(Socket::enableDebugText) printf("In [%s::%s] ABOUT TO Transform to [%d,%d] = %d\n",__FILE__,__FUNCTION__,newRow,newCol,getCellResult);
+                    //if(Socket::enableDebugText) printf("In [%s::%s] ABOUT TO Transform to [%d,%d] = %d\n",__FILE__,__FUNCTION__,newRow,newCol,getCellResult);
 
                     // bool getCellMapCell(int x, int y) const {return cellMap[size*y+x];}
                     // cellMap[i*size+j]= row[j]=='0'? false: true;
@@ -1164,12 +1164,12 @@ void Unit::setRotateAmount(float value) {
             }
         }
 
-        if(Socket::enableDebugText) printf("In [%s::%s] Transformed matrix below:\n",__FILE__,__FUNCTION__);
+        //if(Socket::enableDebugText) printf("In [%s::%s] Transformed matrix below:\n",__FILE__,__FUNCTION__);
         for(int iRow = 0; iRow < matrixSize; ++iRow) {
             for(int iCol = 0; iCol < matrixSize; ++iCol) {
                 bool getCellResult          = ut->getCellMapCell(iCol, iRow);
                 bool getCellResultRotated   = getCellMapCell(iRow, iCol);
-                if(Socket::enableDebugText) printf("In [%s::%s] matrix [%d,%d] = %d, rotated = %d\n",__FILE__,__FUNCTION__,iRow,iCol,getCellResult,getCellResultRotated);
+                //if(Socket::enableDebugText) printf("In [%s::%s] matrix [%d,%d] = %d, rotated = %d\n",__FILE__,__FUNCTION__,iRow,iCol,getCellResult,getCellResultRotated);
             }
         }
     }

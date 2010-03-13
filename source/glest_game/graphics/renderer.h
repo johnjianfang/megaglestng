@@ -165,6 +165,8 @@ private:
 	//water
 	float waterAnim;
 
+	bool allowRotateUnits;
+
 private:
 	Renderer();
 	~Renderer();

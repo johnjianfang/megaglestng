@@ -49,6 +49,8 @@ void UnitUpdater::init(Game *game){
 	this->console= game->getConsole();
 	this->scriptManager= game->getScriptManager();
 	pathFinder.init(map);
+
+	allowRotateUnits = Config::getInstance().getBool(reinterpret_cast<const char *>("AllowRotateUnits"),"0");
 }
 
 
@@ -286,7 +288,12 @@ void UnitUpdater::updateBuild(Unit *unit){
 				const UnitType *builtUnitType= command->getUnitType();
 
                 //!!!
-                float unitRotation = gui->getUnitTypeBuildRotation(builtUnitType->getId());
+                float unitRotation = -1;
+                if(allowRotateUnits == true) {
+                    char unitKey[50]="";
+                    sprintf(unitKey,"%d_%d",builtUnitType->getId(),unit->getFaction()->getIndex());
+                    unitRotation = gui->getUnitTypeBuildRotation(unitKey);
+                }
 				Unit *builtUnit= new Unit(world->getNextUnitId(), command->getPos(), builtUnitType, unit->getFaction(), world->getMap(),unitRotation);
 				builtUnit->create();
 
@@ -559,7 +566,13 @@ void UnitUpdater::updateProduce(Unit *unit){
             unit->setCurrSkill(scStop);
 
             //!!!
-            float unitRotation = gui->getUnitTypeBuildRotation(pct->getProducedUnit()->getId());
+            float unitRotation = -1;
+            if(allowRotateUnits == true) {
+                char unitKey[50]="";
+                sprintf(unitKey,"%d_%d",pct->getId(),unit->getFaction()->getIndex());
+                unitRotation = gui->getUnitTypeBuildRotation(unitKey);
+            }
+
 			produced= new Unit(world->getNextUnitId(), Vec2i(0), pct->getProducedUnit(), unit->getFaction(), world->getMap(),unitRotation);
 
 			//place unit creates the unit

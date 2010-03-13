@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -32,7 +32,7 @@ using namespace Util;
 //	class Mesh
 // =====================================================
 
-// ==================== constructor & destructor ==================== 
+// ==================== constructor & destructor ====================
 
 Mesh::Mesh(){
 	frameCount= 0;
@@ -89,18 +89,18 @@ void Mesh::updateInterpolationVertices(float t, bool cycle) const{
 	interpolationData->updateVertices(t, cycle);
 }
 
-// ==================== load ==================== 
+// ==================== load ====================
 
 void Mesh::loadV2(const string &dir, FILE *f, TextureManager *textureManager){
 	//read header
 	MeshHeaderV2 meshHeader;
 	fread(&meshHeader, sizeof(MeshHeaderV2), 1, f);
-	
+
 
 	if(meshHeader.normalFrameCount!=meshHeader.vertexFrameCount){
 		throw runtime_error("Old model: vertex frame count different from normal frame count");
 	}
-	
+
 	if(meshHeader.texCoordFrameCount!=1){
 		throw runtime_error("Old model: texture coord frame count is not 1");
 	}
@@ -115,7 +115,7 @@ void Mesh::loadV2(const string &dir, FILE *f, TextureManager *textureManager){
 	//misc
 	twoSided= false;
 	customColor= false;
-	
+
 	//texture
 	if(meshHeader.hasTexture && textureManager!=NULL){
 		texturePaths[mtDiffuse]= toLower(reinterpret_cast<char*>(meshHeader.texName));
@@ -144,7 +144,7 @@ void Mesh::loadV3(const string &dir, FILE *f, TextureManager *textureManager){
 	//read header
 	MeshHeaderV3 meshHeader;
 	fread(&meshHeader, sizeof(MeshHeaderV3), 1, f);
-	
+
 
 	if(meshHeader.normalFrameCount!=meshHeader.vertexFrameCount){
 		throw runtime_error("Old model: vertex frame count different from normal frame count");
@@ -160,7 +160,7 @@ void Mesh::loadV3(const string &dir, FILE *f, TextureManager *textureManager){
 	//misc
 	twoSided= (meshHeader.properties & mp3TwoSided) != 0;
 	customColor= (meshHeader.properties & mp3CustomColor) != 0;
-	
+
 	//texture
 	if(!(meshHeader.properties & mp3NoTexture) && textureManager!=NULL){
 		texturePaths[mtDiffuse]= toLower(reinterpret_cast<char*>(meshHeader.texName));
@@ -191,7 +191,7 @@ void Mesh::load(const string &dir, FILE *f, TextureManager *textureManager){
 	//read header
 	MeshHeader meshHeader;
 	fread(&meshHeader, sizeof(MeshHeader), 1, f);
-	
+
 	//init
 	frameCount= meshHeader.frameCount;
 	vertexCount= meshHeader.vertexCount;
@@ -202,7 +202,7 @@ void Mesh::load(const string &dir, FILE *f, TextureManager *textureManager){
 	//properties
 	customColor= (meshHeader.properties & mpfCustomColor) != 0;
 	twoSided= (meshHeader.properties & mpfTwoSided) != 0;
-	
+
 	//material
 	diffuseColor= Vec3f(meshHeader.diffuseColor);
 	specularColor= Vec3f(meshHeader.specularColor);
@@ -230,7 +230,7 @@ void Mesh::load(const string &dir, FILE *f, TextureManager *textureManager){
 		}
 		flag*= 2;
 	}
-	
+
 	//read data
 	fread(vertices, sizeof(Vec3f)*frameCount*vertexCount, 1, f);
 	fread(normals, sizeof(Vec3f)*frameCount*vertexCount, 1, f);
@@ -266,7 +266,7 @@ void Mesh::save(const string &dir, FILE *f){
 		strcpy(reinterpret_cast<char*>(meshHeader.texName), texName.c_str());
 		texture->getPixmap()->saveTga(dir+"/"+texName);
 	}
-	
+
 	fwrite(&meshHeader, sizeof(MeshHeader), 1, f);
 	fwrite(vertices, sizeof(Vec3f)*vertexFrameCount*pointCount, 1, f);
 	fwrite(normals, sizeof(Vec3f)*normalFrameCount*pointCount, 1, f);
@@ -300,7 +300,7 @@ void Mesh::computeTangents(){
 			float v1= texCoords[i1].y;
 			float v2= texCoords[i2].y;
 
-			tangents[i0]+= 
+			tangents[i0]+=
 				((p2-p0)*(v1-v0)-(p1-p0)*(v2-v0))/
 				((u2-u0)*(v1-v0)-(u1-u0)*(v2-v0));
 		}
@@ -317,7 +317,7 @@ void Mesh::computeTangents(){
 //	class Model
 // ===============================================
 
-// ==================== constructor & destructor ==================== 
+// ==================== constructor & destructor ====================
 
 Model::Model(){
 	meshCount= 0;
@@ -329,7 +329,7 @@ Model::~Model(){
 	delete [] meshes;
 }
 
-// ==================== data ==================== 
+// ==================== data ====================
 
 void Model::buildInterpolationData() const{
 	for(int i=0; i<meshCount; ++i){
@@ -349,7 +349,7 @@ void Model::updateInterpolationVertices(float t, bool cycle) const{
 	}
 }
 
-// ==================== get ==================== 
+// ==================== get ====================
 
 uint32 Model::getTriangleCount() const{
 	uint32 triangleCount= 0;
@@ -367,7 +367,7 @@ uint32 Model::getVertexCount() const{
 	return vertexCount;
 }
 
-// ==================== io ==================== 
+// ==================== io ====================
 
 void Model::load(const string &path){
 	string extension= path.substr(path.find_last_of('.')+1);
@@ -392,7 +392,7 @@ void Model::save(const string &path){
 /*void Model::loadG3dOld(const string &path){
    try{
 		FILE *f=fopen(path.c_str(),"rb");
-		if (f==NULL){ 
+		if (f==NULL){
 			throw runtime_error("Error opening 3d model file");
 		}
 
@@ -429,10 +429,10 @@ void Model::save(const string &path){
 
 //load a model from a g3d file
 void Model::loadG3d(const string &path){
-			
+
     try{
 		FILE *f=fopen(path.c_str(),"rb");
-		if (f==NULL){ 
+		if (f==NULL){
 			throw runtime_error("Error opening 3d model file");
 		}
 
@@ -442,6 +442,8 @@ void Model::loadG3d(const string &path){
 		FileHeader fileHeader;
 		fread(&fileHeader, sizeof(FileHeader), 1, f);
 		if(strncmp(reinterpret_cast<char*>(fileHeader.id), "G3D", 3)!=0){
+
+		    printf("In [%s::%s] file = [%s] fileheader.id = [%s][%c]\n",__FILE__,__FUNCTION__,path.c_str(),reinterpret_cast<char*>(fileHeader.id),fileHeader.id[0]);
 			throw runtime_error("Not a valid S3D model");
 		}
 		fileVersion= fileHeader.version;
@@ -466,7 +468,7 @@ void Model::loadG3d(const string &path){
 		}
 		//version 3
 		else if(fileHeader.version==3){
-			
+
 			fread(&meshCount, sizeof(meshCount), 1, f);
 			meshes= new Mesh[meshCount];
 			for(uint32 i=0; i<meshCount; ++i){
@@ -476,7 +478,7 @@ void Model::loadG3d(const string &path){
 		}
 		//version 2
 		else if(fileHeader.version==2){
-			
+
 			fread(&meshCount, sizeof(meshCount), 1, f);
 			meshes= new Mesh[meshCount];
 			for(uint32 i=0; i<meshCount; ++i){
@@ -497,7 +499,7 @@ void Model::loadG3d(const string &path){
 
 //save a model to a g3d file
 void Model::saveS3d(const string &path){
-	
+
 	/*FILE *f= fopen(path.c_str(), "wb");
 	if(f==NULL){
 		throw runtime_error("Cant open file for writting: "+path);

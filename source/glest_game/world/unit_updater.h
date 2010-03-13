@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -29,7 +29,7 @@ class ScriptManager;
 // =====================================================
 //	class UnitUpdater
 //
-///	Updates all units in the game, even the player 
+///	Updates all units in the game, even the player
 ///	controlled units, performs basic actions only
 ///	such as responding to an attack
 // =====================================================
@@ -55,6 +55,7 @@ private:
 	ScriptManager *scriptManager;
 	PathFinder pathFinder;
 	Random random;
+	bool allowRotateUnits;
 
 public:
     void init(Game *game);
@@ -62,7 +63,7 @@ public:
 	//update skills
     void updateUnit(Unit *unit);
 
-    //update commands 
+    //update commands
     void updateUnitCommand(Unit *unit);
     void updateStop(Unit *unit);
     void updateMove(Unit *unit);
@@ -76,7 +77,7 @@ public:
 	void updateMorph(Unit *unit);
 
 private:
-    //attack 
+    //attack
     void hit(Unit *attacker);
 	void hit(Unit *attacker, const AttackSkillType* ast, const Vec2i &targetPos, Field targetField);
 	void damage(Unit *attacker, const AttackSkillType* ast, Unit *attacked, float distance);

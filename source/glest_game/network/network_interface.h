@@ -75,11 +75,11 @@ public:
 	//virtual void setGameSettings(GameSettings *serverGameSettings) { gameSettings = *serverGameSettings; }
 	const virtual GameSettings * getGameSettings() { return &gameSettings; }
 
-	virtual void setAllowDownloadDataSynch(bool value)          { allowDownloadDataSynch = value; }
-	virtual bool getAllowDownloadDataSynch()                    { return allowDownloadDataSynch; }
+	static void setAllowDownloadDataSynch(bool value)          { allowDownloadDataSynch = value; }
+	static bool getAllowDownloadDataSynch()                    { return allowDownloadDataSynch; }
 
-	virtual void setAllowGameDataSynchCheck(bool value)          { allowGameDataSynchCheck = value; }
-	virtual bool getAllowGameDataSynchCheck()                    { return allowGameDataSynchCheck; }
+	static void setAllowGameDataSynchCheck(bool value)          { allowGameDataSynchCheck = value; }
+	static bool getAllowGameDataSynchCheck()                    { return allowGameDataSynchCheck; }
 
     virtual bool getNetworkGameDataSynchCheckOk()               { return (networkGameDataSynchCheckOkMap && networkGameDataSynchCheckOkTile && networkGameDataSynchCheckOkTech && networkGameDataSynchCheckOkFogOfWar); }
     virtual void setNetworkGameDataSynchCheckOkMap(bool value)  { networkGameDataSynchCheckOkMap = value; }

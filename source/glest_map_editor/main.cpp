@@ -58,7 +58,7 @@ MainWindow::MainWindow()
 	currentBrush=btHeight;
 	resourceUnderMouse=0;
 	objectUnderMouse=0;
-  
+
 	//gl canvas
 	int args[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER };
 	glCanvas = new GlCanvas(this, args);
@@ -259,7 +259,7 @@ void MainWindow::setExtension() {
 void MainWindow::onTimer(wxTimerEvent &event) {
 	wxPaintEvent paintEvent;
 	onPaint(paintEvent);
-	
+
 }
 
 void MainWindow::onMouseDown(wxMouseEvent &event) {
@@ -312,10 +312,10 @@ void MainWindow::onMouseMove(wxMouseEvent &event) {
 			int currObject = program->getObject(x,y);
 			SetStatusText(wxT("Object: ") + ToUnicode(object_descs[currObject]), siCURR_OBJECT);
 			resourceUnderMouse = 0;
-			objectUnderMouse = currObject;				
+			objectUnderMouse = currObject;
 		}
 	}
-	
+
 	event.Skip();
 }
 
@@ -711,7 +711,7 @@ void MainWindow::uncheckRadius() {
  	if (e.GetKeyCode() == 'H') {
  		wxCommandEvent evt(wxEVT_NULL, miBrushHeight + height + heightCount / 2 + 1);
  		onMenuBrushHeight(evt);
- 	} else if (e.GetKeyCode() == ' ') {	
+ 	} else if (e.GetKeyCode() == ' ') {
 		if( resourceUnderMouse != 0 )
 		{
 			wxCommandEvent evt(wxEVT_NULL, miBrushResource + resourceUnderMouse + 1);

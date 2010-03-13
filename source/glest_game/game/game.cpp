@@ -132,7 +132,7 @@ void Game::init()
 	mainMessageBox.init(lang.get("Yes"), lang.get("No"));
 	mainMessageBox.setEnabled(false);
 
-	//check forog war
+	//check fog of war
 	if(!Config::getInstance().getBool("FogOfWar") && networkManager.isNetworkGame() ){
 		throw runtime_error("Can not play online games with for of war disabled");
 	}

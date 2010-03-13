@@ -180,6 +180,7 @@ private:
 	UnitParticleSystems unitParticleSystems;
 	UnitParticleSystems damageParticleSystems;
 
+    bool allowRotateUnits;
     float rotateAmount;
 	bool *cellMap;
 

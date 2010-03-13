@@ -130,7 +130,8 @@ private:
 	bool selectingPos;
 	bool selectingMeetingPoint;
 
-	std::map<int, float> unitTypeBuildRotation;
+    bool allowRotateUnits;
+	std::map<string, float> unitTypeBuildRotation;
 
 public:
 	Gui();
@@ -174,7 +175,7 @@ public:
 	//misc
 	void onSelectionChanged();
 
-    float getUnitTypeBuildRotation(int unitId) const;
+    float getUnitTypeBuildRotation(string unitKey) const;
 
 private:
 

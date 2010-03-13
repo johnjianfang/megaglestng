@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -36,7 +36,7 @@ class TextureManager;
 // =====================================================
 //	class Mesh
 //
-//	Part of a 3D model	
+//	Part of a 3D model
 // =====================================================
 
 class Mesh{
@@ -66,7 +66,7 @@ private:
 	//properties
 	bool twoSided;
 	bool customColor;
-	
+
 	InterpolationData *interpolationData;
 
 public:
@@ -78,7 +78,7 @@ public:
 
 	//maps
 	const Texture2D *getTexture(int i) const	{return textures[i];}
-	
+
 	//counts
 	uint32 getFrameCount() const			{return frameCount;}
 	uint32 getVertexCount() const			{return vertexCount;}
@@ -101,10 +101,10 @@ public:
 	//properties
 	bool getTwoSided() const		{return twoSided;}
 	bool getCustomTexture() const	{return customColor;}
-	
+
 	//external data
 	const InterpolationData *getInterpolationData() const	{return interpolationData;}
-	
+
 	//interpolation
 	void buildInterpolationData();
 	void updateInterpolationData(float t, bool cycle) const;
@@ -135,7 +135,7 @@ private:
 	uint32 meshCount;
 	Mesh *meshes;
 
-public: 
+public:
 	//constructor & destructor
 	Model();
 	virtual ~Model();
@@ -154,7 +154,7 @@ public:
 
 	uint32 getTriangleCount() const;
 	uint32 getVertexCount() const;
-	
+
 	//io
 	void load(const string &path);
 	void save(const string &path);

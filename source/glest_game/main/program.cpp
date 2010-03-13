@@ -164,16 +164,16 @@ void Program::setState(ProgramState *programState)
 
 	delete this->programState;
 
-    if(Socket::enableDebugText) printf("In [%s::%s] A\n",__FILE__,__FUNCTION__);
+    if(Socket::enableDebugText) printf("In [%s::%s] %d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	this->programState= programState;
 	programState->load();
 
-	if(Socket::enableDebugText) printf("In [%s::%s] B\n",__FILE__,__FUNCTION__);
+	if(Socket::enableDebugText) printf("In [%s::%s] %d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	programState->init();
 
-    if(Socket::enableDebugText) printf("In [%s::%s] C\n",__FILE__,__FUNCTION__);
+    if(Socket::enableDebugText) printf("In [%s::%s] %d\n",__FILE__,__FUNCTION__,__LINE__);
 
 	updateTimer.reset();
 	updateCameraTimer.reset();
@@ -233,6 +233,9 @@ void Program::init(WindowGl *window){
 	//sound
 	SoundRenderer &soundRenderer= SoundRenderer::getInstance();
 	soundRenderer.init(window);
+
+	NetworkInterface::setAllowGameDataSynchCheck(Config::getInstance().getBool("AllowGameDataSynchCheck","0"));
+	NetworkInterface::setAllowDownloadDataSynch(Config::getInstance().getBool("AllowDownloadDataSynch","0"));
 }
 
 void Program::setDisplaySettings(){

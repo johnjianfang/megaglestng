@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -34,20 +34,36 @@ void Config::save(const string &path){
 	properties.save(path);
 }
 
-int Config::getInt(const string &key) const{
-	return properties.getInt(key);
+int Config::getInt(const char *key,const char *defaultValueIfNotFound) const {
+    return properties.getInt(key,defaultValueIfNotFound);
 }
 
-bool Config::getBool(const string &key) const{
-	return properties.getBool(key);
+bool Config::getBool(const char *key,const char *defaultValueIfNotFound) const {
+    return properties.getBool(key,defaultValueIfNotFound);
 }
 
-float Config::getFloat(const string &key) const{
-	return properties.getFloat(key);
+float Config::getFloat(const char *key,const char *defaultValueIfNotFound) const {
+    return properties.getFloat(key,defaultValueIfNotFound);
 }
 
-const string &Config::getString(const string &key) const{
-	return properties.getString(key);
+const string Config::getString(const char *key,const char *defaultValueIfNotFound) const {
+    return properties.getString(key,defaultValueIfNotFound);
+}
+
+int Config::getInt(const string &key,const char *defaultValueIfNotFound) const{
+	return properties.getInt(key,defaultValueIfNotFound);
+}
+
+bool Config::getBool(const string &key,const char *defaultValueIfNotFound) const{
+	return properties.getBool(key,defaultValueIfNotFound);
+}
+
+float Config::getFloat(const string &key,const char *defaultValueIfNotFound) const{
+	return properties.getFloat(key,defaultValueIfNotFound);
+}
+
+const string Config::getString(const string &key,const char *defaultValueIfNotFound) const{
+	return properties.getString(key,defaultValueIfNotFound);
 }
 
 void Config::setInt(const string &key, int value){

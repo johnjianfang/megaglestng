@@ -4,15 +4,13 @@
 #include <string>
 
 #include <wx/wx.h>
-#include <wx/timer.h>
 #include <wx/glcanvas.h>
 
 #include "renderer.h"
-#include "util.h"
-#include "window.h"
+//#include "util.h"
 
-using Shared::Platform::Window;
-using Shared::Platform::MouseState;
+//using Shared::Platform::Window;
+//using Shared::Platform::MouseState;
 
 using std::string;
 
@@ -21,7 +19,7 @@ namespace Shared{ namespace G3dViewer{
 class GlCanvas;
 
 // ===============================
-// 	class MainWindow  
+// 	class MainWindow
 // ===============================
 
 class MainWindow: public wxFrame{
@@ -69,6 +67,7 @@ private:
 public:
 	MainWindow(const string &modelPath);
 	~MainWindow();
+	void init();
 
 	void Notify();
 
@@ -94,7 +93,7 @@ public:
 //	class GlCanvas
 // =====================================================
 
-class GlCanvas: public wxGLCanvas{
+class GlCanvas: public wxGLCanvas {
 private:
 	DECLARE_EVENT_TABLE()
 
@@ -108,8 +107,9 @@ private:
 	MainWindow *mainWindow;
 };
 
+
 // ===============================
-// 	class App  
+// 	class App
 // ===============================
 
 class App: public wxApp{

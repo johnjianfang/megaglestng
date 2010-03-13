@@ -73,3 +73,29 @@ if $(WX_AVAILABLE) = "yes" {
   IncludeDir glest_editor : ../shared_lib/include/$(LIB_INCLUDE_DIRS) $(GLEST_MAP_DIRS) ;
 }
 
+### Viewer ###
+  SubDir TOP g3d_viewer ;
+
+  GLEST_VIEWER_DIRS = . ;
+  for i in $(GLEST_DIRS) {
+    GLEST_VIEWER_SOURCES += [ Wildcard $(i) : *.cpp *.h ] ;
+  }
+
+  Application glest_g3dviewer : $(GLEST_VIEWER_SOURCES) ;
+  LinkWith glest_g3dviewer : glestlib ;
+  ExternalLibs glest_g3dviewer : SDL GL GLU WX ;
+  IncludeDir glest_g3dviewer : ../shared_lib/include/$(LIB_INCLUDE_DIRS) $(GLEST_VIEWER_DIRS) ;
+
+### Configurator ###
+  SubDir TOP configurator ;
+
+  GLEST_CONFIG_DIRS = . ;
+  for i in $(GLEST_DIRS) {
+    GLEST_CONFIG_SOURCES += [ Wildcard $(i) : *.cpp *.h ] ;
+  }
+
+  Application glest_configurator : $(GLEST_CONFIG_SOURCES) ;
+  LinkWith glest_configurator : glestlib ;
+  ExternalLibs glest_configurator : SDL GL GLU XERCES WX ;
+  IncludeDir glest_configurator : ../shared_lib/include/$(LIB_INCLUDE_DIRS) $(GLEST_CONFIG_DIRS) ;
+

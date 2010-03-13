@@ -1,17 +1,26 @@
 #ifndef _SHADER_G3DVIEWER_RENDERER_H_
 #define _SHADER_G3DVIEWER_RENDERER_H_
 
+/*
 #include "model_renderer.h"
 #include "texture_manager.h"
 #include "model.h"
 #include "texture.h"
+*/
+
+#include "model_renderer.h"
+#include "texture_manager.h"
+#include "model.h"
+#include "texture.h"
+//#include "model_manager.h"
+//#include "graphics_factory_gl.h"
 
 using Shared::Graphics::ModelRenderer;
 using Shared::Graphics::TextureManager;
 using Shared::Graphics::Model;
 using Shared::Graphics::Texture2D;
 
-#include "model_renderer.h"
+//#include "model_renderer.h"
 
 using Shared::Graphics::MeshCallback;
 using Shared::Graphics::Mesh;
@@ -33,7 +42,7 @@ public:
 };
 
 // ===============================
-// 	class Renderer  
+// 	class Renderer
 // ===============================
 
 class Renderer{
@@ -65,6 +74,8 @@ private:
 	MeshCallbackTeamColor meshCallbackTeamColor;
 
 	Renderer();
+	void checkGlCaps();
+	void checkExtension(const string &extension, const string &msg);
 
 public:
 	~Renderer();

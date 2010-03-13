@@ -6,7 +6,7 @@
 
 #include <wx/wx.h>
 
-#include "xml/xml_parser.h"
+#include "xml_parser.h"
 
 using std::string;
 using std::vector;
@@ -14,6 +14,10 @@ using std::vector;
 using Shared::Xml::XmlNode;
 
 namespace Configurator{
+
+// ===============================================
+//	class Global functions
+// ===============================================
 
 class Field;
 class FieldGroup;
@@ -37,7 +41,7 @@ public:
 	~Configuration();
 
 	void load(const string &path);
-	
+
 	void loadStructure(const string &path);
 	void loadValues(const string &path);
 
@@ -50,6 +54,15 @@ public:
 
 	int getFieldGroupCount() const			{return fieldGroups.size();}
 	FieldGroup *getFieldGroup(int i) const	{return fieldGroups[i];}
+
+    static wxString ToUnicode(const char* str) {
+        return wxString(str, wxConvUTF8);
+    }
+
+    static wxString ToUnicode(const string& str) {
+        return wxString(str.c_str(), wxConvUTF8);
+    }
+
 };
 
 // ===============================
@@ -90,7 +103,7 @@ protected:
 	string defaultValue;
 
 public:
-	virtual ~Field()= 0{}
+	virtual ~Field() {};
 
 	const string &getName() const			{return name;}
 	const string &getVariableName() const	{return variableName;}

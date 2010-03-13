@@ -2,10 +2,10 @@
 
 #include <stdexcept>
 
-#include "xml/xml_parser.h"
-#include "util/util.h"
-#include "util/properties.h"
-#include "util/conversion.h"
+#include "xml_parser.h"
+#include "util.h"
+#include "properties.h"
+#include "conversion.h"
 
 using namespace std;
 using namespace Shared::Xml;
@@ -16,6 +16,7 @@ namespace Configurator{
 // ===============================================
 // 	class Configuration
 // ===============================================
+
 
 Configuration::~Configuration(){
 	for(int i= 0; i<fieldGroups.size(); ++i){
@@ -29,7 +30,7 @@ void Configuration::load(const string &path){
 }
 
 void Configuration::loadStructure(const string &path){
-	
+
 	XmlTree xmlTree;
 	xmlTree.load(path);
 
@@ -37,10 +38,10 @@ void Configuration::loadStructure(const string &path){
 
 	//title
 	title= configurationNode->getChild("title")->getAttribute("value")->getValue();
-	
+
 	//fileName
 	fileName= configurationNode->getChild("file-name")->getAttribute("value")->getValue();
-	
+
 	//icon
 	XmlNode *iconNode= configurationNode->getChild("icon");
 	icon= iconNode->getAttribute("value")->getBoolValue();
@@ -115,10 +116,10 @@ void FieldGroup::load(const XmlNode *groupNode){
 
 	fields.resize(groupNode->getChildCount());
 	for(int i=0; i<fields.size(); ++i){
-		const XmlNode *fieldNode= groupNode->getChild("field", i); 
+		const XmlNode *fieldNode= groupNode->getChild("field", i);
 
 		Field *f= newField(fieldNode->getAttribute("type")->getValue());
-			
+
 		//name
 		const XmlNode *nameNode= fieldNode->getChild("name");
 		f->setName(nameNode->getAttribute("value")->getValue());
@@ -177,7 +178,7 @@ Field *FieldGroup::newField(const string &type){
 // ===============================================
 
 void BoolField::createControl(wxWindow *parent, wxSizer *sizer){
-	checkBox= new wxCheckBox(parent, -1, "");
+	checkBox= new wxCheckBox(parent, -1, Configuration::ToUnicode(""));
 	checkBox->SetValue(strToBool(value));
 	sizer->Add(checkBox);
 }
@@ -205,16 +206,16 @@ bool BoolField::isValueValid(const string &value){
 // ===============================================
 
 void IntField::createControl(wxWindow *parent, wxSizer *sizer){
-	textCtrl= new wxTextCtrl(parent, -1, value.c_str());
+	textCtrl= new wxTextCtrl(parent, -1, Configuration::ToUnicode(value.c_str()));
 	sizer->Add(textCtrl);
 }
 
 void IntField::updateValue(){
-	value= textCtrl->GetValue();
+	value= (const char*)wxFNCONV(textCtrl->GetValue());
 }
 
 void IntField::updateControl(){
-	textCtrl->SetValue(value.c_str());
+	textCtrl->SetValue(Configuration::ToUnicode(value.c_str()));
 }
 
 bool IntField::isValueValid(const string &value){
@@ -232,16 +233,16 @@ bool IntField::isValueValid(const string &value){
 // ===============================================
 
 void FloatField::createControl(wxWindow *parent, wxSizer *sizer){
-	textCtrl= new wxTextCtrl(parent, -1, value.c_str());
+	textCtrl= new wxTextCtrl(parent, -1, Configuration::ToUnicode(value.c_str()));
 	sizer->Add(textCtrl);
 }
 
 void FloatField::updateValue(){
-	value= textCtrl->GetValue();
+	value= (const char*)wxFNCONV(textCtrl->GetValue());
 }
 
 void FloatField::updateControl(){
-	textCtrl->SetValue(value.c_str());
+	textCtrl->SetValue(Configuration::ToUnicode(value.c_str()));
 }
 
 bool FloatField::isValueValid(const string &value){
@@ -259,17 +260,17 @@ bool FloatField::isValueValid(const string &value){
 // ===============================================
 
 void StringField::createControl(wxWindow *parent, wxSizer *sizer){
-	textCtrl= new wxTextCtrl(parent, -1, value.c_str());
+	textCtrl= new wxTextCtrl(parent, -1, Configuration::ToUnicode(value.c_str()));
 	textCtrl->SetSize(wxSize(3*textCtrl->GetSize().x/2, textCtrl->GetSize().y));
 	sizer->Add(textCtrl);
 }
 
 void StringField::updateValue(){
-	value= textCtrl->GetValue();
+	value= (const char*)wxFNCONV(textCtrl->GetValue());
 }
 
 void StringField::updateControl(){
-	textCtrl->SetValue(value.c_str());
+	textCtrl->SetValue(Configuration::ToUnicode(value.c_str()));
 }
 
 bool StringField::isValueValid(const string &value){
@@ -281,20 +282,20 @@ bool StringField::isValueValid(const string &value){
 // ===============================================
 
 void EnumField::createControl(wxWindow *parent, wxSizer *sizer){
-	comboBox= new wxComboBox(parent, -1, "", wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
+	comboBox= new wxComboBox(parent, -1, Configuration::ToUnicode(""), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
 	for(int i=0; i<enumerants.size(); ++i){
-		comboBox->Append(enumerants[i].c_str());
+		comboBox->Append(Configuration::ToUnicode(enumerants[i].c_str()));
 	}
-	comboBox->SetValue(value.c_str());
+	comboBox->SetValue(Configuration::ToUnicode(value.c_str()));
 	sizer->Add(comboBox);
 }
 
 void EnumField::updateValue(){
-	value= comboBox->GetValue();
+	value= (const char*)wxFNCONV(comboBox->GetValue());
 }
 
 void EnumField::updateControl(){
-	comboBox->SetValue(value.c_str());
+	comboBox->SetValue(Configuration::ToUnicode(value.c_str()));
 }
 
 bool EnumField::isValueValid(const string &value){
@@ -353,16 +354,16 @@ string IntRangeField::getInfo() const{
 // ===============================================
 
 void FloatRangeField::createControl(wxWindow *parent, wxSizer *sizer){
-	textCtrl= new wxTextCtrl(parent, -1, value.c_str());
+	textCtrl= new wxTextCtrl(parent, -1, Configuration::ToUnicode(value.c_str()));
 	sizer->Add(textCtrl);
 }
 
 void FloatRangeField::updateValue(){
-	value= textCtrl->GetValue();
+	value= (const char*)wxFNCONV(textCtrl->GetValue());
 }
 
 void FloatRangeField::updateControl(){
-	textCtrl->SetValue(value.c_str());
+	textCtrl->SetValue(Configuration::ToUnicode(value.c_str()));
 }
 
 bool FloatRangeField::isValueValid(const string &value){

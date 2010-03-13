@@ -51,6 +51,9 @@ private:
 
 public:
 	MainWindow();
+	void init();
+	static const string versionString;
+	static const string winHeader;
 
 	void onButtonOk(wxCommandEvent &event);
 	void onButtonApply(wxCommandEvent &event);

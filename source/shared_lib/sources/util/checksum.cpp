@@ -56,7 +56,7 @@ void Checksum::addFile(const string &path){
 		while(!feof(file)){
 			int8 byte= 0;
 
-			fread(&byte, 1, 1, file);
+			size_t readBytes = fread(&byte, 1, 1, file);
 			addByte(byte);
 		}
 	}

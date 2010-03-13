@@ -549,7 +549,7 @@ void MenuStateCustomGame::loadMapInfo(string file, MapInfo *mapInfo){
 			throw runtime_error("Can't open file");
 
 		MapFileHeader header;
-		fread(&header, sizeof(MapFileHeader), 1, f);
+		size_t readBytes = fread(&header, sizeof(MapFileHeader), 1, f);
 
 		mapInfo->size.x= header.width;
 		mapInfo->size.y= header.height;

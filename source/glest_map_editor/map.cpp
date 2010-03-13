@@ -583,7 +583,7 @@ void Map::loadFromFile(const string &path) {
 
 		//read header
 		MapFileHeader header;
-		fread(&header, sizeof(MapFileHeader), 1, f1);
+		size_t readBytes = fread(&header, sizeof(MapFileHeader), 1, f1);
 
 		altFactor = header.altFactor;
 		waterLevel = header.waterLevel;
@@ -594,22 +594,22 @@ void Map::loadFromFile(const string &path) {
 		//read start locations
 		resetFactions(header.maxFactions);
 		for (int i = 0; i < maxFactions; ++i) {
-			fread(&startLocations[i].x, sizeof(int32), 1, f1);
-			fread(&startLocations[i].y, sizeof(int32), 1, f1);
+			readBytes = fread(&startLocations[i].x, sizeof(int32), 1, f1);
+			readBytes = fread(&startLocations[i].y, sizeof(int32), 1, f1);
 		}
 
 		//read Heights
 		reset(header.width, header.height, 10, 1);
 		for (int j = 0; j < h; ++j) {
 			for (int i = 0; i < w; ++i) {
-				fread(&cells[i][j].height, sizeof(float), 1, f1);
+				readBytes = fread(&cells[i][j].height, sizeof(float), 1, f1);
 			}
 		}
 
 		//read surfaces
 		for (int j = 0; j < h; ++j) {
 			for (int i = 0; i < w; ++i) {
-				fread(&cells[i][j].surface, sizeof(int8), 1, f1);
+				readBytes = fread(&cells[i][j].surface, sizeof(int8), 1, f1);
 			}
 		}
 
@@ -617,7 +617,7 @@ void Map::loadFromFile(const string &path) {
 		for (int j = 0; j < h; ++j) {
 			for (int i = 0; i < w; ++i) {
 				int8 obj;
-				fread(&obj, sizeof(int8), 1, f1);
+				readBytes = fread(&obj, sizeof(int8), 1, f1);
 				if (obj <= 10) {
 					cells[i][j].object = obj;
 				} else {

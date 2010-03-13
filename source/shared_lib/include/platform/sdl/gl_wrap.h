@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2005 Matthias Braun <matze@braunis.de>
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 #ifndef _SHARED_PLATFORM_GLWRAP_H_
@@ -33,18 +33,18 @@ namespace Shared{ namespace Platform{
 class PlatformContextGl {
 public:
 	virtual ~PlatformContextGl() {}
-	
+
 	virtual void init(int colorBits, int depthBits, int stencilBits);
 	virtual void end();
 
 	virtual void makeCurrent();
 	virtual void swapBuffers();
-	
+
 	DeviceContextHandle getHandle() const	{ return 0; }
 };
 
 // =====================================================
-//	Global Fcs  
+//	Global Fcs
 // =====================================================
 
 void createGlFontBitmaps(uint32 &base, const string &type, int size, int width, int charCount, FontMetrics &metrics);

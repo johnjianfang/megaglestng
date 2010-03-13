@@ -122,7 +122,7 @@ void Map::load(const string &path, TechTree *techTree, Tileset *tileset){
 
 			//read header
 			MapFileHeader header;
-			fread(&header, sizeof(MapFileHeader), 1, f);
+			size_t readBytes = fread(&header, sizeof(MapFileHeader), 1, f);
 
 			if(next2Power(header.width) != header.width){
 				throw runtime_error("Map width is not a power of 2");
@@ -146,8 +146,8 @@ void Map::load(const string &path, TechTree *techTree, Tileset *tileset){
 			startLocations= new Vec2i[maxPlayers];
 			for(int i=0; i<maxPlayers; ++i){
 				int x, y;
-				fread(&x, sizeof(int32), 1, f);
-				fread(&y, sizeof(int32), 1, f);
+				readBytes = fread(&x, sizeof(int32), 1, f);
+				readBytes = fread(&y, sizeof(int32), 1, f);
 				startLocations[i]= Vec2i(x, y)*cellScale;
 			}
 
@@ -160,7 +160,7 @@ void Map::load(const string &path, TechTree *techTree, Tileset *tileset){
 			for(int j=0; j<surfaceH; ++j){
 				for(int i=0; i<surfaceW; ++i){
 					float32 alt;
-					fread(&alt, sizeof(float32), 1, f);
+					readBytes = fread(&alt, sizeof(float32), 1, f);
 					SurfaceCell *sc= getSurfaceCell(i, j);
 					sc->setVertex(Vec3f(i*mapScale, alt / heightFactor, j*mapScale));
 				}
@@ -170,7 +170,7 @@ void Map::load(const string &path, TechTree *techTree, Tileset *tileset){
 			for(int j=0; j<surfaceH; ++j){
 				for(int i=0; i<surfaceW; ++i){
 					int8 surf;
-					fread(&surf, sizeof(int8), 1, f);
+					readBytes = fread(&surf, sizeof(int8), 1, f);
 					getSurfaceCell(i, j)->setSurfaceType(surf-1);
 				}
 			}
@@ -180,7 +180,7 @@ void Map::load(const string &path, TechTree *techTree, Tileset *tileset){
 				for(int i=0; i<w; i+= cellScale){
 
 					int8 objNumber;
-					fread(&objNumber, sizeof(int8), 1, f);
+					readBytes = fread(&objNumber, sizeof(int8), 1, f);
 					SurfaceCell *sc= getSurfaceCell(toSurfCoords(Vec2i(i, j)));
 					if(objNumber==0){
 						sc->setObject(NULL);

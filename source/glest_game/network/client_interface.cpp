@@ -51,7 +51,7 @@ ClientInterface::ClientInterface(){
 
 ClientInterface::~ClientInterface()
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
     if(clientSocket != NULL && clientSocket->isConnected() == true)
     {
@@ -62,12 +62,12 @@ ClientInterface::~ClientInterface()
 	delete clientSocket;
 	clientSocket = NULL;
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ClientInterface::connect(const Ip &ip, int port)
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	delete clientSocket;
 
@@ -78,7 +78,7 @@ void ClientInterface::connect(const Ip &ip, int port)
 	clientSocket->setBlock(false);
 	clientSocket->connect(ip, port);
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END - socket = %d\n",__FILE__,__FUNCTION__,clientSocket->getSocketId());
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END - socket = %d\n",__FILE__,__FUNCTION__,clientSocket->getSocketId());
 }
 
 void ClientInterface::reset()
@@ -134,7 +134,7 @@ void ClientInterface::updateLobby()
 
             if(receiveMessage(&networkMessageIntro))
             {
-                if(Socket::enableDebugText) printf("In [%s::%s] got NetworkMessageIntro\n",__FILE__,__FUNCTION__);
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] got NetworkMessageIntro\n",__FILE__,__FUNCTION__);
 
                 //check consistency
                 if(Config::getInstance().getBool("NetworkConsistencyChecks"))
@@ -143,7 +143,7 @@ void ClientInterface::updateLobby()
                     {
 						string sErr = "Server and client versions do not match (" + networkMessageIntro.getVersionString() + "). You have to use the same binaries.";
                         printf("%s\n",sErr.c_str());
-						//throw runtime_error("Server and client versions do not match (" + networkMessageIntro.getVersionString() + "). You have to use the same binaries.");
+						throw runtime_error(sErr);
                     }
                 }
 
@@ -166,59 +166,29 @@ void ClientInterface::updateLobby()
 
             if(receiveMessage(&networkMessageSynchNetworkGameData))
             {
-                if(Socket::enableDebugText) printf("In [%s::%s] got NetworkMessageSynchNetworkGameData\n",__FILE__,__FUNCTION__);
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] got NetworkMessageSynchNetworkGameData\n",__FILE__,__FUNCTION__);
 
                 // check the checksum's
-                //Checksum checksum;
-                //tileset
-                //string file = "tilesets/" + networkMessageSynchNetworkGameData.getTileset() + "/" + networkMessageSynchNetworkGameData.getTileset() + ".xml";
-                //checksum.addFile(file);
-                // models
-                // sounds
-                // textures
-                //int32  tilesetCRC = checksum.getSum();
-                //if(Socket::enableDebugText) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),tilesetCRC);
-
-                //if(tilesetCRC != networkMessageSynchNetworkGameData.getTilesetCRC())
-                //{
-                //    if(Socket::enableDebugText) printf("In [%s::%s] tilesetCRC mismatch, local = %d, remote = %d\n",
-                //            __FILE__,__FUNCTION__,tilesetCRC,networkMessageSynchNetworkGameData.getTilesetCRC());
-                //}
-
-                int32 tilesetCRC = getFolderTreeContentsCheckSumRecursively("tilesets/" +
+                int32 tilesetCRC = getFolderTreeContentsCheckSumRecursively(string(GameConstants::folder_path_tilesets) + "/" +
                     networkMessageSynchNetworkGameData.getTileset() + "/*", ".xml", NULL);
 
                 this->setNetworkGameDataSynchCheckOkTile((tilesetCRC == networkMessageSynchNetworkGameData.getTilesetCRC()));
                 if(this->getNetworkGameDataSynchCheckOkTile() == false)
                 {
-                    if(Socket::enableDebugText) printf("In [%s::%s] tilesetCRC mismatch, local = %d, remote = %d\n",
+                    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] tilesetCRC mismatch, local = %d, remote = %d\n",
                             __FILE__,__FUNCTION__,tilesetCRC,networkMessageSynchNetworkGameData.getTilesetCRC());
                 }
 
 
                 //tech, load before map because of resources
-                //checksum = Checksum();
-                //file = "techs/" + networkMessageSynchNetworkGameData.getTech() + "/" + networkMessageSynchNetworkGameData.getTech() + ".xml";
-                //checksum.addFile(file);
-                // factions
-                // resources
-                //int32 techCRC = checksum.getSum();
-                //if(Socket::enableDebugText) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),techCRC);
-
-                //if(techCRC != networkMessageSynchNetworkGameData.getTechCRC())
-                //{
-                //    if(Socket::enableDebugText) printf("In [%s::%s] techCRC mismatch, local = %d, remote = %d\n",
-                //            __FILE__,__FUNCTION__,techCRC,networkMessageSynchNetworkGameData.getTechCRC());
-                //}
-
-                int32 techCRC = getFolderTreeContentsCheckSumRecursively("techs/" +
+                int32 techCRC = getFolderTreeContentsCheckSumRecursively(string(GameConstants::folder_path_techs) + "/" +
                         networkMessageSynchNetworkGameData.getTech() + "/*", ".xml", NULL);
 
                 this->setNetworkGameDataSynchCheckOkTech((techCRC == networkMessageSynchNetworkGameData.getTechCRC()));
 
                 if(this->getNetworkGameDataSynchCheckOkTech() == false)
                 {
-                    if(Socket::enableDebugText) printf("In [%s::%s] techCRC mismatch, local = %d, remote = %d\n",
+                    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] techCRC mismatch, local = %d, remote = %d\n",
                             __FILE__,__FUNCTION__,techCRC,networkMessageSynchNetworkGameData.getTechCRC());
                 }
 
@@ -227,13 +197,13 @@ void ClientInterface::updateLobby()
                 string file = Map::getMapPath(networkMessageSynchNetworkGameData.getMap());
                 checksum.addFile(file);
                 int32 mapCRC = checksum.getSum();
-                //if(Socket::enableDebugText) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),mapCRC);
+                //if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),mapCRC);
 
                 this->setNetworkGameDataSynchCheckOkMap((mapCRC == networkMessageSynchNetworkGameData.getMapCRC()));
 
                 if(this->getNetworkGameDataSynchCheckOkMap() == false)
                 {
-                    if(Socket::enableDebugText) printf("In [%s::%s] mapCRC mismatch, local = %d, remote = %d\n",
+                    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] mapCRC mismatch, local = %d, remote = %d\n",
                             __FILE__,__FUNCTION__,mapCRC,networkMessageSynchNetworkGameData.getMapCRC());
                 }
 
@@ -242,7 +212,7 @@ void ClientInterface::updateLobby()
 
                 if(this->getNetworkGameDataSynchCheckOkFogOfWar() == false)
                 {
-                    if(Socket::enableDebugText) printf("In [%s::%s] getFogOfWar mismatch, local = %d, remote = %d\n",
+                    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] getFogOfWar mismatch, local = %d, remote = %d\n",
                             __FILE__,__FUNCTION__,getFogOfWar(),networkMessageSynchNetworkGameData.getFogOfWar());
                 }
 
@@ -258,7 +228,7 @@ void ClientInterface::updateLobby()
             if(receiveMessage(&networkMessageSynchNetworkGameDataFileCRCCheck))
             {
                 /*
-                if(Socket::enableDebugText) printf("In [%s::%s] got nmtSynchNetworkGameDataFileCRCCheck totalfiles = %d, fileindex = %d, crc = %d, file [%s]\n",
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] got nmtSynchNetworkGameDataFileCRCCheck totalfiles = %d, fileindex = %d, crc = %d, file [%s]\n",
                     __FILE__,__FUNCTION__,networkMessageSynchNetworkGameDataFileCRCCheck.getTotalFileCount(),
                     networkMessageSynchNetworkGameDataFileCRCCheck.getFileIndex(),
                     networkMessageSynchNetworkGameDataFileCRCCheck.getFileCRC(),
@@ -271,7 +241,7 @@ void ClientInterface::updateLobby()
 
                     if(fileCRC != networkMessageSynchNetworkGameDataFileCRCCheck.getFileCRC())
                     {
-                        if(Socket::enableDebugText) printf("In [%s::%s] got nmtSynchNetworkGameDataFileCRCCheck localCRC = %d, remoteCRC = %d, file [%s]\n",
+                        if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] got nmtSynchNetworkGameDataFileCRCCheck localCRC = %d, remoteCRC = %d, file [%s]\n",
                             __FILE__,__FUNCTION__,fileCRC,
                             networkMessageSynchNetworkGameDataFileCRCCheck.getFileCRC(),
                             networkMessageSynchNetworkGameDataFileCRCCheck.getFileName().c_str());
@@ -309,7 +279,7 @@ void ClientInterface::updateLobby()
             NetworkMessageText networkMessageText;
             if(receiveMessage(&networkMessageText))
             {
-                if(Socket::enableDebugText) printf("In [%s::%s] got nmtText\n",__FILE__,__FUNCTION__);
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] got nmtText\n",__FILE__,__FUNCTION__);
 
                 chatText      = networkMessageText.getText();
                 chatSender    = networkMessageText.getSender();
@@ -324,7 +294,7 @@ void ClientInterface::updateLobby()
 
             if(receiveMessage(&networkMessageLaunch))
             {
-                if(Socket::enableDebugText) printf("In [%s::%s] got NetworkMessageLaunch\n",__FILE__,__FUNCTION__);
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] got NetworkMessageLaunch\n",__FILE__,__FUNCTION__);
 
                 networkMessageLaunch.buildGameSettings(&gameSettings);
 
@@ -425,7 +395,7 @@ void ClientInterface::updateKeyframe(int frameCount)
 
 void ClientInterface::waitUntilReady(Checksum* checksum)
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
     Logger &logger= Logger::getInstance();
 
@@ -487,13 +457,14 @@ void ClientInterface::waitUntilReady(Checksum* checksum)
 			string sErr = "Checksum error, you don't have the same data as the server";
 			//throw runtime_error("Checksum error, you don't have the same data as the server");
 			printf("%s\n",sErr.c_str());
+			throw runtime_error(sErr);
 		}
 	}
 
 	//delay the start a bit, so clients have nore room to get messages
 	sleep(GameConstants::networkExtraLatency);
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ClientInterface::sendTextMessage(const string &text, int teamIndex){
@@ -528,7 +499,7 @@ void ClientInterface::waitForMessage()
 
 void ClientInterface::quitGame(bool userManuallyQuit)
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
     if(clientSocket != NULL && userManuallyQuit == true)
     {
@@ -537,12 +508,12 @@ void ClientInterface::quitGame(bool userManuallyQuit)
         close();
     }
 
-    if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ClientInterface::close()
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	delete clientSocket;
 	clientSocket= NULL;

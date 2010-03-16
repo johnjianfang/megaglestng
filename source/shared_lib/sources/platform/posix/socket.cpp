@@ -29,6 +29,7 @@ using namespace Shared::Util;
 namespace Shared{ namespace Platform{
 
 bool Socket::enableDebugText = true;
+bool Socket::enableNetworkDebugInfo = true;
 
 // =====================================================
 //	class Ip
@@ -84,26 +85,26 @@ Socket::Socket()
 
 Socket::~Socket()
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
 
     disconnectSocket();
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
 }
 
 void Socket::disconnectSocket()
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
 
     if(sock > 0)
     {
-        if(Socket::enableDebugText) printf("In [%s::%s] calling shutdown and close for socket = %d...\n",__FILE__,__FUNCTION__,sock);
+        if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] calling shutdown and close for socket = %d...\n",__FILE__,__FUNCTION__,sock);
         ::shutdown(sock,2);
         ::close(sock);
         sock = -1;
     }
 
-    if(Socket::enableDebugText) printf("In [%s::%s] END closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END closing socket = %d...\n",__FILE__,__FUNCTION__,sock);
 }
 
 // Int lookup is socket fd while bool result is whether or not that socket was signalled for reading
@@ -148,7 +149,7 @@ bool Socket::hasDataToRead(std::map<int,bool> &socketTriggeredList)
             {
                 bResult = true;
 
-                if(Socket::enableDebugText) printf("In [%s::%s] select detected data imaxsocket = %d...\n",__FILE__,__FUNCTION__,imaxsocket);
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] select detected data imaxsocket = %d...\n",__FILE__,__FUNCTION__,imaxsocket);
 
                 for(std::map<int,bool>::iterator itermap = socketTriggeredList.begin();
                     itermap != socketTriggeredList.end(); itermap++)
@@ -156,7 +157,7 @@ bool Socket::hasDataToRead(std::map<int,bool> &socketTriggeredList)
                     int socket = itermap->first;
                     if (FD_ISSET(socket, &rfds))
                     {
-                        if(Socket::enableDebugText) printf("In [%s] FD_ISSET true for socket %d...\n",__FUNCTION__,socket);
+                        if(Socket::enableNetworkDebugInfo) printf("In [%s] FD_ISSET true for socket %d...\n",__FUNCTION__,socket);
 
                         itermap->second = true;
                     }
@@ -166,7 +167,7 @@ bool Socket::hasDataToRead(std::map<int,bool> &socketTriggeredList)
                     }
                 }
 
-                if(Socket::enableDebugText) printf("In [%s::%s] socketTriggeredList->size() = %d\n",__FILE__,__FUNCTION__,socketTriggeredList.size());
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] socketTriggeredList->size() = %d\n",__FILE__,__FUNCTION__,socketTriggeredList.size());
             }
         }
     }
@@ -241,7 +242,7 @@ int Socket::getDataToRead(){
         }
         else if(err == 0)
         {
-            //if(Socket::enableDebugText) printf("In [%s] ioctl returned = %d, size = %ld\n",__FUNCTION__,err,size);
+            //if(Socket::enableNetworkDebugInfo) printf("In [%s] ioctl returned = %d, size = %ld\n",__FUNCTION__,err,size);
         }
     }
 
@@ -287,7 +288,7 @@ int Socket::send(const void *data, int dataSize) {
 	    //throwException(szBuf);
 	}
 
-    if(Socket::enableDebugText) printf("In [%s::%s] sock = %d, bytesSent = %d\n",__FILE__,__FUNCTION__,sock,bytesSent);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] sock = %d, bytesSent = %d\n",__FILE__,__FUNCTION__,sock,bytesSent);
 
 	return static_cast<int>(bytesSent);
 }
@@ -686,7 +687,7 @@ Socket *ServerSocket::accept()
 	if(newSock < 0)
 	{
 	    char szBuf[1024]="";
-	    if(Socket::enableDebugText) printf(szBuf, "In [%s::%s] Error accepting socket connection sock = %d, err = %d, errno = %d\n",__FILE__,__FUNCTION__,sock,newSock,errno);
+	    if(Socket::enableNetworkDebugInfo) printf(szBuf, "In [%s::%s] Error accepting socket connection sock = %d, err = %d, errno = %d\n",__FILE__,__FUNCTION__,sock,newSock,errno);
 
 		if(errno == EAGAIN)
 		{

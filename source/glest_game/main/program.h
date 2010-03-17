@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -16,6 +16,7 @@
 #include "platform_util.h"
 #include "window_gl.h"
 #include "socket.h"
+#include "components.h"
 
 using Shared::Graphics::Context;
 using Shared::Platform::WindowGl;
@@ -30,9 +31,9 @@ class Program;
 class MainWindow;
 
 // =====================================================
-// 	class ProgramState  
+// 	class ProgramState
 //
-///	Base class for all program states: 
+///	Base class for all program states:
 /// Intro, MainMenu, Game, BattleEnd (State Design pattern)
 // =====================================================
 
@@ -62,30 +63,50 @@ public:
 };
 
 // ===============================
-// 	class Program  
+// 	class Program
 // ===============================
 
 class Program{
 private:
 	static const int maxTimes;
 
+	class ShowMessageProgramState : public ProgramState {
+		GraphicMessageBox msgBox;
+		int mouseX;
+		int mouseY;
+		int mouse2dAnim;
+		string msg;
+
+	public:
+		ShowMessageProgramState(Program *program, const char *msg);
+
+		virtual void render();
+		virtual void mouseDownLeft(int x, int y);
+		virtual void mouseMove(int x, int y, const MouseState &mouseState);
+		virtual void update();
+	};
+
+
 private:
     ProgramState *programState;
-		    
+
 	PerformanceTimer fpsTimer;
 	PerformanceTimer updateTimer;
 	PerformanceTimer updateCameraTimer;
 
     WindowGl *window;
+    static Program *singleton;
 
 public:
     Program();
     ~Program();
 
+    static Program *getInstance()	{return singleton;}
+
 	void initNormal(WindowGl *window);
 	void initServer(WindowGl *window);
 	void initClient(WindowGl *window, const Ip &serverIp);
-	
+
 	//main
     void mouseDownLeft(int x, int y);
     void mouseUpLeft(int x, int y);
@@ -97,11 +118,12 @@ public:
     void keyPress(char c);
 	void loop();
 	void resize(SizeState sizeState);
+	void showMessage(const char *msg);
 
 	//misc
 	void setState(ProgramState *programState);
 	void exit();
-	
+
 private:
 	void init(WindowGl *window);
 	void setDisplaySettings();

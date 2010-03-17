@@ -35,7 +35,7 @@ const int NetworkInterface::readyWaitTimeout= 60000;	//1 minute
 
 bool NetworkInterface::allowGameDataSynchCheck  = false;
 bool NetworkInterface::allowDownloadDataSynch   = false;
-
+DisplayMessageFunction NetworkInterface::pCB_DisplayMessage = NULL;
 
 void NetworkInterface::sendMessage(const NetworkMessage* networkMessage){
 	Socket* socket= getSocket();
@@ -56,11 +56,11 @@ NetworkMessageType NetworkInterface::getNextMessageType(bool checkHasDataFirst)
         //peek message type
         int dataSize = socket->getDataToRead();
         if(dataSize >= sizeof(messageType)){
-            if(Socket::enableDebugText) printf("In [%s::%s] socket->getDataToRead() dataSize = %d\n",__FILE__,__FUNCTION__,dataSize);
+            if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] socket->getDataToRead() dataSize = %d\n",__FILE__,__FUNCTION__,dataSize);
 
             int iPeek = socket->peek(&messageType, sizeof(messageType));
 
-            if(Socket::enableDebugText) printf("In [%s::%s] socket->getDataToRead() iPeek = %d, messageType = %d\n",__FILE__,__FUNCTION__,iPeek,messageType);
+            if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] socket->getDataToRead() iPeek = %d, messageType = %d\n",__FILE__,__FUNCTION__,iPeek,messageType);
         }
 
         //sanity check new message type
@@ -74,7 +74,7 @@ NetworkMessageType NetworkInterface::getNextMessageType(bool checkHasDataFirst)
 
 bool NetworkInterface::receiveMessage(NetworkMessage* networkMessage){
 
-    if(Socket::enableDebugText) printf("In [%s::%s]\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s]\n",__FILE__,__FUNCTION__);
 
 	Socket* socket= getSocket();
 
@@ -82,13 +82,28 @@ bool NetworkInterface::receiveMessage(NetworkMessage* networkMessage){
 }
 
 bool NetworkInterface::isConnected(){
-    //if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    //if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
     bool result = (getSocket()!=NULL && getSocket()->isConnected());
 
-    //if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+    //if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 
 	return result;
+}
+
+void NetworkInterface::DisplayErrorMessage(string sErr, bool closeSocket) {
+    if(pCB_DisplayMessage != NULL) {
+        pCB_DisplayMessage(sErr.c_str(), false);
+    }
+    else {
+        throw runtime_error(sErr);
+    }
+
+    if(closeSocket == true && getSocket() != NULL)
+    {
+        close();
+    }
+
 }
 
 // =====================================================

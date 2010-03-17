@@ -49,18 +49,18 @@ bool NetworkMessage::receive(Socket* socket, void* data, int dataSize)
             }
             else
             {
-                if(Socket::enableDebugText) printf("In [%s::%s] socket has been disconnected\n",__FILE__,__FUNCTION__);
+                if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] socket has been disconnected\n",__FILE__,__FUNCTION__);
             }
 		}
 		else
 		{
-		    if(Socket::enableDebugText) printf("In [%s::%s] dataSize = %d\n",__FILE__,__FUNCTION__,dataSize);
+		    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] dataSize = %d\n",__FILE__,__FUNCTION__,dataSize);
 		}
 		return true;
 	}
 	else
 	{
-	    if(Socket::enableDebugText) printf("In [%s::%s] socket->getDataToRead() returned %d\n",__FILE__,__FUNCTION__,ipeekdatalen);
+	    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] socket->getDataToRead() returned %d\n",__FILE__,__FUNCTION__,ipeekdatalen);
 	}
 	return false;
 }
@@ -75,7 +75,7 @@ void NetworkMessage::send(Socket* socket, const void* data, int dataSize) const
 	    }
 	    else
 	    {
-	        if(Socket::enableDebugText) printf("In [%s::%s] socket has been disconnected\n",__FILE__,__FUNCTION__);
+	        if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] socket has been disconnected\n",__FILE__,__FUNCTION__);
 	    }
 	}
 }
@@ -208,11 +208,28 @@ bool NetworkMessageCommandList::receive(Socket* socket){
 
     // read type, commandCount & frame num first.
 	if (!NetworkMessage::receive(socket, &data, networkPacketMsgTypeSize)) {
+	    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s %d] NetworkMessage::receive failed!\n",__FILE__,__FUNCTION__,__LINE__);
 		return false;
 	}
+
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s %d] messageType = %d, frameCount = %d, data.commandCount = %d\n",
+        __FILE__,__FUNCTION__,__LINE__,data.messageType,data.frameCount,data.commandCount);
+
 	// read data.commandCount commands.
 	if (data.commandCount) {
-		return NetworkMessage::receive(socket, &data.commands, sizeof(NetworkCommand) * data.commandCount);
+		bool result = NetworkMessage::receive(socket, &data.commands, sizeof(NetworkCommand) * data.commandCount);
+
+		if(Socket::enableNetworkDebugInfo) {
+            for(int idx = 0 ; idx < data.commandCount; ++idx) {
+                const NetworkCommand &cmd = data.commands[idx];
+
+                printf("In [%s::%s %d] index = %d, networkCommandType = %d, unitId = %d, commandTypeId = %d, positionX = %d, positionY = %d, unitTypeId = %d, targetId = %d\n",
+                        __FILE__,__FUNCTION__,__LINE__,idx, cmd.getNetworkCommandType(),cmd.getUnitId(), cmd.getCommandTypeId(),
+                        cmd.getPosition().x,cmd.getPosition().y, cmd.getUnitTypeId(), cmd.getTargetId());
+            }
+		}
+
+		return result;
 	}
 	return true;
 }
@@ -221,6 +238,21 @@ void NetworkMessageCommandList::send(Socket* socket) const{
 	assert(data.messageType==nmtCommandList);
 	//NetworkMessage::send(socket, &data, sizeof(data));
 	NetworkMessage::send(socket, &data, networkPacketMsgTypeSize + sizeof(NetworkCommand) * data.commandCount);
+
+	if(Socket::enableNetworkDebugInfo) {
+	    printf("In [%s::%s %d] messageType = %d, frameCount = %d, data.commandCount = %d\n",
+                __FILE__,__FUNCTION__,__LINE__,data.messageType,data.frameCount,data.commandCount);
+
+        if (data.commandCount) {
+            for(int idx = 0 ; idx < data.commandCount; ++idx) {
+                const NetworkCommand &cmd = data.commands[idx];
+
+                printf("In [%s::%s %d] index = %d, networkCommandType = %d, unitId = %d, commandTypeId = %d, positionX = %d, positionY = %d, unitTypeId = %d, targetId = %d\n",
+                        __FILE__,__FUNCTION__,__LINE__,idx, cmd.getNetworkCommandType(),cmd.getUnitId(), cmd.getCommandTypeId(),
+                        cmd.getPosition().x,cmd.getPosition().y, cmd.getUnitTypeId(), cmd.getTargetId());
+            }
+        }
+	}
 }
 
 // =====================================================
@@ -273,32 +305,17 @@ NetworkMessageSynchNetworkGameData::NetworkMessageSynchNetworkGameData(const Gam
 	data.tech    = gameSettings->getTech();
 
     //Checksum checksum;
-	//tileset
-	//string file = "tilesets/" + gameSettings->getTileset() + "/" + gameSettings->getTileset() + ".xml";
-    //checksum.addFile(file);
-    // models
-    // sounds
-    // textures
-    //data.tilesetCRC = checksum.getSum();
-    //if(Socket::enableDebugText) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),data.tilesetCRC);
-    data.tilesetCRC = getFolderTreeContentsCheckSumRecursively("tilesets/" + gameSettings->getTileset() + "/*", "xml", NULL);
+    data.tilesetCRC = getFolderTreeContentsCheckSumRecursively(string(GameConstants::folder_path_tilesets) + "/" + gameSettings->getTileset() + "/*", "xml", NULL);
 
     //tech, load before map because of resources
-    //checksum = Checksum();
-    //file = "techs/" + gameSettings->getTech() + "/" + gameSettings->getTech() + ".xml";
-    //checksum.addFile(file);
-    // factions
-    // resources
-    //data.techCRC = checksum.getSum();
-    //if(Socket::enableDebugText) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),data.techCRC);
-    data.techCRC  = getFolderTreeContentsCheckSumRecursively("techs/" + gameSettings->getTech() + "/*", "xml", NULL);
+    data.techCRC  = getFolderTreeContentsCheckSumRecursively(string(GameConstants::folder_path_techs) + "/" + gameSettings->getTech() + "/*", "xml", NULL);
 
     //map
     Checksum checksum;
     string file = Map::getMapPath(gameSettings->getMap());
 	checksum.addFile(file);
 	data.mapCRC = checksum.getSum();
-	//if(Socket::enableDebugText) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),data.mapCRC);
+	//if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] file = [%s] checksum = %d\n",__FILE__,__FUNCTION__,file.c_str(),data.mapCRC);
 
 	data.hasFogOfWar = Config::getInstance().getBool("FogOfWar");;
 }

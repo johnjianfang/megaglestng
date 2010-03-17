@@ -45,7 +45,7 @@ ServerInterface::ServerInterface(){
 }
 
 ServerInterface::~ServerInterface(){
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	for(int i= 0; i<GameConstants::maxPlayers; ++i){
 		delete slots[i];
@@ -53,12 +53,12 @@ ServerInterface::~ServerInterface(){
 
 	close();
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ServerInterface::addSlot(int playerIndex){
 
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	assert(playerIndex>=0 && playerIndex<GameConstants::maxPlayers);
 
@@ -66,18 +66,18 @@ void ServerInterface::addSlot(int playerIndex){
 	slots[playerIndex]= new ConnectionSlot(this, playerIndex);
 	updateListen();
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ServerInterface::removeSlot(int playerIndex){
 
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	delete slots[playerIndex];
 	slots[playerIndex]= NULL;
 	updateListen();
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 ConnectionSlot* ServerInterface::getSlot(int playerIndex){
@@ -115,15 +115,15 @@ void ServerInterface::update()
 
     if(gameHasBeenInitiated == false || socketTriggeredList.size() > 0)
     {
-        if(gameHasBeenInitiated && Socket::enableDebugText) printf("In [%s::%s] socketTriggeredList.size() = %d\n",__FILE__,__FUNCTION__,socketTriggeredList.size());
+        if(gameHasBeenInitiated && Socket::enableNetworkDebugInfo) printf("In [%s::%s] socketTriggeredList.size() = %d\n",__FILE__,__FUNCTION__,socketTriggeredList.size());
 
         bool hasData = Socket::hasDataToRead(socketTriggeredList);
 
-        if(hasData && Socket::enableDebugText) printf("In [%s::%s] hasData == true\n",__FILE__,__FUNCTION__);
+        if(hasData && Socket::enableNetworkDebugInfo) printf("In [%s::%s] hasData == true\n",__FILE__,__FUNCTION__);
 
         if(gameHasBeenInitiated == false || hasData == true)
         {
-            //if(gameHasBeenInitiated && Socket::enableDebugText) printf("In [%s::%s] hasData == true\n",__FILE__,__FUNCTION__);
+            //if(gameHasBeenInitiated && Socket::enableNetworkDebugInfo) printf("In [%s::%s] hasData == true\n",__FILE__,__FUNCTION__);
 
             //std::vector<TeamMessageData> vctTeamMessages;
 
@@ -138,16 +138,16 @@ void ServerInterface::update()
                     if(connectionSlot->isConnected() == false ||
                         (socketTriggeredList[connectionSlot->getSocket()->getSocketId()] == true))
                     {
-                        if(gameHasBeenInitiated && Socket::enableDebugText) printf("In [%s::%s] socketTriggeredList[i] = %i\n",__FILE__,__FUNCTION__,(socketTriggeredList[connectionSlot->getSocket()->getSocketId()] ? 1 : 0));
+                        if(gameHasBeenInitiated && Socket::enableNetworkDebugInfo) printf("In [%s::%s] socketTriggeredList[i] = %i\n",__FILE__,__FUNCTION__,(socketTriggeredList[connectionSlot->getSocket()->getSocketId()] ? 1 : 0));
 
                         if(connectionSlot->isConnected())
                         {
-                            if(Socket::enableDebugText) printf("In [%s::%s] calling slots[i]->update() for slot = %d socketId = %d\n",
+                            if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] calling slots[i]->update() for slot = %d socketId = %d\n",
                                  __FILE__,__FUNCTION__,i,connectionSlot->getSocket()->getSocketId());
                         }
                         else
                         {
-                            if(gameHasBeenInitiated && Socket::enableDebugText) printf("In [%s::%s] slot = %d getSocket() == NULL\n",__FILE__,__FUNCTION__,i);
+                            if(gameHasBeenInitiated && Socket::enableNetworkDebugInfo) printf("In [%s::%s] slot = %d getSocket() == NULL\n",__FILE__,__FUNCTION__,i);
                         }
                         connectionSlot->update(checkForNewClients);
 
@@ -172,7 +172,7 @@ void ServerInterface::update()
                             //teamMessageData.sourceTeamIndex = i;
                             //vctTeamMessages.push_back(teamMessageData);
 
-                            if(Socket::enableDebugText) printf("In [%s::%s] #1 about to broadcast nmtText chatText [%s] chatSender [%s] chatTeamIndex = %d for SlotIndex# %d\n",__FILE__,__FUNCTION__,chatText.c_str(),chatSender.c_str(),chatTeamIndex,i);
+                            if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] #1 about to broadcast nmtText chatText [%s] chatSender [%s] chatTeamIndex = %d for SlotIndex# %d\n",__FILE__,__FUNCTION__,chatText.c_str(),chatSender.c_str(),chatTeamIndex,i);
 
                             NetworkMessageText networkMessageText(chatText,chatSender,chatTeamIndex);
                             broadcastMessage(&networkMessageText, i);
@@ -198,7 +198,7 @@ void ServerInterface::update()
                     {
                         if(connectionSlot->isConnected() && socketTriggeredList[connectionSlot->getSocket()->getSocketId()] == true)
                         {
-                            if(connectionSlot->getSocket() != NULL && Socket::enableDebugText) printf("In [%s::%s] calling connectionSlot->getNextMessageType() for slots[i]->getSocket()->getSocketId() = %d\n",
+                            if(connectionSlot->getSocket() != NULL && Socket::enableNetworkDebugInfo) printf("In [%s::%s] calling connectionSlot->getNextMessageType() for slots[i]->getSocket()->getSocketId() = %d\n",
                                 __FILE__,__FUNCTION__,connectionSlot->getSocket()->getSocketId());
 
                             if(connectionSlot->getNextMessageType() == nmtText)
@@ -206,7 +206,7 @@ void ServerInterface::update()
                                 NetworkMessageText networkMessageText;
                                 if(connectionSlot->receiveMessage(&networkMessageText))
                                 {
-                                    if(Socket::enableDebugText) printf("In [%s::%s] #2 about to broadcast nmtText msg for SlotIndex# %d\n",__FILE__,__FUNCTION__,i);
+                                    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] #2 about to broadcast nmtText msg for SlotIndex# %d\n",__FILE__,__FUNCTION__,i);
 
                                     broadcastMessage(&networkMessageText, i);
                                     chatText= networkMessageText.getText();
@@ -244,7 +244,7 @@ void ServerInterface::updateKeyframe(int frameCount){
 
 void ServerInterface::waitUntilReady(Checksum* checksum){
 
-    if(Socket::enableDebugText) printf("In [%s] START\n",__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s] START\n",__FUNCTION__);
 
     Logger &logger= Logger::getInstance();
     gameHasBeenInitiated = true;
@@ -273,13 +273,17 @@ void ServerInterface::waitUntilReady(Checksum* checksum){
 					if(networkMessageType == nmtReady &&
 					   connectionSlot->receiveMessage(&networkMessageReady))
 					{
-					    if(Socket::enableDebugText) printf("In [%s] networkMessageType==nmtReady\n",__FUNCTION__);
+					    if(Socket::enableNetworkDebugInfo) printf("In [%s] networkMessageType==nmtReady\n",__FUNCTION__);
 
 						connectionSlot->setReady();
 					}
 					else if(networkMessageType != nmtInvalid)
 					{
-						throw runtime_error("Unexpected network message: " + intToStr(networkMessageType));
+						//throw runtime_error("Unexpected network message: " + intToStr(networkMessageType));
+                        string sErr = "Unexpected network message: " + intToStr(networkMessageType);
+                        sendTextMessage(sErr,-1);
+                        DisplayErrorMessage(sErr);
+						return;
 					}
 
 					waitingForHosts.push_back(connectionSlot->getHostName());
@@ -294,7 +298,11 @@ void ServerInterface::waitUntilReady(Checksum* checksum){
 		{
             if(chrono.getMillis() > readyWaitTimeout)
             {
-                throw runtime_error("Timeout waiting for clients");
+                //throw runtime_error("Timeout waiting for clients");
+                string sErr = "Timeout waiting for clients.";
+                sendTextMessage(sErr,-1);
+                DisplayErrorMessage(sErr);
+                return;
             }
             else
             {
@@ -322,7 +330,7 @@ void ServerInterface::waitUntilReady(Checksum* checksum){
 	// FOR TESTING ONLY - delay to see the client count up while waiting
 	//sleep(5000);
 
-    if(Socket::enableDebugText) printf("In [%s] PART B (telling client we are ready!\n",__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s] PART B (telling client we are ready!\n",__FUNCTION__);
 
 	//send ready message after, so clients start delayed
 	for(int i= 0; i < GameConstants::maxPlayers; ++i)
@@ -336,7 +344,7 @@ void ServerInterface::waitUntilReady(Checksum* checksum){
 		}
 	}
 
-	if(Socket::enableDebugText) printf("In [%s] END\n",__FUNCTION__);
+	if(Socket::enableNetworkDebugInfo) printf("In [%s] END\n",__FUNCTION__);
 }
 
 void ServerInterface::sendTextMessage(const string &text, int teamIndex){
@@ -412,7 +420,7 @@ bool ServerInterface::launchGame(const GameSettings* gameSettings){
 
 void ServerInterface::broadcastMessage(const NetworkMessage* networkMessage, int excludeSlot){
 
-    //if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    //if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	for(int i= 0; i<GameConstants::maxPlayers; ++i)
 	{
@@ -423,30 +431,30 @@ void ServerInterface::broadcastMessage(const NetworkMessage* networkMessage, int
 			if(connectionSlot->isConnected())
 			{
 
-			    if(Socket::enableDebugText) printf("In [%s::%s] before sendMessage\n",__FILE__,__FUNCTION__);
+			    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] before sendMessage\n",__FILE__,__FUNCTION__);
 				connectionSlot->sendMessage(networkMessage);
 			}
 			else if(gameHasBeenInitiated == true)
 			{
 
-			    if(Socket::enableDebugText) printf("In [%s::%s] #1 before removeSlot for slot# %d\n",__FILE__,__FUNCTION__,i);
+			    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] #1 before removeSlot for slot# %d\n",__FILE__,__FUNCTION__,i);
 				removeSlot(i);
 			}
 		}
 		else if(i == excludeSlot && gameHasBeenInitiated == true &&
 		        connectionSlot != NULL && connectionSlot->isConnected() == false)
 		{
-            if(Socket::enableDebugText) printf("In [%s::%s] #2 before removeSlot for slot# %d\n",__FILE__,__FUNCTION__,i);
+            if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] #2 before removeSlot for slot# %d\n",__FILE__,__FUNCTION__,i);
             removeSlot(i);
 		}
 	}
 
-	//if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	//if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ServerInterface::broadcastMessageToConnectedClients(const NetworkMessage* networkMessage, int excludeSlot){
 
-    //if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    //if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	for(int i= 0; i<GameConstants::maxPlayers; ++i){
 		ConnectionSlot* connectionSlot= slots[i];
@@ -454,14 +462,14 @@ void ServerInterface::broadcastMessageToConnectedClients(const NetworkMessage* n
 		if(i!= excludeSlot && connectionSlot!= NULL){
 			if(connectionSlot->isConnected()){
 
-			    if(Socket::enableDebugText) printf("In [%s::%s] before sendMessage\n",__FILE__,__FUNCTION__);
+			    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] before sendMessage\n",__FILE__,__FUNCTION__);
 
 				connectionSlot->sendMessage(networkMessage);
 			}
 		}
 	}
 
-	//if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	//if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ServerInterface::updateListen()
@@ -481,13 +489,13 @@ void ServerInterface::updateListen()
 
 void ServerInterface::setGameSettings(GameSettings *serverGameSettings, bool waitForClientAck)
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START gameSettingsUpdateCount = %d\n",__FILE__,__FUNCTION__,gameSettingsUpdateCount);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START gameSettingsUpdateCount = %d\n",__FILE__,__FUNCTION__,gameSettingsUpdateCount);
 
     if(getAllowGameDataSynchCheck() == true)
     {
         if(waitForClientAck == true && gameSettingsUpdateCount > 0)
         {
-            if(Socket::enableDebugText) printf("In [%s::%s] Waiting for client acks #1\n",__FILE__,__FUNCTION__);
+            if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] Waiting for client acks #1\n",__FILE__,__FUNCTION__);
 
             time_t tStart = time(NULL);
             bool gotAckFromAllClients = false;
@@ -526,7 +534,7 @@ void ServerInterface::setGameSettings(GameSettings *serverGameSettings, bool wai
 
         if(waitForClientAck == true)
         {
-            if(Socket::enableDebugText) printf("In [%s::%s] Waiting for client acks #2\n",__FILE__,__FUNCTION__);
+            if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] Waiting for client acks #2\n",__FILE__,__FUNCTION__);
 
             time_t tStart = time(NULL);
             bool gotAckFromAllClients = false;
@@ -552,12 +560,12 @@ void ServerInterface::setGameSettings(GameSettings *serverGameSettings, bool wai
         gameSettingsUpdateCount++;
     }
 
-    if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void ServerInterface::close()
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    if(Socket::enableNetworkDebugInfo) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	//serverSocket = ServerSocket();
 }

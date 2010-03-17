@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -16,13 +16,14 @@
 
 #include "game.h"
 #include "main_menu.h"
-#include "program.h" 
+#include "program.h"
 #include "config.h"
 #include "metrics.h"
 #include "game_util.h"
 #include "platform_util.h"
 #include "platform_main.h"
 #include "leak_dumper.h"
+#include "network_interface.h"
 
 using namespace std;
 using namespace Shared::Platform;
@@ -37,7 +38,43 @@ namespace Glest{ namespace Game{
 class ExceptionHandler: public PlatformExceptionHandler{
 public:
 	virtual void handle(){
-		message("An error ocurred and Glest will close.\nPlease report this bug to "+mailString+", attaching the generated "+getCrashDumpFileName()+" file.");
+
+        string msg = "An error ocurred and Glest will close.\nPlease report this bug to "+mailString+", attaching the generated "+getCrashDumpFileName()+" file.";
+        Program *program = Program::getInstance();
+        if(program) {
+            program->showMessage(msg.c_str());
+        }
+
+        message(msg.c_str());
+	}
+
+	static void handleRuntimeError(const char *msg) {
+        Program *program = Program::getInstance();
+        if(program) {
+            program->showMessage(msg);
+        }
+        else {
+            message("An error ocurred and Glest will close.\nPlease report this bug to "+mailString+", attaching the generated "+getCrashDumpFileName()+" file.");
+        }
+
+        exit(0);
+	}
+
+	static int DisplayMessage(const char *msg, bool exitApp) {
+
+        Program *program = Program::getInstance();
+        if(program) {
+            program->showMessage(msg);
+        }
+        else {
+            message(msg);
+        }
+
+        if(exitApp == true) {
+            exit(0);
+        }
+
+	    return 0;
 	}
 };
 
@@ -123,8 +160,11 @@ int glestMain(int argc, char** argv){
 	try{
 		Config &config = Config::getInstance();
 
+		Socket::enableNetworkDebugInfo = (config.getBool("DebugMode","0") || config.getBool("DebugNetwork","0"));
+		NetworkInterface::setDisplayMessageFunction(ExceptionHandler::DisplayMessage);
+
 		showCursor(config.getBool("Windowed"));
-		
+
 		program= new Program();
 		mainWindow= new MainWindow(program);
 
@@ -139,6 +179,11 @@ int glestMain(int argc, char** argv){
 			program->initNormal(mainWindow);
 		}
 
+        // test
+        //Shared::Platform::MessageBox(NULL,"Mark's test.","Test",0);
+        //throw runtime_error("test!");
+        //ExceptionHandler::DisplayMessage("test!", false);
+
 		//main loop
 		while(Window::handleEvent()){
 			program->loop();
@@ -146,8 +191,9 @@ int glestMain(int argc, char** argv){
 	}
 	catch(const exception &e){
 		restoreVideoMode();
-		exceptionMessage(e);
-	}	
+		//exceptionMessage(e);
+		ExceptionHandler::handleRuntimeError(e.what());
+	}
 
 	delete mainWindow;
 

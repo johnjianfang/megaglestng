@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2005 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -37,14 +37,14 @@ private:
 	GraphicLabel labelInfo;
 	GraphicLabel labelScenario;
 	GraphicListBox listBoxScenario;
-    
+
 	vector<string> scenarioFiles;
 
     ScenarioInfo scenarioInfo;
-	string dir;
+	vector<string> dirList;
 
 public:
-	MenuStateScenario(Program *program, MainMenu *mainMenu, const string &dir);
+	MenuStateScenario(Program *program, MainMenu *mainMenu, const vector<string> &dirList);
 
     void mouseClick(int x, int y, MouseButton mouseButton);
 	void mouseMove(int x, int y, const MouseState *mouseState);
@@ -54,7 +54,7 @@ public:
 	void launchGame();
 	void setScenario(int i);
 	int getScenarioCount() const	{ return listBoxScenario.getItemCount(); }
-	
+
 private:
     void loadScenarioInfo(string file, ScenarioInfo *scenarioInfo);
     void loadGameSettings(const ScenarioInfo *scenarioInfo, GameSettings *gameSettings);

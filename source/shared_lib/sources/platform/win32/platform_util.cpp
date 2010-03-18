@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -122,9 +122,9 @@ int64 Chrono::queryCounter(int multiplier) const{
 PlatformExceptionHandler *PlatformExceptionHandler::thisPointer= NULL;
 
 LONG WINAPI PlatformExceptionHandler::handler(LPEXCEPTION_POINTERS pointers){
-	
-	HANDLE hFile = CreateFile( 
-		thisPointer->dumpFileName.c_str(), 
+
+	HANDLE hFile = CreateFile(
+		thisPointer->dumpFileName.c_str(),
 		GENERIC_WRITE,
 		FILE_SHARE_WRITE,
 		NULL,
@@ -146,7 +146,7 @@ LONG WINAPI PlatformExceptionHandler::handler(LPEXCEPTION_POINTERS pointers){
 		&lExceptionInformation,
 		NULL,
 		NULL );
-		
+
 	thisPointer->handle();
 
 	return EXCEPTION_EXECUTE_HANDLER;
@@ -161,6 +161,53 @@ void PlatformExceptionHandler::install(string dumpFileName){
 // =====================================================
 //	class Misc
 // =====================================================
+void findDirs(const vector<string> &paths, vector<string> &results, bool errorOnNotFound) {
+    results.clear();
+    int pathCount = paths.size();
+    for(int idx = 0; idx < pathCount; idx++) {
+        string path = paths[idx] + "/*.";
+        vector<string> current_results;
+        findAll(path, current_results, false, errorOnNotFound);
+        if(current_results.size() > 0) {
+            for(int folder_index = 0; folder_index < current_results.size(); folder_index++) {
+                const string current_folder = current_results[folder_index];
+                const string current_folder_path = paths[idx] + "/" + current_folder;
+
+                //printf("current_folder = [%s]\n",current_folder_path.c_str());
+
+                if(isdir(current_folder_path.c_str()) == true) {
+                    //printf("%s is a folder.\n",current_folder_path.c_str());
+
+                    if(std::find(results.begin(),results.end(),current_folder) == results.end()) {
+                        results.push_back(current_folder);
+                    }
+                }
+            }
+        }
+    }
+
+    std::sort(results.begin(),results.end());
+}
+
+void findAll(const vector<string> &paths, const string &fileFilter, vector<string> &results, bool cutExtension, bool errorOnNotFound) {
+    results.clear();
+    int pathCount = paths.size();
+    for(int idx = 0; idx < pathCount; idx++) {
+        string path = paths[idx] + "/" + fileFilter;
+        vector<string> current_results;
+        findAll(path, current_results, cutExtension, errorOnNotFound);
+        if(current_results.size() > 0) {
+            for(int folder_index = 0; folder_index < current_results.size(); folder_index++) {
+                string &current_file = current_results[folder_index];
+                if(std::find(results.begin(),results.end(),current_file) == results.end()) {
+                    results.push_back(current_file);
+                }
+            }
+        }
+    }
+
+    std::sort(results.begin(),results.end());
+}
 
 //finds all filenames like path and stores them in resultys
 void findAll(const string &path, vector<string> &results, bool cutExtension, bool errorOnNotFound){
@@ -179,7 +226,7 @@ void findAll(const string &path, vector<string> &results, bool cutExtension, boo
 		do{
 			if(!(strcmp(".", fi.name)==0 || strcmp("..", fi.name)==0)){
 				i++;
-				results.push_back(fi.name);    
+				results.push_back(fi.name);
 			}
 		}
 		while(_findnext(handle, &fi)==0);
@@ -201,11 +248,11 @@ void findAll(const string &path, vector<string> &results, bool cutExtension, boo
 	delete [] cstr;
 }
 
-int isdir(const char *path)
+bool isdir(const char *path)
 {
   struct stat stats;
-
-  return stat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  bool ret = stat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  return ret;
 }
 
 bool EndsWith(const string &str, const string& key)
@@ -253,9 +300,9 @@ int32 getFolderTreeContentsCheckSumRecursively(const string &path, const string 
 		//	if(*p == '/')
 		//		begin = p+1;
 		//}
-		
 
-		if(isdir(p) == 0)
+
+		if(isdir(p) == false)
 		{
             bool addFile = true;
             if(filterFileExt != "")
@@ -291,7 +338,7 @@ int32 getFolderTreeContentsCheckSumRecursively(const string &path, const string 
 		//	if(*p == '/')
 		//		begin = p+1;
 		//}
-		
+
         getFolderTreeContentsCheckSumRecursively(string(p) + "/*", filterFileExt, &checksum);
 	}
 
@@ -334,9 +381,9 @@ vector<std::pair<string,int32> > getFolderTreeContentsCheckSumListRecursively(co
 		//	if(*p == '/')
 		//		begin = p+1;
 		//}
-		
 
-		if(isdir(p) == 0)
+
+		if(isdir(p) == false)
 		{
             bool addFile = true;
             if(filterFileExt != "")
@@ -375,7 +422,7 @@ vector<std::pair<string,int32> > getFolderTreeContentsCheckSumListRecursively(co
 		//	if(*p == '/')
 		//		begin = p+1;
 		//}
-		
+
         checksumFiles = getFolderTreeContentsCheckSumListRecursively(string(p) + "/*", filterFileExt, &checksumFiles);
 	}
 
@@ -452,7 +499,7 @@ void exceptionMessage(const exception &excp){
 
 	message+= "ERROR(S):\n\n";
 	message+= excp.what();
-	
+
 	title= "Error: Unhandled Exception";
 	printf("Error detected with text: %s\n",message.c_str());
 

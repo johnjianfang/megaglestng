@@ -25,6 +25,7 @@
 #include "unit_updater.h"
 #include "renderer.h"
 #include "leak_dumper.h"
+#include "socket.h"
 
 using namespace Shared::Util;
 
@@ -720,45 +721,6 @@ const ProducibleType *MorphCommandType::getProduced() const{
 }
 
 // =====================================================
-// 	class RotateUnitCommandType
-// =====================================================
-
-//varios
-RotateUnitCommandType::RotateUnitCommandType(){
-    commandTypeClass= ccRotateUnit;
-    clicks= cOne;
-}
-
-void RotateUnitCommandType::update(UnitUpdater *unitUpdater, Unit *unit) const{
-	unitUpdater->updateStop(unit);
-}
-
-string RotateUnitCommandType::getDesc(const TotalUpgrade *totalUpgrade) const{
-    string str;
-	Lang &lang= Lang::getInstance();
-
-    str= name+"\n";
-	//str+= lang.get("ReactionSpeed")+": "+ intToStr(stopSkillType->getSpeed())+"\n";
-    //if(stopSkillType->getEpCost()!=0)
-    //    str+= lang.get("EpCost")+": "+intToStr(stopSkillType->getEpCost())+"\n";
-
-    return str;
-}
-
-string RotateUnitCommandType::toString() const{
-	Lang &lang= Lang::getInstance();
-	return lang.get("RotateUnit");
-}
-
-void RotateUnitCommandType::load(int id, const XmlNode *n, const string &dir, const TechTree *tt, const FactionType *ft, const UnitType &ut){
-	CommandType::load(id, n, dir, tt, ft, ut);
-
-	//stop
-   	//string skillName= n->getChild("stop-skill")->getAttribute("value")->getRestrictedValue();
-	//stopSkillType= static_cast<const StopSkillType*>(ut.getSkillType(skillName, scStop));
-}
-
-// =====================================================
 // 	class CommandFactory
 // =====================================================
 
@@ -773,7 +735,6 @@ CommandTypeFactory::CommandTypeFactory(){
 	registerClass<ProduceCommandType>("produce");
 	registerClass<UpgradeCommandType>("upgrade");
 	registerClass<MorphCommandType>("morph");
-	registerClass<RotateUnitCommandType>("rotate_unit");
 }
 
 CommandTypeFactory &CommandTypeFactory::getInstance(){

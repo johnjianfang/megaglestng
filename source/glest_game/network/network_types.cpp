@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -29,5 +29,14 @@ NetworkCommand::NetworkCommand(int networkCommandType, int unitId, int commandTy
 	this->targetId= targetId;
 }
 
+NetworkCommand::NetworkCommand(int networkCommandType, NetworkCommandSubType ncstType, int unitId, int value1, int value2) {
+	this->networkCommandType= networkCommandType;
+	this->unitId= unitId;
+	this->commandTypeId= ncstType;
+	this->positionX= -1;
+	this->positionY= -1;
+	this->unitTypeId= value1;
+	this->targetId= value2;
+}
 
 }}//end namespace

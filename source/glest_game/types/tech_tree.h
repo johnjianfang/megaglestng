@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -43,9 +43,10 @@ private:
 	DamageMultiplierTable damageMultiplierTable;
 
 public:
+    void loadTech(const vector<string> pathList, const string &techName, set<string> &factions, Checksum* checksum);
     void load(const string &dir, set<string> &factions, Checksum* checksum);
     ~TechTree();
-    
+
     //get
 	int getResourceTypeCount() const							{return resourceTypes.size();}
 	int getTypeCount() const									{return factionTypes.size();}

@@ -3,13 +3,13 @@
 //
 //	Copyright (C) 2001-2005 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
-#include "menu_state_new_game.h" 
+#include "menu_state_new_game.h"
 
 #include "renderer.h"
 #include "sound_renderer.h"
@@ -32,7 +32,7 @@ namespace Glest{ namespace Game{
 // 	class MenuStateNewGame
 // =====================================================
 
-MenuStateNewGame::MenuStateNewGame(Program *program, MainMenu *mainMenu): 
+MenuStateNewGame::MenuStateNewGame(Program *program, MainMenu *mainMenu):
 	MenuState(program, mainMenu, "root")
 {
 	Lang &lang= Lang::getInstance();
@@ -58,16 +58,16 @@ void MenuStateNewGame::mouseClick(int x, int y, MouseButton mouseButton){
 	if(buttonCustomGame.mouseClick(x, y)){
 		soundRenderer.playFx(coreData.getClickSoundB());
 		mainMenu->setState(new MenuStateCustomGame(program, mainMenu));
-    }  
+    }
 	else if(buttonScenario.mouseClick(x, y)){
 		soundRenderer.playFx(coreData.getClickSoundB());
-		mainMenu->setState(new MenuStateScenario(program, mainMenu, "scenarios"));
-    }  
+		mainMenu->setState(new MenuStateScenario(program, mainMenu, Config::getInstance().getPathListForType(ptScenarios)));
+    }
 	else if(buttonTutorial.mouseClick(x, y)){
 		soundRenderer.playFx(coreData.getClickSoundB());
-		mainMenu->setState(new MenuStateScenario(program, mainMenu, "tutorials"));
-    }     
-    else if(buttonReturn.mouseClick(x, y)){ 
+		mainMenu->setState(new MenuStateScenario(program, mainMenu, Config::getInstance().getPathListForType(ptTutorials)));
+    }
+    else if(buttonReturn.mouseClick(x, y)){
 		soundRenderer.playFx(coreData.getClickSoundB());
 		mainMenu->setState(new MenuStateRoot(program, mainMenu));
     }

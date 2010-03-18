@@ -44,10 +44,15 @@ public:
 //	class NetworkCommand
 // =====================================================
 
-enum NetworkCommandType{
+enum NetworkCommandType {
 	nctGiveCommand,
 	nctCancelCommand,
-	nctSetMeetingPoint
+	nctSetMeetingPoint,
+	nctNetworkCommand
+};
+
+enum NetworkCommandSubType {
+	ncstRotateUnit
 };
 
 #pragma pack(push, 2)
@@ -64,6 +69,7 @@ private:
 public:
 	NetworkCommand(){};
 	NetworkCommand(int networkCommandType, int unitId, int commandTypeId= -1, const Vec2i &pos= Vec2i(0), int unitTypeId= -1, int targetId= -1);
+	NetworkCommand(int networkCommandType, NetworkCommandSubType ncstType, int unitId, int value1, int value2=-1);
 
 	NetworkCommandType getNetworkCommandType() const	{return static_cast<NetworkCommandType>(networkCommandType);}
 	int getUnitId() const								{return unitId;}

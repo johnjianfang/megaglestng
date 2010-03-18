@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2005 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -18,6 +18,7 @@
 #include "util.h"
 #include "game_util.h"
 #include "leak_dumper.h"
+#include <stdio.h>
 
 using namespace Shared::Xml;
 using namespace Shared::Util;
@@ -56,8 +57,36 @@ void Scenario::load(const string &path){
 	}
 }
 
+int Scenario::getScenarioPathIndex(const vector<string> dirList, const string &scenarioName) {
+    int iIndex = 0;
+    for(int idx = 0; idx < dirList.size(); idx++) {
+        string scenarioFile = dirList[idx] + "/" + scenarioName + "/" + scenarioName + ".xml";
+        if(fileExists(scenarioFile) == true) {
+            iIndex = idx;
+            break;
+        }
+    }
+
+    return iIndex;
+}
+
+string Scenario::getScenarioPath(const vector<string> dirList, const string &scenarioName){
+    string scenarioFile = "";
+    for(int idx = 0; idx < dirList.size(); idx++) {
+        scenarioFile = dirList[idx] + "/" + scenarioName + "/" + scenarioName + ".xml";
+        if(fileExists(scenarioFile) == true) {
+            break;
+        }
+    }
+
+    return scenarioFile;
+}
+
 string Scenario::getScenarioPath(const string &dir, const string &scenarioName){
-	return dir + "/" + scenarioName + "/" + scenarioName + ".xml";
+    string scenarioFile = dir + "/" + scenarioName + "/" + scenarioName + ".xml";
+    //printf("dir [%s] scenarioName [%s] scenarioFile [%s]\n",dir.c_str(),scenarioName.c_str(),scenarioFile.c_str());
+
+    return scenarioFile;
 }
 
 string Scenario::getFunctionName(const XmlNode *scriptNode){

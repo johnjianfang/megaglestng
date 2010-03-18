@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2005 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -59,7 +59,9 @@ public:
 	int getScriptCount() const				{return scripts.size();}
 	const Script* getScript(int i) const	{return &scripts[i];}
 
+	static string getScenarioPath(const vector<string> dir, const string &scenarioName);
 	static string getScenarioPath(const string &dir, const string &scenarioName);
+	static int getScenarioPathIndex(const vector<string> dirList, const string &scenarioName);
 
 private:
 	string getFunctionName(const XmlNode *scriptNode);

@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -31,17 +31,27 @@ namespace Glest{ namespace Game{
 // 	class TechTree
 // =====================================================
 
-void TechTree::load(const string &dir, set<string> &factions, Checksum* checksum){
+void TechTree::loadTech(const vector<string> pathList, const string &techName, set<string> &factions, Checksum* checksum) {
+    for(int idx = 0; idx < pathList.size(); idx++) {
+        string path = pathList[idx] + "/" + techName;
+        if(isdir(path.c_str()) == true) {
+            load(path, factions, checksum);
+            break;
+        }
+    }
+}
+
+void TechTree::load(const string &dir, set<string> &factions, Checksum* checksum) {
 
 	string str;
     vector<string> filenames;
 	string name= lastDir(dir);
-		
+
 	Logger::getInstance().add("TechTree: "+ formatString(name), true);
 
 	//load resources
 	str= dir+"/resources/*.";
-    
+
     try{
         findAll(str, filenames);
 		resourceTypes.resize(filenames.size());
@@ -79,7 +89,7 @@ void TechTree::load(const string &dir, set<string> &factions, Checksum* checksum
 			const XmlNode *techTreeNode= xmlTree.getRootNode();
 
 			//attack types
-			const XmlNode *attackTypesNode= techTreeNode->getChild("attack-types"); 
+			const XmlNode *attackTypesNode= techTreeNode->getChild("attack-types");
 			attackTypes.resize(attackTypesNode->getChildCount());
 			for(int i=0; i<attackTypes.size(); ++i){
 				const XmlNode *attackTypeNode= attackTypesNode->getChild("attack-type", i);
@@ -88,7 +98,7 @@ void TechTree::load(const string &dir, set<string> &factions, Checksum* checksum
 			}
 
 			//armor types
-			const XmlNode *armorTypesNode= techTreeNode->getChild("armor-types"); 
+			const XmlNode *armorTypesNode= techTreeNode->getChild("armor-types");
 			armorTypes.resize(armorTypesNode->getChildCount());
 			for(int i=0; i<armorTypes.size(); ++i){
 				const XmlNode *armorTypeNode= armorTypesNode->getChild("armor-type", i);
@@ -98,7 +108,7 @@ void TechTree::load(const string &dir, set<string> &factions, Checksum* checksum
 
 			//damage multipliers
 			damageMultiplierTable.init(attackTypes.size(), armorTypes.size());
-			const XmlNode *damageMultipliersNode= techTreeNode->getChild("damage-multipliers"); 
+			const XmlNode *damageMultipliersNode= techTreeNode->getChild("damage-multipliers");
 			for(int i=0; i<damageMultipliersNode->getChildCount(); ++i){
 				const XmlNode *damageMultiplierNode= damageMultipliersNode->getChild("damage-multiplier", i);
 				const AttackType *attackType= getAttackType(damageMultiplierNode->getAttribute("attack")->getRestrictedValue());
@@ -134,9 +144,9 @@ TechTree::~TechTree(){
 }
 
 
-// ==================== get ==================== 
+// ==================== get ====================
 
-const FactionType *TechTree::getType(const string &name) const{    
+const FactionType *TechTree::getType(const string &name) const{
      for(int i=0; i<factionTypes.size(); ++i){
           if(factionTypes[i].getName()==name){
                return &factionTypes[i];
@@ -146,7 +156,7 @@ const FactionType *TechTree::getType(const string &name) const{
 }
 
 const ResourceType *TechTree::getTechResourceType(int i) const{
-    
+
      for(int j=0; j<getResourceTypeCount(); ++j){
           const ResourceType *rt= getResourceType(j);
           if(rt->getResourceNumber()==i && rt->getClass()==rcTech)
@@ -167,7 +177,7 @@ const ResourceType *TechTree::getFirstTechResourceType() const{
 }
 
 const ResourceType *TechTree::getResourceType(const string &name) const{
-    
+
 	for(int i=0; i<resourceTypes.size(); ++i){
 		if(resourceTypes[i].getName()==name){
 			return &resourceTypes[i];

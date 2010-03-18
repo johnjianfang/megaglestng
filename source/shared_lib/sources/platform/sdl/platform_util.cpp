@@ -27,6 +27,7 @@
 #include "checksum.h"
 #include "socket.h"
 #include <algorithm>
+#include <unistd.h>
 
 using namespace Shared::Util;
 using namespace std;
@@ -118,6 +119,67 @@ int64 Chrono::queryCounter(int multiplier) const {
 //         Misc
 // =====================================
 
+// This was the simplest, most portable solution i could find in 5 mins for linux
+int MessageBox(int handle, const char *msg, const char *title, int buttons) {
+    char cmd[1024]="";
+    //sprintf(cmd, "xmessage -center \"%s\"", msg);
+    sprintf(cmd, "gdialog --title \"%s\" --msgbox \"%s\"", title, msg);
+
+    //if(fork()==0){
+        //close(1); close(2);
+    int ret = system(cmd);
+        //exit(0);
+    //}
+}
+
+void findDirs(const vector<string> &paths, vector<string> &results, bool errorOnNotFound) {
+    results.clear();
+    int pathCount = paths.size();
+    for(int idx = 0; idx < pathCount; idx++) {
+        string path = paths[idx] + "/*.";
+        vector<string> current_results;
+        findAll(path, current_results, false, errorOnNotFound);
+        if(current_results.size() > 0) {
+            for(int folder_index = 0; folder_index < current_results.size(); folder_index++) {
+                const string current_folder = current_results[folder_index];
+                const string current_folder_path = paths[idx] + "/" + current_folder;
+
+                //printf("current_folder = [%s]\n",current_folder_path.c_str());
+
+                if(isdir(current_folder_path.c_str()) == true) {
+                    //printf("%s is a folder.\n",current_folder_path.c_str());
+
+                    if(std::find(results.begin(),results.end(),current_folder) == results.end()) {
+                        results.push_back(current_folder);
+                    }
+                }
+            }
+        }
+    }
+
+    std::sort(results.begin(),results.end());
+}
+
+void findAll(const vector<string> &paths, const string &fileFilter, vector<string> &results, bool cutExtension, bool errorOnNotFound) {
+    results.clear();
+    int pathCount = paths.size();
+    for(int idx = 0; idx < pathCount; idx++) {
+        string path = paths[idx] + "/" + fileFilter;
+        vector<string> current_results;
+        findAll(path, current_results, cutExtension, errorOnNotFound);
+        if(current_results.size() > 0) {
+            for(int folder_index = 0; folder_index < current_results.size(); folder_index++) {
+                string &current_file = current_results[folder_index];
+                if(std::find(results.begin(),results.end(),current_file) == results.end()) {
+                    results.push_back(current_file);
+                }
+            }
+        }
+    }
+
+    std::sort(results.begin(),results.end());
+}
+
 //finds all filenames like path and stores them in resultys
 void findAll(const string &path, vector<string> &results, bool cutExtension, bool errorOnNotFound) {
 	results.clear();
@@ -166,11 +228,11 @@ void findAll(const string &path, vector<string> &results, bool cutExtension, boo
 	}
 }
 
-int isdir(const char *path)
+bool isdir(const char *path)
 {
   struct stat stats;
-
-  return stat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  bool ret = stat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
+  return ret;
 }
 
 bool EndsWith(const string &str, const string& key)
@@ -220,7 +282,7 @@ int32 getFolderTreeContentsCheckSumRecursively(const string &path, const string 
 		}
 		*/
 
-		if(isdir(p) == 0)
+		if(isdir(p) == false)
 		{
             bool addFile = true;
             if(filterFileExt != "")
@@ -302,7 +364,7 @@ vector<std::pair<string,int32> > getFolderTreeContentsCheckSumListRecursively(co
 		}
 		*/
 
-		if(isdir(p) == 0)
+		if(isdir(p) == false)
 		{
             bool addFile = true;
             if(filterFileExt != "")
@@ -400,6 +462,7 @@ bool ask(string message) {
 
 void exceptionMessage(const exception &excp) {
 	std::cerr << "Exception: " << excp.what() << std::endl;
+	//int result = MessageBox(NULL, excp.what(), "Error", 0);
 }
 
 int getScreenW() {

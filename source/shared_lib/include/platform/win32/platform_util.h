@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -46,7 +46,7 @@ private:
 
 public:
 	void init(int fps, int maxTimes= -1);
-	
+
 	bool isTime();
 	void reset();
 };
@@ -97,7 +97,9 @@ public:
 // =====================================================
 //	Misc
 // =====================================================
-
+bool isdir(const char *path);
+void findDirs(const vector<string> &paths, vector<string> &results, bool errorOnNotFound=false);
+void findAll(const vector<string> &paths, const string &fileFilter, vector<string> &results, bool cutExtension=false, bool errorOnNotFound=true);
 void findAll(const string &path, vector<string> &results, bool cutExtension=false, bool errorOnNotFound=true);
 int32 getFolderTreeContentsCheckSumRecursively(const string &path, const string &filterFileExt, Checksum *recursiveChecksum);
 vector<std::pair<string,int32> > getFolderTreeContentsCheckSumListRecursively(const string &path, const string &filterFileExt, vector<std::pair<string,int32> > *recursiveMap);

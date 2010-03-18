@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -15,13 +15,14 @@
 #include "unit.h"
 #include "conversion.h"
 #include "upgrade.h"
-#include "command.h" 
+#include "command.h"
 #include "command_type.h"
 #include "network_manager.h"
 #include "console.h"
 #include "config.h"
 #include "platform_util.h"
 #include "leak_dumper.h"
+#include "game.h"
 
 using namespace Shared::Graphics;
 using namespace Shared::Util;
@@ -33,7 +34,7 @@ namespace Glest{ namespace Game{
 // 	class Commander
 // =====================================================
 
-// ===================== PUBLIC ======================== 
+// ===================== PUBLIC ========================
 
 void Commander::init(World *world){
 	this->world= world;
@@ -45,13 +46,13 @@ CommandResult Commander::tryGiveCommand(const Unit* unit, const CommandType *com
 }
 
 CommandResult Commander::tryGiveCommand(const Selection *selection, CommandClass commandClass, const Vec2i &pos, const Unit *targetUnit) const{
-	
+
 	if(!selection->isEmpty()){
 		Vec2i refPos, currPos;
 		CommandResultContainer results;
-		
+
 		refPos= computeRefPos(selection);
-		
+
 		//give orders to all selected units
 		for(int i=0; i<selection->getCount(); ++i){
 			const Unit *unit= selection->getUnit(i);
@@ -61,7 +62,7 @@ CommandResult Commander::tryGiveCommand(const Selection *selection, CommandClass
 				int unitId= selection->getUnit(i)->getId();
 				Vec2i currPos= computeDestPos(refPos, selection->getUnit(i)->getPos(), pos);
 				NetworkCommand networkCommand(nctGiveCommand, unitId, ct->getId(), currPos, -1, targetId);
-				
+
 				//every unit is ordered to a different pos
 				CommandResult result= pushNetworkCommand(&networkCommand);
 				results.push_back(result);
@@ -81,19 +82,19 @@ CommandResult Commander::tryGiveCommand(const Selection *selection, const Comman
 	if(!selection->isEmpty() && commandType!=NULL){
 		Vec2i refPos;
 		CommandResultContainer results;
-		
+
 		refPos= computeRefPos(selection);
-		
+
 		//give orders to all selected units
 		for(int i=0; i<selection->getCount(); ++i){
 			int targetId= targetUnit==NULL? Unit::invalidId: targetUnit->getId();
 			int unitId= selection->getUnit(i)->getId();
 			Vec2i currPos= computeDestPos(refPos, selection->getUnit(i)->getPos(), pos);
 			NetworkCommand networkCommand(nctGiveCommand, unitId, commandType->getId(), currPos, -1, targetId);
-				
+
 			//every unit is ordered to a different position
 			CommandResult result= pushNetworkCommand(&networkCommand);
-			results.push_back(result); 
+			results.push_back(result);
 		}
 
 		return computeResult(results);
@@ -106,17 +107,17 @@ CommandResult Commander::tryGiveCommand(const Selection *selection, const Comman
 //auto command
 CommandResult Commander::tryGiveCommand(const Selection *selection, const Vec2i &pos, const Unit *targetUnit) const{
 	if(!selection->isEmpty()){
-	
+
 		Vec2i refPos, currPos;
 		CommandResultContainer results;
-		
+
 		//give orders to all selected units
 		refPos= computeRefPos(selection);
 		for(int i=0; i<selection->getCount(); ++i){
-			
+
 			//every unit is ordered to a different pos
 			currPos= computeDestPos(refPos, selection->getUnit(i)->getPos(), pos);
-		    
+
 			//get command type
 			const CommandType *commandType= selection->getUnit(i)->computeCommandType(pos, targetUnit);
 
@@ -141,7 +142,7 @@ CommandResult Commander::tryGiveCommand(const Selection *selection, const Vec2i 
 }
 
 CommandResult Commander::tryCancelCommand(const Selection *selection) const{
-	
+
 	for(int i=0; i<selection->getCount(); ++i){
 		NetworkCommand command(nctCancelCommand, selection->getUnit(i)->getId());
 		pushNetworkCommand(&command);
@@ -156,7 +157,7 @@ void Commander::trySetMeetingPoint(const Unit* unit, const Vec2i &pos)const{
 }
 
 
-// ==================== PRIVATE ==================== 
+// ==================== PRIVATE ====================
 
 Vec2i Commander::computeRefPos(const Selection *selection) const{
     Vec2i total= Vec2i(0);
@@ -207,7 +208,10 @@ CommandResult Commander::pushNetworkCommand(const NetworkCommand* networkCommand
 
 	//validate unit
 	if(unit==NULL){
-		throw runtime_error("Command refers to non existant unit. Game out of synch.");
+	    char szBuf[1024]="";
+	    sprintf(szBuf,"In [%s::%s - %d] Command refers to non existant unit id = %d. Game out of synch.",
+            __FILE__,__FUNCTION__,__LINE__,networkCommand->getUnitId());
+		throw runtime_error(szBuf);
 	}
 
 	//add the command to the interface
@@ -227,7 +231,7 @@ void Commander::updateNetwork(){
 
 	//chech that this is a keyframe
 	if( !networkManager.isNetworkGame() || (world->getFrameCount() % GameConstants::networkFramePeriod)==0){
-		
+
 		GameNetworkInterface *gameNetworkInterface= NetworkManager::getInstance().getGameNetworkInterface();
 
 		//update the keyframe
@@ -241,29 +245,86 @@ void Commander::updateNetwork(){
 	}
 }
 
-void Commander::giveNetworkCommand(const NetworkCommand* networkCommand) const{
-	
-	Unit* unit= world->findUnitById(networkCommand->getUnitId());
-			
-	//exec ute command, if unit is still alive
-	if(unit!=NULL){
-		switch(networkCommand->getNetworkCommandType()){
-			case nctGiveCommand:{
-				assert(networkCommand->getCommandTypeId()!=CommandType::invalidId);
-				Command* command= buildCommand(networkCommand);
-				unit->giveCommand(command);
-				}
-				break;
-			case nctCancelCommand:
-				unit->cancelCommand();
-				break;
-			case nctSetMeetingPoint:
-				unit->setMeetingPos(networkCommand->getPosition());
-				break;
-			default:
-				assert(false);
-		}
-	}
+void Commander::giveNetworkCommandSpecial(const NetworkCommand* networkCommand) const {
+    switch(networkCommand->getNetworkCommandType()) {
+        case nctNetworkCommand: {
+            if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctNetworkCommand\n",__FILE__,__FUNCTION__,__LINE__);
+            switch(networkCommand->getCommandTypeId()) {
+                case ncstRotateUnit: {
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found ncstRotateUnit [%d]\n",__FILE__,__FUNCTION__,__LINE__,networkCommand->getTargetId());
+
+                    //!!!
+                    int unitTypeId = networkCommand->getUnitId();
+                    int factionIndex = networkCommand->getUnitTypeId();
+                    int rotateAmount = networkCommand->getTargetId();
+
+                    //const Faction *faction = world->getFaction(factionIndex);
+                    //const UnitType* unitType= world->findUnitTypeById(faction->getType(), factionIndex);
+
+                    char unitKey[50]="";
+                    sprintf(unitKey,"%d_%d",unitTypeId,factionIndex);
+
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] unitKey = [%s]\n",__FILE__,__FUNCTION__,__LINE__,unitKey);
+
+                    Game *game = this->world->getGame();
+                    Gui *gui = game->getGui();
+                    gui->setUnitTypeBuildRotation(unitKey,rotateAmount);
+                    //unit->setRotateAmount(networkCommand->getTargetId());
+
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found ncstRotateUnit [%d]\n",__FILE__,__FUNCTION__,__LINE__,networkCommand->getTargetId());
+                    }
+                    break;
+            }
+            if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctNetworkCommand\n",__FILE__,__FUNCTION__,__LINE__);
+            }
+            break;
+        default:
+            assert(false);
+    }
+}
+
+void Commander::giveNetworkCommand(const NetworkCommand* networkCommand) const {
+
+    if(networkCommand->getNetworkCommandType() == nctNetworkCommand) {
+        giveNetworkCommandSpecial(networkCommand);
+    }
+    else {
+        Unit* unit= world->findUnitById(networkCommand->getUnitId());
+
+        //exec ute command, if unit is still alive
+        if(unit!=NULL) {
+            switch(networkCommand->getNetworkCommandType()){
+                case nctGiveCommand:{
+                    assert(networkCommand->getCommandTypeId()!=CommandType::invalidId);
+
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctGiveCommand networkCommand->getUnitId() = %d\n",__FILE__,__FUNCTION__,__LINE__,networkCommand->getUnitId());
+
+                    Command* command= buildCommand(networkCommand);
+                    unit->giveCommand(command);
+
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctGiveCommand networkCommand->getUnitId() = %d\n",__FILE__,__FUNCTION__,__LINE__,networkCommand->getUnitId());
+                    }
+                    break;
+                case nctCancelCommand: {
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctCancelCommand\n",__FILE__,__FUNCTION__,__LINE__);
+                    unit->cancelCommand();
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctCancelCommand\n",__FILE__,__FUNCTION__,__LINE__);
+                }
+                    break;
+                case nctSetMeetingPoint: {
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctSetMeetingPoint\n",__FILE__,__FUNCTION__,__LINE__);
+                    unit->setMeetingPos(networkCommand->getPosition());
+                    if(Socket::enableDebugText) printf("In [%s::%s Line: %d] found nctSetMeetingPoint\n",__FILE__,__FUNCTION__,__LINE__);
+                }
+                    break;
+                default:
+                    assert(false);
+            }
+        }
+        else {
+            if(Socket::enableDebugText) printf("In [%s::%s Line: %d] NULL Unit for id = %d, networkCommand->getNetworkCommandType() = %d\n",__FILE__,__FUNCTION__,__LINE__,networkCommand->getUnitId(),networkCommand->getNetworkCommandType());
+        }
+    }
 }
 
 Command* Commander::buildCommand(const NetworkCommand* networkCommand) const{
@@ -272,18 +333,27 @@ Command* Commander::buildCommand(const NetworkCommand* networkCommand) const{
 	Unit* target= NULL;
 	const CommandType* ct= NULL;
 	const Unit* unit= world->findUnitById(networkCommand->getUnitId());
-	const UnitType* unitType= world->findUnitTypeById(unit->getFaction()->getType(), networkCommand->getUnitTypeId());
-	
+
 	//validate unit
-	if(unit==NULL){
-		throw runtime_error("Can not find unit with id: " + intToStr(networkCommand->getUnitId()) + ". Game out of synch.");
+	if(unit == NULL) {
+	    char szBuf[1024]="";
+	    sprintf(szBuf,"In [%s::%s - %d] Can not find unit with id: %d. Game out of synch.",
+            __FILE__,__FUNCTION__,__LINE__,networkCommand->getUnitId());
+
+		throw runtime_error(szBuf);
 	}
 
+    const UnitType* unitType= world->findUnitTypeById(unit->getFaction()->getType(), networkCommand->getUnitTypeId());
 	ct= unit->getType()->findCommandTypeById(networkCommand->getCommandTypeId());
 
 	//validate command type
-	if(ct==NULL){
-		throw runtime_error("Can not find command type with id: " + intToStr(networkCommand->getCommandTypeId()) + " in unit: " + unit->getType()->getName() + ". Game out of synch.");
+	if(ct == NULL) {
+
+	    char szBuf[1024]="";
+	    sprintf(szBuf,"In [%s::%s - %d] Can not find command type with id = %d in unit = %d [%s]. Game out of synch.",
+            __FILE__,__FUNCTION__,__LINE__,networkCommand->getCommandTypeId(),unit->getId(), unit->getDesc().c_str());
+
+		throw runtime_error(szBuf);
 	}
 
 	//get target, the target might be dead due to lag, cope with it

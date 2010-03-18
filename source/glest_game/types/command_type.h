@@ -41,7 +41,6 @@ enum CommandClass{
 	ccProduce,
 	ccUpgrade,
 	ccMorph,
-	ccRotateUnit,
 
 	ccCount,
 	ccNull
@@ -326,29 +325,6 @@ public:
 	const UnitType *getMorphUnit() const				{return morphUnit;}
 	int getDiscount() const								{return discount;}
 };
-
-// ===============================
-// 	class BuildCommandType
-// ===============================
-
-class RotateUnitCommandType: public CommandType{
-private:
-    float rotateAmount;
-
-public:
-    RotateUnitCommandType();
-
-	virtual void update(UnitUpdater *unitUpdater, Unit *unit) const;
-    virtual void load(int id, const XmlNode *n, const string &dir, const TechTree *tt, const FactionType *ft, const UnitType &ut);
-    virtual string getDesc(const TotalUpgrade *totalUpgrade) const;
-	virtual string toString() const;
-	virtual bool isQueuable() const						{return true;}
-
-    //get
-	const float getRotateAmount() const	{return rotateAmount; }
-	void setRotateAmount(float value)   { rotateAmount = value; }
-};
-
 
 // ===============================
 // 	class CommandFactory

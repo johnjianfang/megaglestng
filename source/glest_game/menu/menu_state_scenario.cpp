@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2005 Marti�o Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -31,14 +31,14 @@ using namespace	Shared::Xml;
 // 	class MenuStateScenario
 // =====================================================
 
-MenuStateScenario::MenuStateScenario(Program *program, MainMenu *mainMenu, const string &dir):
+MenuStateScenario::MenuStateScenario(Program *program, MainMenu *mainMenu, const vector<string> &dirList):
     MenuState(program, mainMenu, "scenario")
 {
 	Lang &lang= Lang::getInstance();
 	NetworkManager &networkManager= NetworkManager::getInstance();
     vector<string> results;
 
-	this->dir = dir;
+	this->dirList = dirList;
 
     labelInfo.init(350, 350);
 	labelInfo.setFont(CoreData::getInstance().getMenuFontNormal());
@@ -55,9 +55,9 @@ MenuStateScenario::MenuStateScenario(Program *program, MainMenu *mainMenu, const
     labelScenario.setText(lang.get("Scenario"));
 
     //scenario listbox
-	findAll(dir+"/*.", results);
-    scenarioFiles= results;
-	if(results.size()==0){
+	findDirs(dirList, results);
+    scenarioFiles = results;
+	if(results.size() == 0) {
         throw runtime_error("There are no scenarios");
 	}
 	for(int i= 0; i<results.size(); ++i){
@@ -65,7 +65,7 @@ MenuStateScenario::MenuStateScenario(Program *program, MainMenu *mainMenu, const
 	}
     listBoxScenario.setItems(results);
 
-    loadScenarioInfo(Scenario::getScenarioPath(dir, scenarioFiles[listBoxScenario.getSelectedItemIndex()]), &scenarioInfo );
+    loadScenarioInfo(Scenario::getScenarioPath(dirList, scenarioFiles[listBoxScenario.getSelectedItemIndex()]), &scenarioInfo );
     labelInfo.setText(scenarioInfo.desc);
 
 	networkManager.init(nrServer);
@@ -79,19 +79,19 @@ void MenuStateScenario::mouseClick(int x, int y, MouseButton mouseButton){
 	if(buttonReturn.mouseClick(x,y)){
 		soundRenderer.playFx(coreData.getClickSoundA());
 		mainMenu->setState(new MenuStateNewGame(program, mainMenu));
-    } 
+    }
 	else if(buttonPlayNow.mouseClick(x,y)){
 		soundRenderer.playFx(coreData.getClickSoundC());
 		launchGame();
 	}
     else if(listBoxScenario.mouseClick(x, y)){
-		loadScenarioInfo(Scenario::getScenarioPath(dir, scenarioFiles[listBoxScenario.getSelectedItemIndex()]), &scenarioInfo);
+		loadScenarioInfo(Scenario::getScenarioPath(dirList, scenarioFiles[listBoxScenario.getSelectedItemIndex()]), &scenarioInfo);
         labelInfo.setText(scenarioInfo.desc);
 	}
 }
 
 void MenuStateScenario::mouseMove(int x, int y, const MouseState *ms){
-	
+
 	listBoxScenario.mouseMove(x, y);
 
 	buttonReturn.mouseMove(x, y);
@@ -124,13 +124,13 @@ void MenuStateScenario::launchGame(){
 
 void MenuStateScenario::setScenario(int i){
 	listBoxScenario.setSelectedItemIndex(i);
-	loadScenarioInfo(Scenario::getScenarioPath(dir, scenarioFiles[listBoxScenario.getSelectedItemIndex()]), &scenarioInfo);
+	loadScenarioInfo(Scenario::getScenarioPath(dirList, scenarioFiles[listBoxScenario.getSelectedItemIndex()]), &scenarioInfo);
 }
 
 void MenuStateScenario::loadScenarioInfo(string file, ScenarioInfo *scenarioInfo){
-	
+
     Lang &lang= Lang::getInstance();
-    
+
     XmlTree xmlTree;
 	xmlTree.load(file);
 
@@ -143,12 +143,12 @@ void MenuStateScenario::loadScenarioInfo(string file, ScenarioInfo *scenarioInfo
 	}
 
 	const XmlNode *playersNode= scenarioNode->getChild("players");
-	
+
     for(int i= 0; i<GameConstants::maxPlayers; ++i){
     	XmlNode* playerNode;
     	string factionTypeName;
     	ControlType factionControl;
-    	
+
     	if(playersNode->hasChildAtIndex("player",i)){
         	playerNode = playersNode->getChild("player", i);
         	factionControl = strToControllerType( playerNode->getAttribute("control")->getValue() );
@@ -189,7 +189,7 @@ void MenuStateScenario::loadScenarioInfo(string file, ScenarioInfo *scenarioInfo
 			break;
 		}
 	}
-	
+
 	//add misc info
 	string difficultyString = "Difficulty" + intToStr(scenarioInfo->difficulty);
 
@@ -209,7 +209,7 @@ void MenuStateScenario::loadGameSettings(const ScenarioInfo *scenarioInfo, GameS
     gameSettings->setTileset(scenarioInfo->tilesetName);
     gameSettings->setTech(scenarioInfo->techTreeName);
 	gameSettings->setScenario(scenarioFiles[listBoxScenario.getSelectedItemIndex()]);
-	gameSettings->setScenarioDir(dir);
+	gameSettings->setScenarioDir(Scenario::getScenarioPath(dirList, scenarioFiles[listBoxScenario.getSelectedItemIndex()]));
 	gameSettings->setDefaultUnits(scenarioInfo->defaultUnits);
 	gameSettings->setDefaultResources(scenarioInfo->defaultResources);
 	gameSettings->setDefaultVictoryConditions(scenarioInfo->defaultVictoryConditions);
@@ -241,10 +241,10 @@ ControlType MenuStateScenario::strToControllerType(const string &str){
     else if(str=="cpu"){
 	    return ctCpu;
     }
-    else if(str=="cpu-ultra"){ 
+    else if(str=="cpu-ultra"){
         return ctCpuUltra;
     }
-    else if(str=="cpu-mega"){ 
+    else if(str=="cpu-mega"){
         return ctCpuMega;
     }
     else if(str=="human"){

@@ -21,6 +21,7 @@
 #include "renderer.h"
 #include "tech_tree.h"
 #include "leak_dumper.h"
+#include "game.h"
 
 using namespace Shared::Util;
 
@@ -31,7 +32,7 @@ namespace Glest{ namespace Game{
 // =====================================================
 
 void Faction::init(
-	const FactionType *factionType, ControlType control, TechTree *techTree,
+	const FactionType *factionType, ControlType control, TechTree *techTree, Game *game,
 	int factionIndex, int teamIndex, int startLocationIndex, bool thisFaction, bool giveResources)
 {
 	this->control= control;
@@ -40,6 +41,9 @@ void Faction::init(
 	this->index= factionIndex;
 	this->teamIndex= teamIndex;
 	this->thisFaction= thisFaction;
+	this->world= game->getWorld();
+	this->scriptManager= game->getScriptManager();
+	
 
 	resources.resize(techTree->getResourceTypeCount());
 	store.resize(techTree->getResourceTypeCount());
@@ -303,7 +307,11 @@ void Faction::applyCostsOnInterval(){
 					//decrease unit hp
 					if(getResource(resource->getType())->getAmount()<0){
 						resetResourceAmount(resource->getType());
-						unit->decHp(unit->getType()->getMaxHp()/3);
+						bool decHpResult=unit->decHp(unit->getType()->getMaxHp()/3);
+						if(decHpResult){
+							world->getStats()->die(unit->getFactionIndex());
+							scriptManager->onUnitDied(unit);
+						}
 						StaticSound *sound= unit->getType()->getFirstStOfClass(scDie)->getSound();
 						if(sound!=NULL && thisFaction){
 							SoundRenderer::getInstance().playFx(sound);

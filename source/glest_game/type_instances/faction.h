@@ -34,6 +34,9 @@ class ProducibleType;
 class RequirableType;
 class CommandType;
 class UnitType;
+class Game;
+class ScriptManager;
+class World;
 
 // =====================================================
 // 	class Faction
@@ -57,6 +60,9 @@ private:
 	Allies allies;
 	Units units;
 	UnitMap unitMap;
+	World *world;
+	ScriptManager *scriptManager;
+	
 
     ControlType control;
 
@@ -71,7 +77,7 @@ private:
 
 public:
     void init(
-		const FactionType *factionType, ControlType control, TechTree *techTree, 
+		const FactionType *factionType, ControlType control, TechTree *techTree, Game *game,
 		int factionIndex, int teamIndex, int startLocationIndex, bool thisFaction, bool giveResources);
 	void end();
 

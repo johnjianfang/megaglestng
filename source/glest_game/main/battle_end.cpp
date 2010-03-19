@@ -65,7 +65,7 @@ void BattleEnd::render(){
 
 	for(int i=0; i<stats.getFactionCount(); ++i){
 
-		int textX= lm+120+i*110;
+		int textX= lm+160+i*100;
 		int team= stats.getTeam(i) + 1;
 		int kills= stats.getKills(i);
 		int deaths= stats.getDeaths(i);

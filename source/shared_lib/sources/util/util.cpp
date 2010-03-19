@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -16,12 +16,31 @@
 #include <stdexcept>
 #include <cstring>
 #include <cstdio>
+#include <stdarg.h>
 
 #include "leak_dumper.h"
 
 using namespace std;
 
 namespace Shared{ namespace Util{
+
+
+bool SystemFlags::enableDebugText           = false;
+bool SystemFlags::enableNetworkDebugInfo    = false;
+
+void SystemFlags::OutputDebug(DebugType type, const char *fmt, ...) {
+    if((type == debugSystem && SystemFlags::enableDebugText == false) ||
+       (type == debugNetwork && SystemFlags::enableNetworkDebugInfo == false)) {
+        return;
+    }
+
+    va_list argList;
+    va_start(argList, fmt);
+
+    vprintf(fmt, argList);
+
+    va_end(argList);
+}
 
 string lastDir(const string &s){
 	size_t i= s.find_last_of('/');
@@ -38,7 +57,7 @@ string lastDir(const string &s){
 		pos= i<j? j: i;
 	}
 
-	if (pos==string::npos){ 
+	if (pos==string::npos){
 		throw runtime_error(string(__FILE__)+" lastDir - i==string::npos");
 	}
 
@@ -83,7 +102,7 @@ string cutLastExt(const string &s){
 
 string ext(const string &s){
      size_t i;
-     
+
      i=s.find_last_of('.')+1;
 
 	 if (i==string::npos){
@@ -95,7 +114,7 @@ string ext(const string &s){
 
 string replaceBy(const string &s, char c1, char c2){
 	string rs= s;
-	
+
 	for(size_t i=0; i<s.size(); ++i){
 		if (rs[i]==c1){
 			rs[i]=c2;
@@ -107,7 +126,7 @@ string replaceBy(const string &s, char c1, char c2){
 
 string toLower(const string &s){
 	string rs= s;
-	
+
 	for(size_t i=0; i<s.size(); ++i){
 		rs[i]= tolower(s[i]);
 	}

@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -17,6 +17,21 @@
 using std::string;
 
 namespace Shared{ namespace Util{
+
+class SystemFlags
+{
+public:
+
+    enum DebugType {
+        debugSystem,
+        debugNetwork
+    };
+
+    static bool enableDebugText;
+    static bool enableNetworkDebugInfo;
+
+    static void OutputDebug(DebugType type, const char *fmt, ...);
+};
 
 const string sharedLibVersionString= "v0.4.1";
 
@@ -39,14 +54,14 @@ int round(float f);
 //misc
 bool fileExists(const string &path);
 
-template<typename T> 
+template<typename T>
 void deleteValues(T beginIt, T endIt){
 	for(T it= beginIt; it!=endIt; ++it){
 		delete *it;
 	}
 }
 
-template<typename T> 
+template<typename T>
 void deleteMapValues(T beginIt, T endIt){
 	for(T it= beginIt; it!=endIt; ++it){
 		delete it->second;

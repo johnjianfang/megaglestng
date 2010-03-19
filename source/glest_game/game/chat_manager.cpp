@@ -15,9 +15,11 @@
 #include "console.h"
 #include "network_manager.h"
 #include "lang.h"
+#include "util.h"
 #include "leak_dumper.h"
 
 using namespace Shared::Platform;
+using namespace Shared::Util;
 
 namespace Glest{ namespace Game{
 
@@ -96,12 +98,12 @@ void ChatManager::updateNetwork()
 	{
 		int teamIndex= gameNetworkInterface->getChatTeamIndex();
 
-		if(Socket::enableDebugText) printf("In [%s::%s] got nmtText [%s] for team = %d\n",__FILE__,__FUNCTION__,gameNetworkInterface->getChatText().c_str(),teamIndex);
+		SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] got nmtText [%s] for team = %d\n",__FILE__,__FUNCTION__,gameNetworkInterface->getChatText().c_str(),teamIndex);
 
 		if(teamIndex==-1 || teamIndex==thisTeamIndex){
 			console->addLine(gameNetworkInterface->getChatSender()+": "+gameNetworkInterface->getChatText(), true);
 
-			if(Socket::enableDebugText) printf("In [%s::%s] Added text to console\n",__FILE__,__FUNCTION__);
+			SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] Added text to console\n",__FILE__,__FUNCTION__);
 		}
 	}
 }

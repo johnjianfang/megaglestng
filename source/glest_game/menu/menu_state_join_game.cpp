@@ -102,7 +102,7 @@ MenuStateJoinGame::MenuStateJoinGame(Program *program, MainMenu *mainMenu, bool 
 
 void MenuStateJoinGame::mouseClick(int x, int y, MouseButton mouseButton)
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	CoreData &coreData= CoreData::getInstance();
 	SoundRenderer &soundRenderer= SoundRenderer::getInstance();
@@ -161,7 +161,7 @@ void MenuStateJoinGame::mouseClick(int x, int y, MouseButton mouseButton)
 		}
 	}
 
-    if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 void MenuStateJoinGame::mouseMove(int x, int y, const MouseState *ms){
@@ -315,19 +315,19 @@ void MenuStateJoinGame::update()
 		//launch
 		if(clientInterface->getLaunchGame())
 		{
-		    if(Socket::enableDebugText) printf("In [%s::%s] clientInterface->getLaunchGame() - A\n",__FILE__,__FUNCTION__);
+		    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] clientInterface->getLaunchGame() - A\n",__FILE__,__FUNCTION__);
 
 			servers.save(serverFileName);
 
-			if(Socket::enableDebugText) printf("In [%s::%s] clientInterface->getLaunchGame() - B\n",__FILE__,__FUNCTION__);
+			SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] clientInterface->getLaunchGame() - B\n",__FILE__,__FUNCTION__);
 
 			program->setState(new Game(program, clientInterface->getGameSettings()));
 
-			if(Socket::enableDebugText) printf("In [%s::%s] clientInterface->getLaunchGame() - C\n",__FILE__,__FUNCTION__);
+			SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] clientInterface->getLaunchGame() - C\n",__FILE__,__FUNCTION__);
 		}
 	}
 
-    if(Socket::enableDebugText && clientInterface->getLaunchGame()) printf("In [%s::%s] clientInterface->getLaunchGame() - D\n",__FILE__,__FUNCTION__);
+    if(clientInterface->getLaunchGame()) SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] clientInterface->getLaunchGame() - D\n",__FILE__,__FUNCTION__);
 }
 
 void MenuStateJoinGame::keyDown(char key){
@@ -387,7 +387,7 @@ void MenuStateJoinGame::keyPress(char c){
 
 void MenuStateJoinGame::connectToServer()
 {
-    if(Socket::enableDebugText) printf("In [%s::%s] START\n",__FILE__,__FUNCTION__);
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] START\n",__FILE__,__FUNCTION__);
 
 	ClientInterface* clientInterface= NetworkManager::getInstance().getClientInterface();
 	Config& config= Config::getInstance();
@@ -395,7 +395,7 @@ void MenuStateJoinGame::connectToServer()
 
 	clientInterface->connect(serverIp, GameConstants::serverPort);
 
-	if(Socket::enableDebugText) printf("In [%s::%s] server - [%s]\n",__FILE__,__FUNCTION__,serverIp.getString().c_str());
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] server - [%s]\n",__FILE__,__FUNCTION__,serverIp.getString().c_str());
 
 	labelServerIp.setText(serverIp.getString()+'_');
 	labelInfo.setText("");
@@ -404,7 +404,7 @@ void MenuStateJoinGame::connectToServer()
 	config.setString("ServerIp", serverIp.getString());
 	config.save();
 
-	if(Socket::enableDebugText) printf("In [%s::%s] END\n",__FILE__,__FUNCTION__);
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s] END\n",__FILE__,__FUNCTION__);
 }
 
 }}//end namespace

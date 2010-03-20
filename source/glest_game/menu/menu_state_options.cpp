@@ -110,7 +110,7 @@ MenuStateOptions::MenuStateOptions(Program *program, MainMenu *mainMenu):
 	//textures 3d
 	listBoxUnitParticles.pushBackItem(lang.get("No"));
 	listBoxUnitParticles.pushBackItem(lang.get("Yes"));
-	listBoxUnitParticles.setSelectedItemIndex(clamp(config.getInt("UnitParticles"), 0, 1));
+	listBoxUnitParticles.setSelectedItemIndex(clamp(config.getBool("UnitParticles"), 0, 1));
 
 	//lights
 	for(int i= 1; i<=8; ++i){
@@ -167,7 +167,7 @@ void MenuStateOptions::mouseClick(int x, int y, MouseButton mouseButton){
 		saveConfig();
 	}
 	else if(listBoxUnitParticles.mouseClick(x, y)){
-		config.setInt("UnitParticles", listBoxUnitParticles.getSelectedItemIndex());
+		config.setBool("UnitParticles", listBoxUnitParticles.getSelectedItemIndex());
 		saveConfig();
 	}
 	else if(listBoxLights.mouseClick(x, y)){

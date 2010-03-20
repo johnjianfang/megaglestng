@@ -15,10 +15,12 @@
 
 #include "logger.h"
 #include "util.h"
+#include "platform_util.h"
 #include "leak_dumper.h"
 
 using namespace std;
 using namespace Shared::Util;
+using namespace Shared::Platform;
 
 namespace Glest{ namespace Game{
 
@@ -39,6 +41,12 @@ void Lang::loadStrings(const string &language){
 
 void Lang::loadScenarioStrings(const string &scenarioDir, const string &scenarioName){
 	string path= scenarioDir + "/" + scenarioName + "/" + scenarioName + "_" + language + ".lng";
+	if(EndsWith(scenarioDir, ".xml") == true) {
+		path= scenarioDir;
+		path = path.erase(path.size()-4,4);
+		path += "_" + language + ".lng";
+	}
+	
 	
 	scenarioStrings.clear();
 	
@@ -47,6 +55,8 @@ void Lang::loadScenarioStrings(const string &scenarioDir, const string &scenario
 		scenarioStrings.load(path);
 	}
 	else{
+		SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d] path not found [%s]\n",__FILE__,__FUNCTION__,__LINE__,path.c_str());
+
 		//try english otherwise
 		string path= scenarioDir + "/" +scenarioName + "/" + scenarioName + "_english.lng";
 		if(fileExists(path)){

@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -195,8 +195,11 @@ void Selection::unitEvent(UnitObserver::Event event, const Unit *unit){
 			}
 		}
 
-		//notify gui
-		gui->onSelectionChanged();
+		//notify gui only if no more units to execute the command
+		//of course the selection changed, but this doesn't matter in this case.
+		if( selectedUnits.size()<1 ){
+			gui->onSelectionChanged();
+		}
 
 	}
 }

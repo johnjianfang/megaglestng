@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -52,14 +52,20 @@ AllocRegistry &AllocRegistry::getInstance(){
 }
 
 AllocRegistry::~AllocRegistry(){
-	dump("leak_dump.log");
+
+    string leakLog = "leak_dump.log";
+    if(getGameReadWritePath() != "") {
+        leakLog = getGameReadWritePath() + leakLog;
+    }
+
+	dump(leakLog.c_str());
 }
 
 void AllocRegistry::allocate(AllocInfo info){
 	++allocCount;
 	allocBytes+= info.bytes;
 	unsigned hashCode= reinterpret_cast<unsigned>(info.ptr) % maxAllocs;
-	
+
 	for(int i=hashCode; i<maxAllocs; ++i){
 		if(allocs[i].free){
 			allocs[i]= info;
@@ -75,10 +81,10 @@ void AllocRegistry::allocate(AllocInfo info){
 	++nonMonitoredCount;
 	nonMonitoredBytes+= info.bytes;
 }
-	
+
 void AllocRegistry::deallocate(void* ptr, bool array){
 	unsigned hashCode= reinterpret_cast<unsigned>(ptr) % maxAllocs;
-	
+
 	for(int i=hashCode; i<maxAllocs; ++i){
 		if(!allocs[i].free && allocs[i].ptr==ptr && allocs[i].array==array){
 			allocs[i].free= true;

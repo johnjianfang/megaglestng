@@ -49,6 +49,8 @@ private:
 	Console console;
 	ChatManager chatManager;
 
+	string serversSavedFile;
+
 public:
 	MenuStateJoinGame(Program *program, MainMenu *mainMenu, bool connect= false, Ip serverIp= Ip());
 

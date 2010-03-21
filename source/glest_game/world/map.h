@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -14,12 +14,13 @@
 
 #include "vec.h"
 #include "math_util.h"
-#include "command_type.h" 
+#include "command_type.h"
 #include "logger.h"
 #include "object.h"
 #include "game_constants.h"
 
 #include <cassert>
+
 
 namespace Glest{ namespace Game{
 
@@ -35,10 +36,10 @@ class Tileset;
 class Unit;
 class Resource;
 class TechTree;
-
+class GameSettings;
 
 // =====================================================
-// 	class Cell 
+// 	class Cell
 //
 ///	A map cell that holds info about units present on it
 // =====================================================
@@ -58,12 +59,12 @@ public:
 	//get
 	Unit *getUnit(int field) const		{return units[field];}
 	float getHeight() const				{return height;}
-	
+
 	void setUnit(int field, Unit *unit)	{units[field]= unit;}
 	void setHeight(float height)		{this->height= height;}
-	
+
 	bool isFree(Field field) const;
-}; 
+};
 
 // =====================================================
 // 	class SurfaceCell
@@ -74,23 +75,23 @@ public:
 class SurfaceCell{
 private:
 	//geometry
-	Vec3f vertex;			
-	Vec3f normal;	
+	Vec3f vertex;
+	Vec3f normal;
 	Vec3f color;
 
 	//tex coords
 	Vec2f fowTexCoord;		//tex coords for TEXTURE1 when multitexturing and fogOfWar
 	Vec2f surfTexCoord;		//tex coords for TEXTURE0
-	
+
 	//surface
-	int surfaceType;		
+	int surfaceType;
     const Texture2D *surfaceTexture;
 
 	//object & resource
 	Object *object;
 
 	//visibility
-	bool visible[GameConstants::maxPlayers];	
+	bool visible[GameConstants::maxPlayers];
     bool explored[GameConstants::maxPlayers];
 
 	//cache
@@ -104,7 +105,7 @@ public:
 	const Vec3f &getVertex() const				{return vertex;}
 	float getHeight() const						{return vertex.y;}
 	const Vec3f &getColor() const				{return color;}
-	const Vec3f &getNormal() const				{return normal;}	
+	const Vec3f &getNormal() const				{return normal;}
 	int getSurfaceType() const					{return surfaceType;}
 	const Texture2D *getSurfaceTexture() const	{return surfaceTexture;}
 	Object *getObject() const					{return object;}
@@ -118,9 +119,9 @@ public:
 
 	//set
 	void setVertex(const Vec3f &vertex)			{this->vertex= vertex;}
-	void setHeight(float height)				{vertex.y= height;}  
+	void setHeight(float height)				{vertex.y= height;}
 	void setNormal(const Vec3f &normal)			{this->normal= normal;}
-	void setColor(const Vec3f &color)			{this->color= color;} 
+	void setColor(const Vec3f &color)			{this->color= color;}
 	void setSurfaceType(int surfaceType)		{this->surfaceType= surfaceType;}
 	void setSurfaceTexture(const Texture2D *st)	{this->surfaceTexture= st;}
 	void setObject(Object *object)				{this->object= object;}
@@ -129,7 +130,7 @@ public:
 	void setExplored(int teamIndex, bool explored);
     void setVisible(int teamIndex, bool visible);
 	void setNearSubmerged(bool nearSubmerged)	{this->nearSubmerged= nearSubmerged;}
-	
+
 	//misc
 	void deleteResource();
 	bool isFree() const;
@@ -137,7 +138,7 @@ public:
 
 
 // =====================================================
-// 	class Map  
+// 	class Map
 //
 ///	Represents the game map (and loads it from a gbm file)
 // =====================================================
@@ -156,7 +157,7 @@ private:
 	int surfaceW;
 	int surfaceH;
 	int maxPlayers;
-	Cell *cells; 
+	Cell *cells;
 	SurfaceCell *surfaceCells;
 	Vec2i *startLocations;
 
@@ -167,7 +168,7 @@ private:
 public:
 	Map();
 	~Map();
-	
+
 	void init();
 	void load(const string &path, TechTree *techTree, Tileset *tileset);
 
@@ -204,10 +205,10 @@ public:
 	bool isFreeCells(const Vec2i &pos, int size, Field field) const;
 	bool isFreeCellsOrHasUnit(const Vec2i &pos, int size, Field field, const Unit *unit) const;
 	bool isAproxFreeCells(const Vec2i &pos, int size, Field field, int teamIndex) const;
-	
+
 	//unit placement
 	bool aproxCanMove(const Unit *unit, const Vec2i &pos1, const Vec2i &pos2) const;
-	bool canMove(const Unit *unit, const Vec2i &pos1, const Vec2i &pos2) const;  
+	bool canMove(const Unit *unit, const Vec2i &pos1, const Vec2i &pos2) const;
     void putUnitCells(Unit *unit, const Vec2i &pos);
 	void clearUnitCells(Unit *unit, const Vec2i &pos);
 
@@ -223,7 +224,7 @@ public:
 	//static
 	static Vec2i toSurfCoords(Vec2i unitPos)		{return unitPos/cellScale;}
 	static Vec2i toUnitCoords(Vec2i surfPos)		{return surfPos*cellScale;}
-	static string getMapPath(const string &mapName);
+	static string getMapPath(const string &mapName, string scenarioDir="");
 
 private:
 	//compute
@@ -234,7 +235,7 @@ private:
 
 
 // ===============================
-// 	class PosCircularIterator  
+// 	class PosCircularIterator
 // ===============================
 
 class PosCircularIterator{
@@ -251,7 +252,7 @@ public:
 };
 
 // ===============================
-// 	class PosQuadIterator  
+// 	class PosQuadIterator
 // ===============================
 
 class PosQuadIterator{

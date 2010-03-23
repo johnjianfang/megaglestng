@@ -22,7 +22,8 @@ namespace Glest{ namespace Game{
 
 class MenuStateOptions: public MenuState{
 private:
-	GraphicButton buttonReturn;	
+	GraphicButton buttonOk;	
+	GraphicButton buttonAbort;
 	GraphicButton buttonAutoConfig;	
 	
 	GraphicLabel labelLang;
@@ -44,6 +45,10 @@ private:
 	GraphicListBox listBoxVolumeAmbient;
 	GraphicListBox listBoxVolumeMusic;
 	GraphicListBox listBoxMusicSelect;
+	GraphicLabel labelPlayerName;
+	GraphicLabel labelPlayerNameLabel;
+	GraphicLabel *activeInputLabel;
+	
 
 public:
 	MenuStateOptions(Program *program, MainMenu *mainMenu);
@@ -51,9 +56,13 @@ public:
 	void mouseClick(int x, int y, MouseButton mouseButton);
 	void mouseMove(int x, int y, const MouseState *mouseState);
 	void render();
+	virtual void keyDown(char key);
+    virtual void keyPress(char c);
+	
 
 private:
 	void saveConfig();
+	void setActiveInputLable(GraphicLabel* newLable);
 };
 
 }}//end namespace

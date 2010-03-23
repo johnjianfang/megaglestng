@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -30,6 +30,7 @@ const float SoundRenderer::audibleDist= 50.f;
 // =====================================================
 
 SoundRenderer::SoundRenderer(){
+    soundPlayer = NULL;
 	loadConfig();
 }
 
@@ -49,6 +50,7 @@ void SoundRenderer::init(Window *window){
 
 SoundRenderer::~SoundRenderer(){
 	delete soundPlayer;
+	soundPlayer = NULL;
 }
 
 SoundRenderer &SoundRenderer::getInstance(){
@@ -57,7 +59,9 @@ SoundRenderer &SoundRenderer::getInstance(){
 }
 
 void SoundRenderer::update(){
-	soundPlayer->updateStreams();
+    if(soundPlayer != NULL) {
+        soundPlayer->updateStreams();
+    }
 }
 
 // ======================= Music ============================
@@ -65,11 +69,15 @@ void SoundRenderer::update(){
 void SoundRenderer::playMusic(StrSound *strSound){
 	strSound->setVolume(musicVolume);
 	strSound->restart();
-	soundPlayer->play(strSound);
+	if(soundPlayer != NULL) {
+        soundPlayer->play(strSound);
+	}
 }
 
 void SoundRenderer::stopMusic(StrSound *strSound){
-	soundPlayer->stop(strSound);
+    if(soundPlayer != NULL) {
+        soundPlayer->stop(strSound);
+    }
 }
 
 // ======================= Fx ============================
@@ -78,11 +86,14 @@ void SoundRenderer::playFx(StaticSound *staticSound, Vec3f soundPos, Vec3f camPo
 	if(staticSound!=NULL){
 		float d= soundPos.dist(camPos);
 
-		if(d<audibleDist){	
+		if(d<audibleDist){
 			float vol= (1.f-d/audibleDist)*fxVolume;
 			float correctedVol= log10(log10(vol*9+1)*9+1);
 			staticSound->setVolume(correctedVol);
-			soundPlayer->play(staticSound);
+
+			if(soundPlayer != NULL) {
+                soundPlayer->play(staticSound);
+			}
 		}
 	}
 }
@@ -90,7 +101,9 @@ void SoundRenderer::playFx(StaticSound *staticSound, Vec3f soundPos, Vec3f camPo
 void SoundRenderer::playFx(StaticSound *staticSound){
 	if(staticSound!=NULL){
 		staticSound->setVolume(fxVolume);
-		soundPlayer->play(staticSound);
+		if(soundPlayer != NULL) {
+            soundPlayer->play(staticSound);
+		}
 	}
 }
 
@@ -98,17 +111,23 @@ void SoundRenderer::playFx(StaticSound *staticSound){
 
 void SoundRenderer::playAmbient(StrSound *strSound){
 	strSound->setVolume(ambientVolume);
-	soundPlayer->play(strSound, ambientFade);
+	if(soundPlayer != NULL) {
+        soundPlayer->play(strSound, ambientFade);
+	}
 }
 
 void SoundRenderer::stopAmbient(StrSound *strSound){
-	soundPlayer->stop(strSound, ambientFade);
+    if(soundPlayer != NULL) {
+        soundPlayer->stop(strSound, ambientFade);
+    }
 }
 
 // ======================= Misc ============================
 
 void SoundRenderer::stopAllSounds(){
-	soundPlayer->stopAllSounds();
+    if(soundPlayer != NULL) {
+        soundPlayer->stopAllSounds();
+    }
 }
 
 void SoundRenderer::loadConfig(){

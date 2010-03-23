@@ -144,12 +144,14 @@ public:
 	~Pixmap2D();
 	
 	//load & save
+	static Pixmap2D* loadPath(const string& path);
 	void load(const string &path);
-	void loadTga(const string &path);
-	void loadBmp(const string &path);
+	/*void loadTga(const string &path);
+	void loadBmp(const string &path);*/
 	void save(const string &path);
 	void saveBmp(const string &path);
 	void saveTga(const string &path);
+
 
 	//get 
 	int getW() const			{return w;}
@@ -254,8 +256,8 @@ public:
 
 	//load & save
 	void loadFace(const string &path, int face);
-	void loadFaceBmp(const string &path, int face);
-	void loadFaceTga(const string &path, int face);
+	/*void loadFaceBmp(const string &path, int face);
+	void loadFaceTga(const string &path, int face);*/
 	
 	//get 
 	Pixmap2D *getFace(int face)				{return &faces[face];}

@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2005 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -83,9 +83,9 @@ private:
 
 	//misc
 	MessageQueue messageQueue;
-	GraphicMessageBox messageBox;
+	static GraphicMessageBox messageBox;
 	string displayText;
-	
+
 	//last created unit
 	string lastCreatedUnitName;
 	int lastCreatedUnitId;
@@ -110,10 +110,10 @@ public:
 
 	//message box functions
 	bool getMessageBoxEnabled() const									{return !messageQueue.empty();}
-	GraphicMessageBox* getMessageBox()									{return &messageBox;}
+	static GraphicMessageBox* getMessageBox()									{return &messageBox;}
 	string getDisplayText() const										{return displayText;}
 	bool getGameOver() const											{return gameOver;}
-	const PlayerModifiers *getPlayerModifiers(int factionIndex) const	{return &playerModifiers[factionIndex];}	
+	const PlayerModifiers *getPlayerModifiers(int factionIndex) const	{return &playerModifiers[factionIndex];}
 
 	//events
 	void onMessageBoxOk();

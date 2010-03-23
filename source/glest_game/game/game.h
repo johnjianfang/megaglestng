@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -68,6 +68,7 @@ private:
 	bool paused;
 	bool gameOver;
 	bool renderNetworkStatus;
+	float scrollSpeed;
 	Speed speed;
 	GraphicMessageBox mainMessageBox;
 
@@ -81,7 +82,7 @@ public:
 
     //get
 	GameSettings *getGameSettings()			{return &gameSettings;}
-	
+
 	const GameCamera *getGameCamera() const	{return &gameCamera;}
 	GameCamera *getGameCamera()				{return &gameCamera;}
 	const Commander *getCommander() const	{return &commander;}
@@ -109,6 +110,7 @@ public:
     virtual void mouseDownRight(int x, int y);
     virtual void mouseUpLeft(int x, int y);
     virtual void mouseDoubleClickLeft(int x, int y);
+    virtual void eventMouseWheel(int x, int y, int zDelta);
     virtual void mouseMove(int x, int y, const MouseState *mouseState);
 
 	void quitGame();

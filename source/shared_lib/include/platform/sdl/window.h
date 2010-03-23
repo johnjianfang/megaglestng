@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2005 Matthias Braun <matze@braunis.de>
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -29,7 +29,10 @@ class PlatformContextGl;
 enum MouseButton{
 	mbLeft,
 	mbRight,
-	mbCenter
+	mbCenter,
+	mbWheelUp,
+	mbWheelDown
+
 };
 
 enum SizeState{
@@ -86,14 +89,14 @@ public:
 
 	Window();
 	virtual ~Window();
-	
+
 	WindowHandle getHandle()	{return 0;}
 	string getText();
 	int getX()					{ return 0; }
 	int getY()					{ return 0; }
 	int getW()					{ return w; }
 	int getH()					{ return h; }
-	
+
 	//component state
 	int getClientW()			{ return getW(); }
 	int getClientH()			{ return getH(); }
@@ -118,6 +121,7 @@ protected:
 	virtual void eventMouseUp(int x, int y, MouseButton mouseButton){}
 	virtual void eventMouseMove(int x, int y, const MouseState* mouseState){}
 	virtual void eventMouseDoubleClick(int x, int y, MouseButton mouseButton){}
+	virtual void eventMouseWheel(int x, int y, int zDelta) {}
 	virtual void eventKeyDown(char key){}
 	virtual void eventKeyUp(char key){}
 	virtual void eventKeyPress(char c){}

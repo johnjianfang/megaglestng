@@ -1,9 +1,9 @@
 //This file is part of Glest Shared Library (www.glest.org)
 //Copyright (C) 2005 Matthias Braun <matze@braunis.de>
 
-//You can redistribute this code and/or modify it under 
-//the terms of the GNU General Public License as published by the Free Software 
-//Foundation; either version 2 of the License, or (at your option) any later 
+//You can redistribute this code and/or modify it under
+//the terms of the GNU General Public License as published by the Free Software
+//Foundation; either version 2 of the License, or (at your option) any later
 //version.
 
 #include "window.h"
@@ -25,7 +25,7 @@ using namespace std;
 namespace Shared{ namespace Platform{
 
 // =======================================
-//               WINDOW               
+//               WINDOW
 // =======================================
 
 // ========== STATIC INICIALIZATIONS ==========
@@ -37,7 +37,7 @@ static Window* global_window = 0;
 
 Window::Window() {
 	memset(lastMouseDown, 0, sizeof(lastMouseDown));
-	
+
 	assert(global_window == 0);
 	global_window = this;
 }
@@ -51,6 +51,8 @@ bool Window::handleEvent() {
 	SDL_Event event;
 	while(SDL_PollEvent(&event)) {
 		try {
+		    //printf("[%d]\n",event.type);
+
 			switch(event.type) {
 				case SDL_QUIT:
 					return false;
@@ -72,7 +74,7 @@ bool Window::handleEvent() {
 				}
 				case SDL_KEYDOWN:
 					/* handle ALT+Return */
-					if(event.key.keysym.sym == SDLK_RETURN 
+					if(event.key.keysym.sym == SDLK_RETURN
 							&& (event.key.keysym.mod & (KMOD_LALT | KMOD_RALT))) {
 						toggleFullscreen();
 					}
@@ -155,8 +157,24 @@ void Window::toggleFullscreen() {
 void Window::handleMouseDown(SDL_Event event) {
 	static const Uint32 DOUBLECLICKTIME = 500;
 	static const int DOUBLECLICKDELTA = 5;
-		
+
 	MouseButton button = getMouseButton(event.button.button);
+
+	// windows implementation uses 120 for the resolution of a standard mouse
+	// wheel notch.  However, newer mice have finer resolutions.  I dunno if SDL
+	// handles those, but for now we're going to say that each mouse wheel
+	// movement is 120.
+	if(button == mbWheelUp) {
+	    //printf("button == mbWheelUp\n");
+		eventMouseWheel(event.button.x, event.button.y, 120);
+		return;
+	} else if(button == mbWheelDown) {
+	    //printf("button == mbWheelDown\n");
+		eventMouseWheel(event.button.x, event.button.y, -120);
+		return;
+	}
+
+
 	Uint32 ticks = SDL_GetTicks();
 	int n = (int) button;
 	if(ticks - lastMouseDown[n] < DOUBLECLICKTIME
@@ -180,6 +198,10 @@ MouseButton Window::getMouseButton(int sdlButton) {
 			return mbRight;
 		case SDL_BUTTON_MIDDLE:
 			return mbCenter;
+        case SDL_BUTTON_WHEELUP:
+            return mbWheelUp;
+        case SDL_BUTTON_WHEELDOWN:
+            return mbWheelDown;
 		default:
 			throw std::runtime_error("Mouse Button > 3 not handled.");
 	}
@@ -288,7 +310,7 @@ char Window::getKey(SDL_keysym keysym) {
 		case SDLK_y:
 			return 'Y';
 		case SDLK_z:
-			return 'Z'; 
+			return 'Z';
 		default:
 			Uint16 c = keysym.unicode;
 			if((c & 0xFF80) == 0) {

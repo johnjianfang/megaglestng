@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -80,7 +80,7 @@ private:
 
 	static int nextClassName;
 	static WindowMap createdWindows;
-	
+
 protected:
 	WindowHandle handle;
 	WindowStyle windowStyle;
@@ -100,14 +100,14 @@ public:
 	//contructor & destructor
 	Window();
 	virtual ~Window();
-	
+
 	WindowHandle getHandle()	{return handle;}
 	string getText();
 	int getX()					{return x;}
 	int getY()					{return y;}
 	int getW()					{return w;}
 	int getH()					{return h;}
-	
+
 	//component state
 	int getClientW();
 	int getClientH();
@@ -136,6 +136,7 @@ protected:
 	virtual void eventMouseMove(int x, int y, const MouseState *mouseState){}
 	virtual void eventMouseDoubleClick(int x, int y, MouseButton mouseButton){}
 	virtual void eventKeyDown(char key){}
+	virtual void eventMouseWheel(int x, int y, int zDelta){}
 	virtual void eventKeyUp(char key){}
 	virtual void eventKeyPress(char c){};
 	virtual void eventResize(){};

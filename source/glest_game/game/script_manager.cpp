@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2005 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -35,13 +35,15 @@ PlayerModifiers::PlayerModifiers(){
 //	class ScriptManager
 // =====================================================
 
+GraphicMessageBox	ScriptManager::messageBox;
+
 ScriptManager* ScriptManager::thisScriptManager= NULL;
 const int ScriptManager::messageWrapCount= 30;
 const int ScriptManager::displayTextWrapCount= 64;
 
 void ScriptManager::init(World* world, GameCamera *gameCamera){
 	const Scenario*	scenario= world->getScenario();
-	
+
 	this->world= world;
 	this->gameCamera= gameCamera;
 
@@ -72,14 +74,14 @@ void ScriptManager::init(World* world, GameCamera *gameCamera){
 	luaScript.registerFunction(getLastDeadUnitId, "lastDeadUnit");
 	luaScript.registerFunction(getUnitCount, "unitCount");
 	luaScript.registerFunction(getUnitCountOfType, "unitCountOfType");
-	
+
 
 	//load code
 	for(int i= 0; i<scenario->getScriptCount(); ++i){
 		const Script* script= scenario->getScript(i);
 		luaScript.loadCode("function " + script->getName() + "()" + script->getCode() + "end\n", script->getName());
 	}
-	
+
 	//setup message box
 	messageBox.init( Lang::getInstance().get("Ok") );
 	messageBox.setEnabled(false);
@@ -98,7 +100,7 @@ void ScriptManager::init(World* world, GameCamera *gameCamera){
 
 void ScriptManager::onMessageBoxOk(){
 	Lang &lang= Lang::getInstance();
-	
+
 	if(!messageQueue.empty()){
 		messageQueue.pop();
 		if(!messageQueue.empty()){
@@ -153,7 +155,7 @@ string ScriptManager::wrapString(const string &str, int wrapCount){
 
 void ScriptManager::showMessage(const string &text, const string &header){
 	Lang &lang= Lang::getInstance();
-	
+
 	messageQueue.push(ScriptManagerMessage(text, header));
 	messageBox.setEnabled(true);
 	messageBox.setText(wrapString(lang.getScenarioString(messageQueue.front().getText()), messageWrapCount));
@@ -278,7 +280,7 @@ int ScriptManager::setCameraPosition(LuaHandle* luaHandle){
 int ScriptManager::createUnit(LuaHandle* luaHandle){
 	LuaArguments luaArguments(luaHandle);
 	thisScriptManager->createUnit(
-		luaArguments.getString(-3), 
+		luaArguments.getString(-3),
 		luaArguments.getInt(-2),
 		luaArguments.getVec2i(-1));
 	return luaArguments.getReturnCount();
@@ -293,7 +295,7 @@ int ScriptManager::giveResource(LuaHandle* luaHandle){
 int ScriptManager::givePositionCommand(LuaHandle* luaHandle){
 	LuaArguments luaArguments(luaHandle);
 	thisScriptManager->givePositionCommand(
-		luaArguments.getInt(-3), 
+		luaArguments.getInt(-3),
 		luaArguments.getString(-2),
 		luaArguments.getVec2i(-1));
 	return luaArguments.getReturnCount();
@@ -303,7 +305,7 @@ int ScriptManager::givePositionCommand(LuaHandle* luaHandle){
 int ScriptManager::giveProductionCommand(LuaHandle* luaHandle){
 	LuaArguments luaArguments(luaHandle);
 	thisScriptManager->giveProductionCommand(
-		luaArguments.getInt(-2), 
+		luaArguments.getInt(-2),
 		luaArguments.getString(-1));
 	return luaArguments.getReturnCount();
 }
@@ -311,7 +313,7 @@ int ScriptManager::giveProductionCommand(LuaHandle* luaHandle){
 int ScriptManager::giveUpgradeCommand(LuaHandle* luaHandle){
 	LuaArguments luaArguments(luaHandle);
 	thisScriptManager->giveUpgradeCommand(
-		luaArguments.getInt(-2), 
+		luaArguments.getInt(-2),
 		luaArguments.getString(-1));
 	return luaArguments.getReturnCount();
 }

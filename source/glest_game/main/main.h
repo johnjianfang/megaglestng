@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -23,7 +23,7 @@ using Shared::Platform::MouseState;
 namespace Glest{ namespace Game{
 
 // =====================================================
-// 	class MainWindow 
+// 	class MainWindow
 //
 ///	Main program window
 // =====================================================
@@ -43,6 +43,7 @@ public:
 	virtual void eventMouseDoubleClick(int x, int y, MouseButton mouseButton);
 	virtual void eventMouseMove(int x, int y, const MouseState *mouseState);
 	virtual void eventKeyDown(char key);
+	virtual void eventMouseWheel(int x, int y, int zDelta);
 	virtual void eventKeyUp(char key);
 	virtual void eventKeyPress(char c);
 	virtual void eventActivate(bool active);

@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -51,7 +51,7 @@ Window::~Window(){
 	if(handle!=0){
 		DestroyWindow(handle);
 		handle= 0;
-		BOOL b= UnregisterClass(className.c_str(), GetModuleHandle(NULL)); 
+		BOOL b= UnregisterClass(className.c_str(), GetModuleHandle(NULL));
 		assert(b);
 	}
 }
@@ -100,8 +100,8 @@ float Window::getAspect(){
 }
 
 void Window::setText(string text){
-    this->text= text; 
-	if(handle!=0){	
+    this->text= text;
+	if(handle!=0){
 		SendMessage(handle, WM_SETTEXT, 0, (LPARAM) text.c_str());
 	}
 }
@@ -114,7 +114,7 @@ void Window::setSize(int w, int h){
 		rect.top= 0;
 		rect.bottom= h;
 		rect.right= w;
-		
+
 		AdjustWindowRect(&rect, style, FALSE);
 
 		w= rect.right-rect.left;
@@ -143,14 +143,14 @@ void Window::setEnabled(bool enabled){
 }
 
 void Window::setVisible(bool visible){
-     
+
      if (visible){
           ShowWindow(handle, SW_SHOW);
           UpdateWindow(handle);
      }
      else{
           ShowWindow(handle, SW_HIDE);
-          UpdateWindow(handle); 
+          UpdateWindow(handle);
      }
 }
 
@@ -178,7 +178,7 @@ void Window::setStyle(WindowStyle windowStyle){
 		setVisible(false);
 		int err= SetWindowLong(handle,  GWL_STYLE, style);
 		assert(err);
-		
+
 		setVisible(true);
 		UpdateWindow(handle);
 	}
@@ -203,7 +203,7 @@ void Window::restore(){
 
 void Window::showPopupMenu(Menu *menu, int x, int y){
 	RECT rect;
-	
+
 	GetWindowRect(handle, &rect);
 
 	TrackPopupMenu(menu->getHandle(), TPM_LEFTALIGN | TPM_TOPALIGN, rect.left+x, rect.top+y, 0, handle, NULL);
@@ -211,7 +211,7 @@ void Window::showPopupMenu(Menu *menu, int x, int y){
 
 void Window::destroy(){
 	DestroyWindow(handle);
-	BOOL b= UnregisterClass(className.c_str(), GetModuleHandle(NULL)); 
+	BOOL b= UnregisterClass(className.c_str(), GetModuleHandle(NULL));
 	assert(b);
 	handle= 0;
 }
@@ -219,10 +219,10 @@ void Window::destroy(){
 // ===================== PRIVATE =======================
 
 LRESULT CALLBACK Window::eventRouter(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
-    
+
 	Window *eventWindow;
 	WindowMap::iterator it;
-	
+
 	it= createdWindows.find(hwnd);
 	if(it==createdWindows.end()){
 		return DefWindowProc(hwnd, msg, wParam, lParam);
@@ -231,8 +231,8 @@ LRESULT CALLBACK Window::eventRouter(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 
 	POINT mousePos;
 	RECT windowRect;
-	
-	GetWindowRect(eventWindow->getHandle(), &windowRect);	
+
+	GetWindowRect(eventWindow->getHandle(), &windowRect);
 
 	mousePos.x = LOWORD(lParam) - windowRect.left;
 	mousePos.y = HIWORD(lParam) -windowRect.top;
@@ -241,7 +241,7 @@ LRESULT CALLBACK Window::eventRouter(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 
 	switch(msg){
 	case WM_CREATE:
-	    eventWindow->eventCreate();        
+	    eventWindow->eventCreate();
 		break;
 
 	case WM_LBUTTONDOWN:
@@ -267,6 +267,14 @@ LRESULT CALLBACK Window::eventRouter(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 	case WM_RBUTTONDBLCLK:
 		eventWindow->eventMouseDoubleClick(mousePos.x, mousePos.y, mbRight);
 		break;
+
+    case WM_MOUSEWHEEL:
+        eventWindow->eventMouseWheel(mousePos.x, mousePos.y, GET_WHEEL_DELTA_WPARAM(wParam));
+        return 0;
+
+    case WM_MOUSEHWHEEL:
+        //eventWindow->eventMouseHWheel(mousePos.x, mousePos.y, GET_WHEEL_DELTA_WPARAM(wParam));
+        break; // not handled, send to DefWindowProc
 
 	case WM_MOUSEMOVE:
 		{
@@ -303,7 +311,7 @@ LRESULT CALLBACK Window::eventRouter(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 	case WM_MOVE:
 		{
 			RECT rect;
-			
+
 			GetWindowRect(eventWindow->getHandle(), &rect);
 			eventWindow->x= rect.left;
 			eventWindow->y= rect.top;
@@ -321,7 +329,7 @@ LRESULT CALLBACK Window::eventRouter(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 			eventWindow->y= rect.top;
 			eventWindow->w= rect.right-rect.left;
 			eventWindow->h= rect.bottom-rect.top;
-			
+
 			eventWindow->eventResize(static_cast<SizeState>(wParam));
 		}
 		break;
@@ -369,7 +377,7 @@ void Window::registerWindow(WNDPROC wndProc){
     wc.lpszClassName = this->className.c_str();
     wc.hIconSm       = NULL;
 
-    int registerClassErr=RegisterClassEx(&wc); 
+    int registerClassErr=RegisterClassEx(&wc);
     assert(registerClassErr);
 
 }
@@ -377,7 +385,7 @@ void Window::registerWindow(WNDPROC wndProc){
 void Window::createWindow(LPVOID creationData){
 
 	handle = CreateWindowEx(
-		exStyle, 
+		exStyle,
 		className.c_str(),
 		text.c_str(),
 		style,
@@ -390,7 +398,7 @@ void Window::createWindow(LPVOID creationData){
 	assert(handle != NULL);
 
 	ShowWindow(handle, SW_SHOW);
-	UpdateWindow(handle);  
+	UpdateWindow(handle);
 }
 
 }}//end namespace

@@ -1,9 +1,9 @@
 //This file is part of Glest Shared Library (www.glest.org)
 //Copyright (C) 2005 Matthias Braun <matze@braunis.de>
 
-//You can redistribute this code and/or modify it under 
-//the terms of the GNU General Public License as published by the Free Software 
-//Foundation; either version 2 of the License, or (at your option) any later 
+//You can redistribute this code and/or modify it under
+//the terms of the GNU General Public License as published by the Free Software
+//Foundation; either version 2 of the License, or (at your option) any later
 //version.
 #include "gl_wrap.h"
 
@@ -19,15 +19,18 @@
 
 #include "opengl.h"
 #include "sdl_private.h"
-#include "leak_dumper.h"
 #include "noimpl.h"
+#include "util.h"
+
+#include "leak_dumper.h"
 
 using namespace Shared::Graphics::Gl;
+using namespace Shared::Util;
 
 namespace Shared{ namespace Platform{
-	
+
 // ======================================
-//	class PlatformContextGl  
+//	class PlatformContextGl
 // ======================================
 
 void PlatformContextGl::init(int colorBits, int depthBits, int stencilBits) {
@@ -44,11 +47,14 @@ void PlatformContextGl::init(int colorBits, int depthBits, int stencilBits) {
 
 	int resW = Private::ScreenWidth;
 	int resH = Private::ScreenHeight;
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d] about to set resolution: %d x %d, colorBits = %d.\n",__FILE__,__FUNCTION__,__LINE__,resW,resH,colorBits);
+
 	SDL_Surface* screen = SDL_SetVideoMode(resW, resH, colorBits, flags);
 	if(screen == 0) {
 		std::ostringstream msg;
-		msg << "Couldn't set video mode "                                    	
-			<< resW << "x" << resH << " (" << colorBits 
+		msg << "Couldn't set video mode "
+			<< resW << "x" << resH << " (" << colorBits
 			<< "bpp " << stencilBits << " stencil "
 			<< depthBits << " depth-buffer). SDL Error is: " << SDL_GetError();
 		throw std::runtime_error(msg.str());
@@ -66,7 +72,7 @@ void PlatformContextGl::swapBuffers() {
 }
 
 // ======================================
-//	Global Fcs  
+//	Global Fcs
 // ======================================
 
 void createGlFontBitmaps(uint32 &base, const string &type, int size, int width,
@@ -82,7 +88,7 @@ void createGlFontBitmaps(uint32 &base, const string &type, int size, int width,
 	}
 
 	// we need the height of 'a' which sould ~ be half ascent+descent
-	metrics.setHeight(static_cast<float> 
+	metrics.setHeight(static_cast<float>
 			(fontInfo->ascent + fontInfo->descent) / 2);
 	for(unsigned int i = 0; i < static_cast<unsigned int> (charCount); ++i) {
 		if(i < fontInfo->min_char_or_byte2 ||
@@ -91,7 +97,7 @@ void createGlFontBitmaps(uint32 &base, const string &type, int size, int width,
 		} else {
 			int p = i - fontInfo->min_char_or_byte2;
 			metrics.setWidth(i, static_cast<float> (
-						fontInfo->per_char[p].rbearing 
+						fontInfo->per_char[p].rbearing
 						- fontInfo->per_char[p].lbearing));
 		}
 	}
@@ -119,4 +125,4 @@ void *getGlProcAddress(const char *procName) {
 	return proc;
 }
 
-}}//end namespace 
+}}//end namespace

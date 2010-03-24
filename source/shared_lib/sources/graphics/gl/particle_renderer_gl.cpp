@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Marti�o Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -27,7 +27,7 @@ namespace Shared{ namespace Graphics{ namespace Gl{
 
 ParticleRendererGl::ParticleRendererGl(){
 	assert(bufferSize%4 == 0);
-	
+
 	rendering= false;
 
 	// init texture coordinates for quads
@@ -35,12 +35,12 @@ ParticleRendererGl::ParticleRendererGl(){
 		texCoordBuffer[i]= Vec2f(0.0f, 1.0f);
 		texCoordBuffer[i+1]= Vec2f(0.0f, 0.0f);
 		texCoordBuffer[i+2]= Vec2f(1.0f, 0.0f);
-		texCoordBuffer[i+3]= Vec2f(1.0f, 1.0f); 
+		texCoordBuffer[i+3]= Vec2f(1.0f, 1.0f);
 	}
 }
 
 void ParticleRendererGl::renderManager(ParticleManager *pm, ModelRenderer *mr){
-	
+
 	//assertions
 	assertGl();
 
@@ -82,7 +82,7 @@ void ParticleRendererGl::renderSystem(ParticleSystem *ps){
 
 	//render particles
 	setBlendMode(ps->getBlendMode());
-	
+
 	// get the current modelview state
 	glGetFloatv(GL_MODELVIEW_MATRIX , modelview);
 	rightVector= Vec3f(modelview[0], modelview[4], modelview[8]);
@@ -116,7 +116,7 @@ void ParticleRendererGl::renderSystem(ParticleSystem *ps){
 		vertexBuffer[bufferIndex+1] = pos - (rightVector + upVector) * size;
 		vertexBuffer[bufferIndex+2] = pos + (rightVector - upVector) * size;
 		vertexBuffer[bufferIndex+3] = pos + (rightVector + upVector) * size;
-		
+
 		colorBuffer[bufferIndex]= color;
 		colorBuffer[bufferIndex+1]= color;
 		colorBuffer[bufferIndex+2]= color;
@@ -135,13 +135,13 @@ void ParticleRendererGl::renderSystem(ParticleSystem *ps){
 }
 
 void ParticleRendererGl::renderSystemLine(ParticleSystem *ps){
-	
+
 	assertGl();
 	assert(rendering);
 
 	if(!ps->isEmpty()){
 		const Particle *particle= ps->getParticle(0);
-		
+
 		setBlendMode(ps->getBlendMode());
 
 		glDisable(GL_TEXTURE_2D);
@@ -154,14 +154,14 @@ void ParticleRendererGl::renderSystemLine(ParticleSystem *ps){
 		int bufferIndex= 0;
 
 		glLineWidth(particle->getSize());
-		
+
 		for(int i=0; i<ps->getAliveParticleCount(); ++i){
 			particle= ps->getParticle(i);
 			Vec4f color= particle->getColor();
 
 			vertexBuffer[bufferIndex] = particle->getPos();
 			vertexBuffer[bufferIndex+1] = particle->getLastPos();
-			
+
 			colorBuffer[bufferIndex]= color;
 			colorBuffer[bufferIndex+1]= color;
 
@@ -179,13 +179,13 @@ void ParticleRendererGl::renderSystemLine(ParticleSystem *ps){
 }
 
 void ParticleRendererGl::renderSystemLineAlpha(ParticleSystem *ps){
-	
+
 	assertGl();
 	assert(rendering);
 
 	if(!ps->isEmpty()){
 		const Particle *particle= ps->getParticle(0);
-			
+
 		setBlendMode(ps->getBlendMode());
 
 		glDisable(GL_TEXTURE_2D);
@@ -198,14 +198,14 @@ void ParticleRendererGl::renderSystemLineAlpha(ParticleSystem *ps){
 		int bufferIndex= 0;
 
 		glLineWidth(particle->getSize());
-		
+
 		for(int i=0; i<ps->getAliveParticleCount(); ++i){
 			particle= ps->getParticle(i);
 			Vec4f color= particle->getColor();
 
 			vertexBuffer[bufferIndex] = particle->getPos();
 			vertexBuffer[bufferIndex+1] = particle->getLastPos();
-			
+
 			colorBuffer[bufferIndex]= color;
 			colorBuffer[bufferIndex+1]= color;
 			colorBuffer[bufferIndex+1].w= 0.0f;
@@ -226,14 +226,14 @@ void ParticleRendererGl::renderSystemLineAlpha(ParticleSystem *ps){
 void ParticleRendererGl::renderSingleModel(AttackParticleSystem *ps, ModelRenderer *mr){
 	//render model
 	if(ps->getModel()!=NULL){
-		
+
 		//init
 		glEnable(GL_LIGHTING);
 		glEnable(GL_TEXTURE_2D);
 		glColor3f(1.f, 1.f, 1.f);
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
-		
+
 		//translate
 		Vec3f pos= ps->getPos();
 		glTranslatef(pos.x, pos.y, pos.z);
@@ -247,7 +247,7 @@ void ParticleRendererGl::renderSingleModel(AttackParticleSystem *ps, ModelRender
 		glRotatef(angleV, rotVector.x, rotVector.y, rotVector.z);
 		float angleH= radToDeg(atan2(direction.x, direction.z));
 		glRotatef(angleH, 0.f, 1.f, 0.f);
-		
+
 		//render
 		mr->begin(true, true, false);
 		mr->render(ps->getModel());

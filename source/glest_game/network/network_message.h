@@ -41,7 +41,7 @@ enum NetworkMessageType{
 	nmtCount
 };
 
-const int32 networkPacketMsgTypeSize = 6;
+const int32 commandListHeaderSize = 6;
 
 // =====================================================
 //	class NetworkMessage
@@ -54,6 +54,7 @@ public:
 	virtual void send(Socket* socket) const = 0;
 
 protected:
+	bool peek(Socket* socket, void* data, int dataSize);
 	bool receive(Socket* socket, void* data, int dataSize);
 	void send(Socket* socket, const void* data, int dataSize) const;
 };

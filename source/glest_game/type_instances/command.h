@@ -16,6 +16,7 @@
 
 #include "unit.h"
 #include "vec.h"
+#include "game_constants.h"
 
 namespace Glest{ namespace Game{
 
@@ -34,19 +35,21 @@ private:
     const CommandType *commandType;
     Vec2i pos;
 	UnitReference unitRef;		//target unit, used to move and attack optinally
+	CardinalDir facing;			// facing, for build command
 	const UnitType *unitType;	//used for build
 
 public:
     //constructor
     Command(const CommandType *ct, const Vec2i &pos=Vec2i(0)); 
     Command(const CommandType *ct, Unit *unit); 
-    Command(const CommandType *ct, const Vec2i &pos, const UnitType *unitType); 
+    Command(const CommandType *ct, const Vec2i &pos, const UnitType *unitType, CardinalDir facing); 
 
     //get
 	const CommandType *getCommandType() const	{return commandType;}
 	Vec2i getPos() const						{return pos;}
 	Unit* getUnit() const						{return unitRef.getUnit();}
 	const UnitType* getUnitType() const			{return unitType;}
+	CardinalDir getFacing() const				{return facing;}
 
     //set 
     void setCommandType(const CommandType *commandType);

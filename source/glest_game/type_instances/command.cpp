@@ -37,10 +37,11 @@ Command::Command(const CommandType *ct, Unit* unit){
 	}
 } 
 
-Command::Command(const CommandType *ct, const Vec2i &pos, const UnitType *unitType){
+Command::Command(const CommandType *ct, const Vec2i &pos, const UnitType *unitType, CardinalDir facing){
     this->commandType= ct;  
     this->pos= pos;
 	this->unitType= unitType;
+	this->facing = facing;
 }
 
 // =============== set ===============

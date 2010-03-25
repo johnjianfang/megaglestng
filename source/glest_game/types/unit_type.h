@@ -17,6 +17,7 @@
 #include "damage_multiplier.h"
 #include "sound_container.h"
 #include "checksum.h"
+#include "game_constants.h"
 
 namespace Glest{ namespace Game{
 
@@ -149,7 +150,7 @@ public:
 	int getHeight() const								{return height;}
 	int getStoredResourceCount() const					{return storedResources.size();}
 	const Resource *getStoredResource(int i) const		{return &storedResources[i];}
-	bool getCellMapCell(int x, int y) const				{return cellMap[size*y+x];}
+	bool getCellMapCell(int x, int y, CardinalDir facing) const;
 	bool getMeetingPoint() const						{return meetingPoint;}
 	Texture2D *getMeetingPointImage() const				{return meetingPointImage;}
 	StaticSound *getSelectionSound() const				{return selectionSounds.getRandSound();}

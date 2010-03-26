@@ -20,6 +20,7 @@ namespace Shared{ namespace Graphics{
 // =====================================================
 
 const int Texture::defaultSize= 256;
+const int Texture::defaultComponents = 4;
 
 Texture::Texture(){
 	mipmap= true;
@@ -36,6 +37,9 @@ Texture::Texture(){
 
 void Texture1D::load(const string &path){
 	this->path= path;
+	if (pixmap.getComponents() == -1) { //TODO: look where you really need that
+		pixmap.init(defaultComponents);
+	}
 	pixmap.load(path);
 }
 
@@ -45,6 +49,9 @@ void Texture1D::load(const string &path){
 
 void Texture2D::load(const string &path){
 	this->path= path;
+	if (pixmap.getComponents() == -1) {
+		pixmap.init(defaultComponents);
+	}
 	pixmap.load(path);
 }
 
@@ -54,6 +61,9 @@ void Texture2D::load(const string &path){
 
 void Texture3D::loadSlice(const string &path, int slice){
 	this->path= path;
+	if (pixmap.getComponents() == -1) {
+		pixmap.init(defaultComponents);
+	}
 	pixmap.loadSlice(path, slice);
 }
 
@@ -63,6 +73,9 @@ void Texture3D::loadSlice(const string &path, int slice){
 
 void TextureCube::loadFace(const string &path, int face){
 	this->path= path;
+	if (pixmap.getFace(0)->getComponents() == -1) {
+		pixmap.init(defaultComponents);
+	}
 	pixmap.loadFace(path, face);
 }
 

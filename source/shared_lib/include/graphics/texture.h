@@ -31,6 +31,7 @@ class TextureParams;
 class Texture{
 public:
 	static const int defaultSize;
+	static const int defaultComponents;
 
 	enum WrapMode{
 		wmRepeat,

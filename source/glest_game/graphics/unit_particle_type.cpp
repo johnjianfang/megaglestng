@@ -120,6 +120,15 @@ void UnitParticleSystemType::load(const XmlNode *particleSystemNode, const strin
     const XmlNode *relativeNode= particleSystemNode->getChild("relative");
     relative= relativeNode->getAttribute("value")->getBoolValue();
     
+    //relativeDirection
+    if(particleSystemNode->hasChild("relativeDirection")){
+    	const XmlNode *relativeDirectionNode= particleSystemNode->getChild("relativeDirection");
+    	relativeDirection= relativeDirectionNode->getAttribute("value")->getBoolValue();
+    }
+    else{
+    	relativeDirection=true;
+    }
+    
     //fixed
     const XmlNode *fixedNode= particleSystemNode->getChild("fixed");
     fixed= fixedNode->getAttribute("value")->getBoolValue();
@@ -129,10 +138,18 @@ void UnitParticleSystemType::load(const XmlNode *particleSystemNode, const strin
     	const XmlNode *teamcolorNoEnergyNode= particleSystemNode->getChild("teamcolorNoEnergy");
     	teamcolorNoEnergy= teamcolorNoEnergyNode->getAttribute("value")->getBoolValue();
     }
+    else{
+    	teamcolorNoEnergy=false;
+    }
+    
+    	
     //teamcolorEnergy
     if(particleSystemNode->hasChild("teamcolorEnergy")){
     	const XmlNode *teamcolorEnergyNode= particleSystemNode->getChild("teamcolorEnergy");
     	teamcolorEnergy= teamcolorEnergyNode->getAttribute("value")->getBoolValue();
+    }
+    else{
+    	teamcolorEnergy=false;
     }
     
     //mode
@@ -162,6 +179,7 @@ void UnitParticleSystemType::setValues(UnitParticleSystem *ups){
 	ups->setVarParticleEnergy(energyVar);
 	ups->setFixed(fixed);
 	ups->setRelative(relative);
+	ups->setRelativeDirection(relativeDirection);
     ups->setTeamcolorNoEnergy(teamcolorNoEnergy);
     ups->setTeamcolorEnergy(teamcolorEnergy);
     ups->setRadius(radius);

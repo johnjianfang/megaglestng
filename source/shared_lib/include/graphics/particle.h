@@ -214,6 +214,7 @@ public:
 		pLineAlpha
 	};
 	bool relative;
+	bool relativeDirection;
     bool fixed;
 	Model *model;
 	Primitive primitive;
@@ -242,6 +243,7 @@ public:
 	void setGravity(float gravity)						{this->gravity= gravity;}
 	void setRotation(float rotation)					{this->rotation= rotation;}
 	void setRelative(bool relative)						{this->relative= relative;}
+	void setRelativeDirection(bool relativeDirection)	{this->relativeDirection= relativeDirection;}
 	void setFixed(bool fixed)							{this->fixed= fixed;}
 	void setPrimitive(Primitive primitive)				{this->primitive= primitive;}
 

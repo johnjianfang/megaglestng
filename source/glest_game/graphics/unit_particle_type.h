@@ -56,6 +56,7 @@ protected:
 	int energyMax;
 	int energyVar;
     bool relative;
+    bool relativeDirection;
     bool fixed;
     bool teamcolorNoEnergy;
     bool teamcolorEnergy;

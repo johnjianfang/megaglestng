@@ -41,49 +41,14 @@ private:
 	bool defaultResources;
 	bool defaultVictoryConditions;
 
-    void CopyAll(const GameSettings &game)
-    {
-        description              = game.description;
-        map                      = game.map;
-        tileset                  = game.tileset;
-        tech                     = game.tech;
-        scenario                 = game.scenario;
-        scenarioDir              = game.scenarioDir;
-        thisFactionIndex         = game.thisFactionIndex;
-        factionCount             = game.factionCount;
-        defaultUnits             = game.defaultUnits;
-        defaultResources         = game.defaultResources;
-        defaultVictoryConditions = game.defaultVictoryConditions;
-
-        for(int i = 0; i < GameConstants::maxPlayers; i++)
-        {
-            factionTypeNames[i]   = game.factionTypeNames[i]; //faction names
-            factionControls[i]    = game.factionControls[i];
-            teams[i]              = game.teams[i];
-            startLocationIndex[i] = game.startLocationIndex[i];
-        }
-
-        //if(Socket::enableDebugText) printf("In [%s::%s] gameSettings->getTileset() = [%s]\n",__FILE__,__FUNCTION__,getTileset().c_str());
-        //if(Socket::enableDebugText) printf("In [%s::%s] gameSettings->getTech() = [%s]\n",__FILE__,__FUNCTION__,getTech().c_str());
-        //if(Socket::enableDebugText) printf("In [%s::%s] gameSettings->getMap() = [%s]\n",__FILE__,__FUNCTION__,getMap().c_str());
-
-    }
+	bool fogOfWar;
 
 public:
 
 
     GameSettings() { }
 
-    GameSettings(const GameSettings &game)
-    {
-        CopyAll(game);
-    }
-
-    GameSettings & operator=(const GameSettings &game)
-    {
-        CopyAll(game);
-        return *this;
-    }
+	// default copy constructor will do fine, and will maintain itself ;)
 
 	//get
 	const string &getDescription() const						{return description;}
@@ -104,6 +69,8 @@ public:
 	bool getDefaultResources() const			{return defaultResources;}
 	bool getDefaultVictoryConditions() const	{return defaultVictoryConditions;}
 
+	bool getFogOfWar() const					{return fogOfWar;}
+
 	//set
 	void setDescription(const string& description)						{this->description= description;}
 	void setMap(const string& map)										{this->map= map;}
@@ -113,9 +80,7 @@ public:
 	void setScenarioDir(const string& scenarioDir)						{this->scenarioDir= scenarioDir;}
 
 	void setFactionTypeName(int factionIndex, const string& factionTypeName)	{this->factionTypeNames[factionIndex]= factionTypeName;}
-
 	void setFactionControl(int factionIndex, ControlType controller)			{this->factionControls[factionIndex]= controller;}
-
 	void setThisFactionIndex(int thisFactionIndex) 							{this->thisFactionIndex= thisFactionIndex;}
 	void setFactionCount(int factionCount)									{this->factionCount= factionCount;}
 	void setTeam(int factionIndex, int team)								{this->teams[factionIndex]= team;}
@@ -124,6 +89,8 @@ public:
 	void setDefaultUnits(bool defaultUnits) 						{this->defaultUnits= defaultUnits;}
 	void setDefaultResources(bool defaultResources) 				{this->defaultResources= defaultResources;}
 	void setDefaultVictoryConditions(bool defaultVictoryConditions) {this->defaultVictoryConditions= defaultVictoryConditions;}
+
+	void setFogOfWar(bool fogOfWar)		{this->fogOfWar = fogOfWar;}
 };
 
 }}//end namespace

@@ -49,7 +49,7 @@ private:
 	static const float exploredAlpha;
 
 public:
-    void init(int x, int y, const World *world);
+    void init(int x, int y, const World *world, bool fogOfWar);
 	Minimap();
 	~Minimap();
 

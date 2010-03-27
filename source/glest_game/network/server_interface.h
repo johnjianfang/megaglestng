@@ -73,7 +73,6 @@ public:
 
 	bool launchGame(const GameSettings* gameSettings);
 	virtual void setGameSettings(GameSettings *serverGameSettings, bool waitForClientAck = false);
-	virtual bool getFogOfWar();
 
 private:
 	void broadcastMessage(const NetworkMessage* networkMessage, int excludeSlot= -1);

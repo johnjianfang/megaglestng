@@ -33,13 +33,14 @@ const float Minimap::exploredAlpha= 0.5f;
 Minimap::Minimap(){
 	fowPixmap0= NULL;
 	fowPixmap1= NULL;
-	fogOfWar= Config::getInstance().getBool("FogOfWar");
+	fogOfWar= true;//Config::getInstance().getBool("FogOfWar");
 }
 
-void Minimap::init(int w, int h, const World *world){
+void Minimap::init(int w, int h, const World *world, bool fogOfWar){
 	int scaledW= w/Map::cellScale;
 	int scaledH= h/Map::cellScale;
 
+	this->fogOfWar = fogOfWar;
 	Renderer &renderer= Renderer::getInstance();
 	
 	//fow pixmaps

@@ -75,7 +75,6 @@ public:
 
 	void connect(const Ip &ip, int port);
 	void reset();
-	virtual bool getFogOfWar();
 
 private:
 	void waitForMessage();

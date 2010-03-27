@@ -29,10 +29,12 @@ private:
 	GraphicLabel labelFaction;
 	GraphicLabel labelTeam;
 	GraphicLabel labelMap;
+	GraphicLabel labelFogOfWar;
 	GraphicLabel labelTechTree;
 	GraphicLabel labelTileset;
 	GraphicLabel labelMapInfo;
 	GraphicListBox listBoxMap;
+	GraphicListBox listBoxFogOfWar;
 	GraphicListBox listBoxTechTree;
 	GraphicListBox listBoxTileset;
 	vector<string> mapFiles;

@@ -333,33 +333,45 @@ void StrSoundBuffer::readChunk(void *writePointer, uint32 size){
 // =====================================================
 
 SoundPlayerDs8::SoundPlayerDs8(){
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
     dsObject= NULL;
 }
 
 void SoundPlayerDs8::init(const SoundPlayerParams *params){
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
     HRESULT hr;
-    
+    	
 	this->params= *params;
 
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 	//reserve memory for buffers
 	staticSoundBuffers.resize(params->staticBufferCount);
 	strSoundBuffers.resize(params->strBufferCount);
 
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 	//create object
     hr=DirectSoundCreate8(NULL, &dsObject, NULL);
 	if (hr!=DS_OK){
         throw runtime_error("Can't create direct sound object");
 	}
     
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	//Set cooperative level
     hr= dsObject->SetCooperativeLevel(GetActiveWindow(), DSSCL_PRIORITY); 
 	if (hr!=DS_OK){
         throw runtime_error("Can't set cooperative level of dsound");
 	}
-    
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void SoundPlayerDs8::end(){
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+	stopAllSounds();
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void SoundPlayerDs8::play(StaticSound *staticSound){

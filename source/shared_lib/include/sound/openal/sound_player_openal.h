@@ -1,9 +1,9 @@
 //This file is part of Glest Shared Library (www.glest.org)
 //Copyright (C) 2005 Matthias Braun <matze@braunis.de>
 
-//You can redistribute this code and/or modify it under 
-//the terms of the GNU General Public License as published by the Free Software 
-//Foundation; either version 2 of the License, or (at your option) any later 
+//You can redistribute this code and/or modify it under
+//the terms of the GNU General Public License as published by the Free Software
+//Foundation; either version 2 of the License, or (at your option) any later
 //version.
 #ifndef _SHARED_SOUND_SOUNDPLAYEROPENAL_H_
 #define _SHARED_SOUND_SOUNDPLAYEROPENAL_H_
@@ -28,12 +28,13 @@ public:
 
 	bool playing();
 	void stop();
+	void unQueueBuffers();
 
 protected:
 	friend class SoundPlayerOpenAL;
 	ALenum getFormat(Sound* sound);
-		
-	ALuint source;	
+
+	ALuint source;
 };
 
 class StaticSoundSource : public SoundSource {
@@ -63,11 +64,11 @@ protected:
 	friend class SoundPlayerOpenAL;
 	static const size_t STREAMBUFFERSIZE = 1024 * 500;
 	static const size_t STREAMFRAGMENTS = 5;
-	static const size_t STREAMFRAGMENTSIZE 
+	static const size_t STREAMFRAGMENTSIZE
 		= STREAMBUFFERSIZE / STREAMFRAGMENTS;
-	
+
 	bool fillBufferAndQueue(ALuint buffer);
-	
+
 	StrSound* sound;
 	ALuint buffers[STREAMFRAGMENTS];
 	ALenum format;
@@ -102,12 +103,12 @@ private:
 	friend class StreamSoundSource;
 
 	void printOpenALInfo();
-	
+
 	StaticSoundSource* findStaticSoundSource();
 	StreamSoundSource* findStreamSoundSource();
 	void checkAlcError(const char* message);
 	static void checkAlError(const char* message);
-	
+
 	ALCdevice* device;
 	ALCcontext* context;
 

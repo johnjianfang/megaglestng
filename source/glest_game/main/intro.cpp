@@ -3,12 +3,12 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
-#include "intro.h"	
+#include "intro.h"
 
 #include "main_menu.h"
 #include "util.h"
@@ -20,21 +20,23 @@
 #include "core_data.h"
 #include "metrics.h"
 #include "auto_test.h"
+#include "util.h"
 #include "leak_dumper.h"
 
+using namespace Shared::Util;
 using namespace Shared::Graphics;
 
-namespace Glest{ namespace Game{ 
+namespace Glest{ namespace Game{
 
 // =====================================================
-// 	class Text  
+// 	class Text
 // =====================================================
 
 Text::Text(const string &text, const Vec2i &pos, int time, const Font2D *font){
 	this->text= text;
 	this->pos= pos;
 	this->time= time;
-	this->texture= NULL;	
+	this->texture= NULL;
 	this->font= font;
 }
 
@@ -42,12 +44,12 @@ Text::Text(const Texture2D *texture, const Vec2i &pos, const Vec2i &size, int ti
 	this->pos= pos;
 	this->size= size;
 	this->time= time;
-	this->texture= texture;	
+	this->texture= texture;
 	this->font= NULL;
 }
 
 // =====================================================
-// 	class Intro  
+// 	class Intro
 // =====================================================
 
 const int Intro::introTime= 24000;
@@ -58,41 +60,56 @@ const int Intro::disapearTime= 2500;
 Intro::Intro(Program *program):
 	ProgramState(program)
 {
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	CoreData &coreData= CoreData::getInstance();
 	const Metrics &metrics= Metrics::getInstance();
-	int w= metrics.getVirtualW(); 
-	int h= metrics.getVirtualH(); 
+	int w= metrics.getVirtualW();
+	int h= metrics.getVirtualH();
 	timer=0;
-	
+
 	texts.push_back(Text(coreData.getLogoTexture(), Vec2i(w/2-128, h/2-64), Vec2i(256, 128), 4000));
 	texts.push_back(Text(glestVersionString, Vec2i(w/2+64, h/2-32), 4000, coreData.getMenuFontNormal()));
 	texts.push_back(Text("www.glest.org", Vec2i(w/2, h/2), 12000, coreData.getMenuFontVeryBig()));
 	SoundRenderer &soundRenderer= SoundRenderer::getInstance();
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	soundRenderer.playMusic(CoreData::getInstance().getIntroMusic());
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void Intro::update(){
 	timer++;
 	if(timer>introTime*GameConstants::updateFps/1000){
+	    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 		program->setState(new MainMenu(program));
+
+		SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
 	}
 
 	if(Config::getInstance().getBool("AutoTest")){
+	    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 		AutoTest::getInstance().updateIntro(program);
+
+		SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
 	}
 }
 
 void Intro::render(){
 	Renderer &renderer= Renderer::getInstance();
 	int difTime;
-	
+
 	renderer.reset2d();
 	renderer.clearBuffers();
 	for(int i=0; i<texts.size(); ++i){
 		Text *text= &texts[i];
-		
+
 		difTime= 1000*timer/GameConstants::updateFps-text->getTime();
-		
+
 		if(difTime>0 && difTime<appearTime+showTime+disapearTime){
 			float alpha= 1.f;
 			if(difTime>0 && difTime<appearTime){
@@ -105,13 +122,13 @@ void Intro::render(){
 			}
 			if(!text->getText().empty()){
 				renderer.renderText(
-					text->getText(), text->getFont(), alpha, 
+					text->getText(), text->getFont(), alpha,
 					text->getPos().x, text->getPos().y, true);
 			}
 			if(text->getTexture()!=NULL){
 				renderer.renderTextureQuad(
-					text->getPos().x, text->getPos().y, 
-					text->getSize().x, text->getSize().y, 
+					text->getPos().x, text->getPos().y,
+					text->getSize().x, text->getSize().y,
 					text->getTexture(), alpha);
 			}
 		}
@@ -125,9 +142,19 @@ void Intro::keyDown(char key){
 
 void Intro::mouseUpLeft(int x, int y){
 	SoundRenderer &soundRenderer= SoundRenderer::getInstance();
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
 	soundRenderer.stopMusic(CoreData::getInstance().getIntroMusic());
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	soundRenderer.playMusic(CoreData::getInstance().getMenuMusic());
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	program->setState(new MainMenu(program));
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 }}//end namespace

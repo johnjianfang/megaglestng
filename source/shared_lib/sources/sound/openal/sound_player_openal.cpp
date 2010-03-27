@@ -1,9 +1,9 @@
 //This file is part of Glest Shared Library (www.glest.org)
 //Copyright (C) 2005 Matthias Braun <matze@braunis.de>
 
-//You can redistribute this code and/or modify it under 
-//the terms of the GNU General Public License as published by the Free Software 
-//Foundation; either version 2 of the License, or (at your option) any later 
+//You can redistribute this code and/or modify it under
+//the terms of the GNU General Public License as published by the Free Software
+//Foundation; either version 2 of the License, or (at your option) any later
 //version.
 #include "sound_player_openal.h"
 
@@ -22,14 +22,22 @@ using namespace Util;
 
 SoundSource::SoundSource()
 {
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	alGenSources(1, &source);
 	SoundPlayerOpenAL::checkAlError("Couldn't create audio source: ");
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 SoundSource::~SoundSource()
 {
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	stop();
 	alDeleteSources(1, &source);
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 bool SoundSource::playing()
@@ -39,11 +47,37 @@ bool SoundSource::playing()
 	return state != AL_STOPPED;
 }
 
+void SoundSource::unQueueBuffers() {
+    int queued;
+    alGetSourcei(source, AL_BUFFERS_QUEUED, &queued);
+    while(queued--) {
+        ALuint buffer;
+        alSourceUnqueueBuffers(source, 1, &buffer);
+    }
+
+}
+
 void SoundSource::stop()
 {
+    //SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	alSourceStop(source);
-	alSourcei(source, AL_BUFFER, AL_NONE);	
+
+    SoundPlayerOpenAL::checkAlError("Problem stopping audio source: ");
+
+	//SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+    unQueueBuffers();
+
+    SoundPlayerOpenAL::checkAlError("Problem unqueuing buffers in audio source: ");
+
+	alSourcei(source, AL_BUFFER, AL_NONE);
+
+	//SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	SoundPlayerOpenAL::checkAlError("Problem stopping audio source: ");
+
+	//SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 ALenum SoundSource::getFormat(Sound* sound)
@@ -63,7 +97,7 @@ ALenum SoundSource::getFormat(Sound* sound)
 		else
 			throw std::runtime_error("Sample format not supported");
 	}
-	
+
 	throw std::runtime_error("Sample format not supported");
 }
 
@@ -90,9 +124,9 @@ void StaticSoundSource::play(StaticSound* sound)
 
 	alGenBuffers(1, &buffer);
 	SoundPlayerOpenAL::checkAlError("Couldn't create audio buffer: ");
-	
+
 	bufferAllocated = true;
-	alBufferData(buffer, format, sound->getSamples(), 
+	alBufferData(buffer, format, sound->getSamples(),
 			static_cast<ALsizei> (sound->getInfo()->getSize()),
 			static_cast<ALsizei> (sound->getInfo()->getSamplesPerSecond()));
 	SoundPlayerOpenAL::checkAlError("Couldn't fill audio buffer: ");
@@ -158,8 +192,14 @@ void StreamSoundSource::play(StrSound* sound, int64 fadeon)
 
 void StreamSoundSource::update()
 {
-	if(sound == 0)
+    //SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+	if(sound == 0) {
+        SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 		return;
+	}
+
+    //SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 
 	ALint processed = 0;
 	alGetSourcei(source, AL_BUFFERS_PROCESSED, &processed);
@@ -168,19 +208,25 @@ void StreamSoundSource::update()
 
 		ALuint buffer;
 		alSourceUnqueueBuffers(source, 1, &buffer);
-		SoundPlayerOpenAL::checkAlError("Couldn't unqueu audio buffer: ");
+		SoundPlayerOpenAL::checkAlError("Couldn't unqueue audio buffer: ");
 
 		if(!fillBufferAndQueue(buffer))
 			break;
 	}
-        
+
+	//SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
  	// we might have to restart the source if we had a buffer underrun
 	if(!playing()) {
-		std::cerr 
+	    //SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+		std::cerr
 			<< "Restarting audio source because of buffer underrun.\n";
 		alSourcePlay(source);
 		SoundPlayerOpenAL::checkAlError("Couldn't restart audio source: ");
-  	}    
+  	}
+
+    //SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 
 	// handle fading
 	switch(fadeState) {
@@ -204,6 +250,8 @@ void StreamSoundSource::update()
 		default:
 			break;
 	}
+
+	//SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 bool StreamSoundSource::fillBufferAndQueue(ALuint buffer)
@@ -223,7 +271,7 @@ bool StreamSoundSource::fillBufferAndQueue(ALuint buffer)
 			sound = next;
 		}
 	} while(bytesread < STREAMFRAGMENTSIZE);
-		
+
 	alBufferData(buffer, format, bufferdata, STREAMFRAGMENTSIZE,
 			sound->getInfo()->getSamplesPerSecond());
         delete[] bufferdata;
@@ -240,22 +288,33 @@ bool StreamSoundSource::fillBufferAndQueue(ALuint buffer)
 // ================================
 
 SoundPlayerOpenAL::SoundPlayerOpenAL() {
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	device = 0;
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 SoundPlayerOpenAL::~SoundPlayerOpenAL() {
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	end();
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void SoundPlayerOpenAL::printOpenALInfo()
 {
 	std::cout << "OpenAL Vendor: " << alGetString(AL_VENDOR) << "\n"
-	          << "OpenAL Version: " << alGetString(AL_VERSION) << "\n"     	
+	          << "OpenAL Version: " << alGetString(AL_VERSION) << "\n"
 	          << "OpenAL Renderer: " << alGetString(AL_RENDERER) << "\n"
-	          << "OpenAl Extensions: " << alGetString(AL_RENDERER) << "\n";   	
+	          << "OpenAl Extensions: " << alGetString(AL_RENDERER) << "\n";
 }
 
 void SoundPlayerOpenAL::init(const SoundPlayerParams* params) {
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	this->params = *params;
 
 	device = alcOpenDevice(0);
@@ -269,30 +328,69 @@ void SoundPlayerOpenAL::init(const SoundPlayerParams* params) {
 		checkAlcError("Couldn't create audio context: ");
 		alcMakeContextCurrent(context);
 		checkAlcError("Couldn't select audio context: ");
-	
+
 		checkAlError("Audio error after init: ");
 	} catch(...) {
+
+	    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 		printOpenALInfo();
 		throw;
 	}
 }
 
 void SoundPlayerOpenAL::end() {
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+
 	for(StaticSoundSources::iterator i = staticSources.begin();
-			i != staticSources.end(); ++i)
-		delete *i;
+			i != staticSources.end(); ++i) {
+        StaticSoundSource *src = (*i);
+        src->stop();
+    }
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	for(StreamSoundSources::iterator i = streamSources.begin();
-			i != streamSources.end(); ++i)
+			i != streamSources.end(); ++i) {
+        StreamSoundSource *src = (*i);
+        src->stop();
+    }
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+	for(StaticSoundSources::iterator i = staticSources.begin();
+			i != staticSources.end(); ++i) {
 		delete *i;
+    }
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+	for(StreamSoundSources::iterator i = streamSources.begin();
+			i != streamSources.end(); ++i) {
+		delete *i;
+    }
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
+    alcMakeContextCurrent( NULL );
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 
 	if(context != 0) {
 		alcDestroyContext(context);
 		context = 0;
 	}
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	if(device != 0) {
 		alcCloseDevice(device);
 		device = 0;
 	}
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void SoundPlayerOpenAL::play(StaticSound* staticSound) {
@@ -380,8 +478,13 @@ StaticSoundSource* SoundPlayerOpenAL::findStaticSoundSource() {
 		return 0;
 	}
 
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	StaticSoundSource* source = new StaticSoundSource();
 	staticSources.push_back(source);
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	return source;
 }
 
@@ -400,8 +503,13 @@ StreamSoundSource* SoundPlayerOpenAL::findStreamSoundSource() {
 		throw std::runtime_error("Too many stream sounds played at once");
 	}
 
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	StreamSoundSource* source = new StreamSoundSource();
 	streamSources.push_back(source);
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	return source;
 }
 

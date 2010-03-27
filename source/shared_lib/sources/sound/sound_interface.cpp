@@ -3,17 +3,19 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
 #include "sound_interface.h"
-
+#include "util.h"
 #include "leak_dumper.h"
 
-namespace Shared{ namespace Sound{	
+using namespace Shared::Util;
+
+namespace Shared{ namespace Sound{
 
 // =====================================================
 //	class SoundInterface
@@ -25,10 +27,13 @@ SoundInterface &SoundInterface::getInstance(){
 }
 
 void SoundInterface::setFactory(SoundFactory *soundFactory){
-	this->soundFactory= soundFactory;	
+	this->soundFactory= soundFactory;
 }
 
 SoundPlayer *SoundInterface::newSoundPlayer(){
+
+    SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	return soundFactory->newSoundPlayer();
 }
 

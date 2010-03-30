@@ -15,9 +15,11 @@
 #include <stdexcept>
 
 #include "opengl.h"
+#include "util.h"
 #include "leak_dumper.h"
 
 using namespace std;
+using namespace Shared::Util;
 
 namespace Shared{ namespace Graphics{ namespace Gl{
 
@@ -26,7 +28,12 @@ namespace Shared{ namespace Graphics{ namespace Gl{
 // =====================================================
 
 void ContextGl::init(){
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	pcgl.init(colorBits, depthBits, stencilBits);
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void ContextGl::end(){
@@ -34,7 +41,11 @@ void ContextGl::end(){
 }
 
 void ContextGl::makeCurrent(){
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	pcgl.makeCurrent();
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line: %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void ContextGl::swapBuffers(){

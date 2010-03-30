@@ -18,14 +18,34 @@
 #include "sound_factory.h"
 
 #include "graphics_factory_gl.h"
+
+#ifdef WIN32
+
+#include "graphics_factory_gl2.h"
+#include "sound_factory_ds8.h"
+
+#else
+
 #include "sound_factory_openal.h"
+
+#endif
 
 using std::string;
 
 using Shared::Graphics::GraphicsFactory;
 using Shared::Sound::SoundFactory;
 using Shared::Graphics::Gl::GraphicsFactoryGl;
+
+#ifdef WIN32
+
+using Shared::Graphics::Gl::GraphicsFactoryGl2;
+using Shared::Sound::Ds8::SoundFactoryDs8;
+
+#else 
+
 using Shared::Sound::OpenAL::SoundFactoryOpenAL;
+
+#endif
 
 namespace Shared{ namespace Platform{
 
@@ -41,7 +61,17 @@ private:
 
 private:
 	GraphicsFactoryGl graphicsFactoryGl;
+
+#ifdef WIN32
+
+	GraphicsFactoryGl2 graphicsFactoryGl2;
+	SoundFactoryDs8 soundFactoryDs8;
+
+#else
+
 	SoundFactoryOpenAL soundFactoryOpenAL;
+
+#endif
 
 public:
 	static FactoryRepository &getInstance();

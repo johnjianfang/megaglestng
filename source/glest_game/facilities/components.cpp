@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -141,8 +141,9 @@ void GraphicListBox::setSelectedItem(string item){
 	if(iter==items.end()){
         throw runtime_error("Value not found on list box: "+item);
 	}
-
-    setSelectedItemIndex(iter-items.begin());
+	else {
+		setSelectedItemIndex(iter-items.begin());
+	}
 
 }
     

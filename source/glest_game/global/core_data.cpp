@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -88,24 +88,27 @@ void CoreData::load(){
 	displayFont->setSize(computeFontSize(15));
 
 	//menu fonts
-	string menuFontName= config.getString("FontMenu");
+	string menuFontNameSmall= config.getString("FontMenuSmall");
 
 	menuFontSmall= renderer.newFont(rsGlobal);
-	menuFontSmall->setType(menuFontName);
-	menuFontSmall->setSize(computeFontSize(12));
+	menuFontSmall->setType(menuFontNameSmall);
+	menuFontSmall->setSize(computeFontSize(10));
 
+	string menuFontNameNormal= config.getString("FontMenuNormal");
 	menuFontNormal= renderer.newFont(rsGlobal);
-	menuFontNormal->setType(menuFontName);
-	menuFontNormal->setSize(computeFontSize(16));
+	menuFontNormal->setType(menuFontNameNormal);
+	menuFontNormal->setSize(computeFontSize(12));
 	menuFontNormal->setWidth(Font::wBold);
 
+	string menuFontNameBig= config.getString("FontMenuBig");
 	menuFontBig= renderer.newFont(rsGlobal);
-	menuFontBig->setType(menuFontName);
-	menuFontBig->setSize(computeFontSize(20));
+	menuFontBig->setType(menuFontNameBig);
+	menuFontBig->setSize(computeFontSize(16));
 
+	string menuFontNameVeryBig= config.getString("FontMenuVeryBig");
 	menuFontVeryBig= renderer.newFont(rsGlobal);
-	menuFontVeryBig->setType(menuFontName);
-	menuFontVeryBig->setSize(computeFontSize(25));
+	menuFontVeryBig->setType(menuFontNameVeryBig);
+	menuFontVeryBig->setSize(computeFontSize(20));
 
 	//console font
 	string consoleFontName= Config::getInstance().getString("FontConsole");

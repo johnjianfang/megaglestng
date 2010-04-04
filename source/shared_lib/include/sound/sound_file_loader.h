@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -45,6 +45,7 @@ public:
 	virtual uint32 read(int8 *samples, uint32 size)= 0;
 	virtual void close()= 0;
 	virtual void restart()= 0;
+	virtual string getFileName() = 0;
 };
 
 // =====================================================
@@ -56,7 +57,7 @@ public:
 class WavSoundFileLoader: public SoundFileLoader{
 private:
 	static const int maxDataRetryCount= 10;
-
+	string fileName;
 private:
 	uint32 dataOffset;
 	uint32 dataSize;
@@ -68,6 +69,7 @@ public:
 	virtual uint32 read(int8 *samples, uint32 size);
 	virtual void close();
 	virtual void restart();
+	virtual string getFileName() { return fileName; }
 };
 
 // =====================================================
@@ -80,12 +82,14 @@ class OggSoundFileLoader: public SoundFileLoader{
 private:
 	OggVorbis_File *vf;
 	FILE *f;
+	string fileName;
 
 public:
 	virtual void open(const string &path, SoundInfo *soundInfo);
 	virtual uint32 read(int8 *samples, uint32 size);
 	virtual void close();
 	virtual void restart();
+	virtual string getFileName() { return fileName; }
 };
 
 // =====================================================

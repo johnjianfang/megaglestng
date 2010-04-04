@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -46,6 +46,8 @@ namespace Glest{ namespace Game{
 MainMenu::MainMenu(Program *program):
 	ProgramState(program)
 {
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	mouseX=100; 
 	mouseY=100;
 
@@ -55,14 +57,28 @@ MainMenu::MainMenu(Program *program):
 	fps= 0;
 	lastFps= 0;
 
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	setState(new MenuStateRoot(program, this));
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
-MainMenu::~MainMenu(){
+MainMenu::~MainMenu() {
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	delete state;
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	Renderer::getInstance().endMenu();
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	SoundRenderer &soundRenderer= SoundRenderer::getInstance();
 	soundRenderer.stopAllSounds();
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
 
 void MainMenu::init(){
@@ -151,14 +167,20 @@ void MainMenu::setState(MenuState *state){
 // =====================================================
 
 MenuState::MenuState(Program *program, MainMenu *mainMenu, const string &stateName){
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
+
 	this->program= program;
 	this->mainMenu= mainMenu;
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 
 	//camera
 	XmlTree xmlTree;
 	xmlTree.load("data/core/menu/menu.xml");
 	const XmlNode *menuNode= xmlTree.getRootNode();
 	const XmlNode *cameraNode= menuNode->getChild("camera");
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 
 	//position
 	const XmlNode *positionNode= cameraNode->getChild(stateName + "-position");
@@ -167,6 +189,8 @@ MenuState::MenuState(Program *program, MainMenu *mainMenu, const string &stateNa
 	startPosition.y= positionNode->getAttribute("y")->getFloatValue();
 	startPosition.z= positionNode->getAttribute("z")->getFloatValue();
 	camera.setPosition(startPosition);
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 
 	//rotation
 	const XmlNode *rotationNode= cameraNode->getChild(stateName + "-rotation");
@@ -178,17 +202,8 @@ MenuState::MenuState(Program *program, MainMenu *mainMenu, const string &stateNa
 		degToRad(startRotation.x), 
 		degToRad(startRotation.y), 
 		degToRad(startRotation.z))));
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s %d]\n",__FILE__,__FUNCTION__,__LINE__);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 }}//end namespace

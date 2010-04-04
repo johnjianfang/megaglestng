@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -31,6 +31,7 @@ void WavSoundFileLoader::open(const string &path, SoundInfo *soundInfo){
     uint32 size32= 0;
     uint16 size16= 0; 
     int count;
+    fileName = path;
 	
 	f.open(path.c_str(), ios_base::in | ios_base::binary);
 
@@ -137,6 +138,8 @@ void WavSoundFileLoader::restart(){
 // =======================================
 
 void OggSoundFileLoader::open(const string &path, SoundInfo *soundInfo){
+	fileName = path;
+
 	f= fopen(path.c_str(), "rb");
 	if(f==NULL){
 		throw runtime_error("Can't open ogg file: "+path);

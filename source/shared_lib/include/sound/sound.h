@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -55,6 +55,7 @@ protected:
 	SoundFileLoader *soundFileLoader;
 	SoundInfo info;
 	float volume;
+	string fileName;
 	
 public:
 	Sound();
@@ -63,7 +64,8 @@ public:
 	const SoundInfo *getInfo() const	{return &info;}
 	float getVolume() const				{return volume;}
 	
-	void setVolume(float volume)	{this->volume= volume;}
+	void setVolume(float volume)		{this->volume= volume;}
+	string getFileName() 				{return fileName; }
 };
 
 // =====================================================
@@ -81,6 +83,7 @@ public:
 	int8 *getSamples() const		{return samples;}
 	
 	void load(const string &path);
+	void close();
 };
 
 // =====================================================

@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -34,6 +34,7 @@ SoundInfo::SoundInfo(){
 
 Sound::Sound(){
 	volume= 0.0f;
+	fileName = "";
 }
 
 // =====================================================
@@ -42,15 +43,33 @@ Sound::Sound(){
 
 StaticSound::StaticSound(){
 	samples= NULL;
+	soundFileLoader = NULL;
+	fileName = "";
 }
 
 StaticSound::~StaticSound(){
-	delete [] samples;
+	close();
+}
+
+void StaticSound::close(){
+	if(samples != NULL) {
+		delete [] samples;
+		samples = NULL;
+	}
+
+	if(soundFileLoader!=NULL){
+		soundFileLoader->close();
+		delete soundFileLoader;
+		soundFileLoader= NULL;
+	}
 }
 
 void StaticSound::load(const string &path){
-	string ext= path.substr(path.find_last_of('.')+1);
+	close();
 
+	fileName = path;
+
+	string ext= path.substr(path.find_last_of('.')+1);
 	soundFileLoader= SoundFileLoaderFactory::getInstance()->newInstance(ext);
 
 	soundFileLoader->open(path, &info);
@@ -58,7 +77,11 @@ void StaticSound::load(const string &path){
 	soundFileLoader->read(samples, info.getSize());
 	soundFileLoader->close();
 
-	delete soundFileLoader;
+	if(soundFileLoader!=NULL){
+		soundFileLoader->close();
+		delete soundFileLoader;
+		soundFileLoader= NULL;
+	}
 }
 
 // =====================================================
@@ -68,6 +91,7 @@ void StaticSound::load(const string &path){
 StrSound::StrSound(){
 	soundFileLoader= NULL;
 	next= NULL;
+	fileName = "";
 }
 
 StrSound::~StrSound(){
@@ -75,6 +99,10 @@ StrSound::~StrSound(){
 }
 
 void StrSound::open(const string &path){
+	close();
+
+	fileName = path;
+
 	string ext= path.substr(path.find_last_of('.')+1);
 
 	soundFileLoader= SoundFileLoaderFactory::getInstance()->newInstance(ext);

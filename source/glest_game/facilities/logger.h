@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -15,8 +15,11 @@
 #include <string>
 #include <deque>
 
+#include "texture.h"
+
 using std::string;
 using std::deque;
+using Shared::Graphics::Texture2D;
 
 namespace Glest{ namespace Game{
 
@@ -38,6 +41,7 @@ private:
 	string state;
 	string subtitle;
 	string current;
+	Texture2D *loadingTexture;
 
 private:
 	Logger();
@@ -50,6 +54,7 @@ public:
 	void setSubtitle(const string &subtitle)	{this->subtitle= subtitle;}
 
 	void add(const string &str, bool renderScreen= false);
+	void loadLoadingScreen(string filepath);
 	void renderLoadingScreen();
 
 	void clear();

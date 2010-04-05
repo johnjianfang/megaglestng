@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -17,6 +17,7 @@
 #include "metrics.h"
 #include "lang.h"
 #include "leak_dumper.h"
+#include "graphics_interface.h"
 
 using namespace std;
 using namespace Shared::Graphics;
@@ -33,6 +34,7 @@ const int Logger::logLineCount= 15;
 
 Logger::Logger(){
 	fileName= "log.txt";
+	loadingTexture=NULL;
 }
 
 Logger & Logger::getInstance(){
@@ -66,6 +68,29 @@ void Logger::clear(){
     fclose(f);
 }
 
+
+void Logger::loadLoadingScreen(string filepath){
+	
+	Renderer &renderer= Renderer::getInstance();
+	
+	if(loadingTexture!=NULL)
+	{
+		delete loadingTexture;
+		loadingTexture=NULL;
+	}
+
+	if(filepath=="")
+	{
+		loadingTexture=NULL;	
+	}
+	else
+	{
+		loadingTexture=GraphicsInterface::getInstance().getFactory()->newTexture2D();
+		loadingTexture->setMipmap(false);
+		loadingTexture->getPixmap()->load(filepath);
+	}
+}
+
 // ==================== PRIVATE ==================== 
 
 void Logger::renderLoadingScreen(){
@@ -76,9 +101,12 @@ void Logger::renderLoadingScreen(){
 
 	renderer.reset2d();
 	renderer.clearBuffers();
-
-	renderer.renderBackground(CoreData::getInstance().getBackgroundTexture());
-	
+	if(loadingTexture==NULL){
+		renderer.renderBackground(CoreData::getInstance().getBackgroundTexture());
+	}
+	else{
+		renderer.renderBackground(loadingTexture);
+	}	
 	renderer.renderText(
 		state, coreData.getMenuFontBig(), Vec3f(1.f), 
 		metrics.getVirtualW()/4, 65*metrics.getVirtualH()/100, false);

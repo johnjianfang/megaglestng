@@ -39,6 +39,9 @@ SoundFactory *FactoryRepository::getSoundFactory(const string &name){
 	if(name == "DirectSound8"){
 		return &soundFactoryDs8;
 	}
+	if(name == "OpenAL") {
+		return &soundFactoryOpenAL;
+	}
 
 	throw runtime_error("Unknown sound factory: " + name);
 }

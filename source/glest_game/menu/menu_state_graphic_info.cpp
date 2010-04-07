@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2005 Martiño Figueroa
+//	Copyright (C) 2001-2005 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -30,7 +30,7 @@ MenuStateGraphicInfo::MenuStateGraphicInfo(Program *program, MainMenu *mainMenu)
 	buttonReturn.init(387, 100, 125);
 	labelInfo.init(100, 700);
 	labelMoreInfo.init(100, 500);
-	labelMoreInfo.setFont(CoreData::getInstance().getMenuFontSmall());
+	labelMoreInfo.setFont(CoreData::getInstance().getDisplayFontSmall());
 
 	Renderer &renderer= Renderer::getInstance();
 	glInfo= renderer.getGlInfo();

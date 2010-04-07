@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -53,7 +53,7 @@ private:
 
     Font2D *displayFont;
 	Font2D *menuFontNormal;
-	Font2D *menuFontSmall;
+	Font2D *displayFontSmall;
 	Font2D *menuFontBig;
 	Font2D *menuFontVeryBig;
 	Font2D *consoleFont;
@@ -81,7 +81,7 @@ public:
 	StaticSound *getWaterSound()			{return waterSounds.getRandSound();}
 
 	Font2D *getDisplayFont() const			{return displayFont;}
-    Font2D *getMenuFontSmall() const		{return menuFontSmall;}
+    Font2D *getDisplayFontSmall() const		{return displayFontSmall;}
     Font2D *getMenuFontNormal() const		{return menuFontNormal;}
     Font2D *getMenuFontBig() const			{return menuFontBig;}
 	Font2D *getMenuFontVeryBig() const		{return menuFontVeryBig;}

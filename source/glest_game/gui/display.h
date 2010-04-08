@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -22,7 +22,7 @@
 using std::string;
 
 using Shared::Graphics::Texture2D;
-using Shared::Graphics::Vec3f;
+using Shared::Graphics::Vec4f;
 using Shared::Util::replaceBy;
 
 namespace Glest{ namespace Game{
@@ -38,6 +38,7 @@ public:
 	static const int cellSideCount= 4;
 	static const int upCellCount= cellSideCount*cellSideCount;
 	static const int downCellCount= cellSideCount*cellSideCount;
+	static const int colorCount= 9;
 	static const int imageSize= 32;
 	static const int invalidPos= -1;
 	static const int downY = imageSize*9;
@@ -54,6 +55,9 @@ private:
 	CommandClass commandClasses[downCellCount];
 	int progressBar;
 	int downSelectedPos;
+	Vec4f colors[colorCount];
+	int currentColor;
+	
 
 public:
 	Display();
@@ -67,6 +71,7 @@ public:
 	bool getDownLighted(int index) const			{return downLighted[index];}
 	const CommandType *getCommandType(int i)		{return commandTypes[i];}
 	CommandClass getCommandClass(int i)				{return commandClasses[i];}
+	Vec4f getColor() const							{return colors[currentColor];}
 	int getProgressBar() const						{return progressBar;}
 	int getDownSelectedPos() const					{return downSelectedPos;}
 	
@@ -84,6 +89,7 @@ public:
 	
 	//misc
 	void clear();
+	void switchColor();
 	int computeDownIndex(int x, int y);
 	int computeDownX(int index) const;
 	int computeDownY(int index) const;

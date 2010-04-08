@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -24,6 +24,18 @@ namespace Glest{ namespace Game{
 // =====================================================
 
 Display::Display(){
+	colors[0]= Vec4f(1.f, 1.f, 1.f, 0.0f);
+	colors[1]= Vec4f(1.f, 0.5f, 0.5f, 0.0f);
+	colors[2]= Vec4f(0.5f, 0.5f, 1.0f, 0.0f);
+	colors[3]= Vec4f(0.5f, 1.0f, 0.5f, 0.0f);
+	colors[4]= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	colors[5]= Vec4f(0.0f, 0.0f, 1.0f, 1.0f);
+	colors[6]= Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+	colors[7]= Vec4f(0.0f, 1.0f, 0.0f, 1.0f);
+	colors[8]= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	currentColor= 0;
+	
 	clear();
 }
 
@@ -44,6 +56,9 @@ void Display::clear(){
 	title.clear();
 	text.clear();
 	progressBar= -1;
+}
+void Display::switchColor(){
+	currentColor= (currentColor+1) % colorCount;
 }
 
 int Display::computeDownIndex(int x, int y){

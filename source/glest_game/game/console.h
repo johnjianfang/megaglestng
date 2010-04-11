@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -15,10 +15,12 @@
 #include <utility>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 using std::string;
 using std::vector;
 using std::pair;
+using namespace std;
 
 namespace Glest{ namespace Game{
 
@@ -52,7 +54,7 @@ public:
 	Console();
 	
 	int getLineCount() const		{return lines.size();}
-	string getLine(int i) const		{return lines[i].first;}
+	string getLine(int i) const		{ if(i < 0 || i >= lines.size()) throw runtime_error("i >= Lines.size()"); return lines[i].first;}
 
 
 	void addStdMessage(const string &s);

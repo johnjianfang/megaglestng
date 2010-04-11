@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -17,7 +17,10 @@
 #include "game_constants.h"
 #include "sound_renderer.h"
 #include "core_data.h"
+#include <stdexcept>
 #include "leak_dumper.h"
+
+using namespace std;
 
 namespace Glest{ namespace Game{
 
@@ -38,12 +41,20 @@ void Console::addStdMessage(const string &s){
 }
 
 void Console::addLine(string line, bool playSound){
-	if(playSound){
-		SoundRenderer::getInstance().playFx(CoreData::getInstance().getClickSoundA());
+	try
+	{
+		if(playSound){
+			SoundRenderer::getInstance().playFx(CoreData::getInstance().getClickSoundA());
+		}
+		lines.insert(lines.begin(), StringTimePair(line, timeElapsed));
+		if(lines.size()>maxLines){
+			lines.pop_back();
+		}
 	}
-	lines.insert(lines.begin(), StringTimePair(line, timeElapsed));
-	if(lines.size()>maxLines){
-		lines.pop_back();
+	catch(const exception &ex) {
+		char szBuf[1024]="";
+		sprintf(szBuf,"In [%s::%s %d] error [%s]\n",__FILE__,__FUNCTION__,__LINE__,ex.what());
+		throw runtime_error(szBuf);
 	}
 }
 

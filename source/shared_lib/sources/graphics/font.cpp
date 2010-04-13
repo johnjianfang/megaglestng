@@ -34,7 +34,7 @@ FontMetrics::~FontMetrics(){
 
 float FontMetrics::getTextWidth(const string &str) const{
 	float width= 0.f;
-	for(int i=0; i<str.size(); ++i){
+	for(unsigned int i=0; i<str.size(); ++i){
 		width+= widths[str[i]];
 	}
 	return width;

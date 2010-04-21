@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -40,6 +40,7 @@ protected:
     string text;
 	const Font2D *font; 
 	bool enabled;
+	bool editable;
 
 	static float anim;
 	static float fade;
@@ -57,12 +58,14 @@ public:
 	const string &getText() const	{return text;}
 	const Font2D *getFont() const	{return font;}
 	bool getEnabled() const			{return enabled;}
+	bool getEditable() const			{return editable;}
 
 	void setX(int x)					{this->x= x;}
 	void setY(int y)					{this->y= y;}
 	void setText(const string &text)	{this->text= text;}
 	void setFont(const Font2D *font)	{this->font= font;}
 	void setEnabled(bool enabled)		{this->enabled= enabled;}
+	void setEditable(bool editable)		{this->editable= editable;}
 
     virtual bool mouseMove(int x, int y);
     virtual bool mouseClick(int x, int y);
@@ -141,6 +144,7 @@ public:
     void setItems(const vector<string> &items);
 	void setSelectedItemIndex(int index);
     void setSelectedItem(string item);
+    void setEditable(bool editable);
     
     virtual bool mouseMove(int x, int y);
     virtual bool mouseClick(int x, int y);

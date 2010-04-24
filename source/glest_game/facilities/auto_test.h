@@ -14,9 +14,9 @@
 
 #include <ctime>
 
-#include "random.h"
+#include "randomgen.h"
 
-using Shared::Util::Random;
+using Shared::Util::RandomGen;
 
 namespace Glest{ namespace Game{
 
@@ -34,7 +34,7 @@ class Game;
 class AutoTest{
 private:
 	int gameStartTime;
-	Random random;
+	RandomGen random;
 
 private:
 	static const time_t invalidTime;

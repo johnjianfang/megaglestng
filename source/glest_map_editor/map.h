@@ -14,12 +14,12 @@
 
 #include "util.h"
 #include "types.h"
-#include "random.h"
+#include "randomgen.h"
 
 using Shared::Platform::int8;
 using Shared::Platform::int32;
 using Shared::Platform::float32;
-using Shared::Util::Random;
+using Shared::Util::RandomGen;
 
 namespace MapEditor {
 
@@ -57,7 +57,7 @@ private:
 		int y;
 	};
 
-	Random random;
+	RandomGen random;
 	string title;
 	string author;
 	string desc;

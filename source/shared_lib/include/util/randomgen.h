@@ -12,13 +12,13 @@
 #ifndef _SHARED_UTIL_RANDOM_H_
 #define _SHARED_UTIL_RANDOM_H_
 
-namespace Shared{ namespace Util{
+namespace Shared { namespace Util {
 
 // =====================================================
-//	class Random
+//	class RandomGen
 // =====================================================
 
-class Random{
+class RandomGen {
 private:
 	static const int m;
 	static const int a;
@@ -28,7 +28,7 @@ private:
 	int lastNumber;
 	
 public:
-	Random();
+	RandomGen();
 	void init(int seed);
 
 	int rand();

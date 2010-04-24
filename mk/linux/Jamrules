@@ -19,6 +19,12 @@ if $(USE_STLPORT_DEBUG)
   LIBS += -lstlport_gcc_debug ;
 }
 
+# if using streflop then add some special compiler defines
+if $(USE_STREFLOP)
+{
+   CPPFLAGS += -mfpmath=sse -msse ;
+}
+
 COMPILER_CFLAGS            += -Wall -W -Wno-unused -Wno-sign-compare ;
 COMPILER_CFLAGS_optimize   += -O3 -DNDEBUG ;
 COMPILER_CXXFLAGS_optimize += -O3 -DNDEBUG ;

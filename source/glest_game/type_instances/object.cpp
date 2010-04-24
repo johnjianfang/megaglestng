@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -31,7 +31,7 @@ namespace Glest{ namespace Game{
 // =====================================================
 
 Object::Object(ObjectType *objectType, const Vec3f &pos){
-	Random random;
+	Shared::Util::Random random;
 
 	random.init(static_cast<int>(pos.x*pos.z));
 

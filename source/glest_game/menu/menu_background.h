@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -26,7 +26,7 @@ using Shared::Graphics::Vec3f;
 using Shared::Graphics::Vec2f;
 using Shared::Graphics::Texture2D;
 using Shared::Graphics::Model;
-using Shared::Util::Random;
+//using Shared::Util::Random;
 
 namespace Glest{ namespace Game{
 
@@ -67,7 +67,7 @@ private:
 	float t;
 
 	//misc
-	Random random;
+	Shared::Util::Random random;
 	Model *characterModels[characterCount];
 	float anim;
 	float fade;

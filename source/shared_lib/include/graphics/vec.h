@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -13,7 +13,8 @@
 #ifndef _SHARED_GRAPHICS_VEC_H_
 #define _SHARED_GRAPHICS_VEC_H_
 
-#include <cmath>
+#include "streflop_cond.h"
+//#include <cmath>
 
 namespace Shared{ namespace Graphics{
 
@@ -124,7 +125,7 @@ public:
 	}
 
 	float length() const{
-		return static_cast<float>(sqrt(static_cast<float>(x*x + y*y)));
+		return static_cast<float>(streflop::sqrt(static_cast<float>(x*x + y*y)));
 	}
 
 	void normalize(){
@@ -257,7 +258,7 @@ public:
 	}
 
 	float length() const{
-		return static_cast<float>(sqrt(x*x + y*y + z*z));
+		return static_cast<float>(streflop::sqrt(x*x + y*y + z*z));
 	}
 
 	void normalize(){

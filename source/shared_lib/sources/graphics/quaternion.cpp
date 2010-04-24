@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -9,6 +9,7 @@
 //	License, or (at your option) any later version
 // ==============================================================
 
+#include "streflop_cond.h"
 #include "quaternion.h"
 
 #include "leak_dumper.h"
@@ -66,23 +67,23 @@ void Quaternion::setAddIdentity(){
 }
 
 void Quaternion::setAxisAngle(const AxisAngle &axisAngle){
-	w= cosf(axisAngle.angle/2.0f);
-	v.x= axisAngle.axis.x * sinf(axisAngle.angle/2.0f);
-	v.y= axisAngle.axis.y * sinf(axisAngle.angle/2.0f);
-	v.z= axisAngle.axis.z * sinf(axisAngle.angle/2.0f);
+	w= streflop::cosf(axisAngle.angle/2.0f);
+	v.x= axisAngle.axis.x * streflop::sinf(axisAngle.angle/2.0f);
+	v.y= axisAngle.axis.y * streflop::sinf(axisAngle.angle/2.0f);
+	v.z= axisAngle.axis.z * streflop::sinf(axisAngle.angle/2.0f);
 }
 
 void Quaternion::setEuler(const EulerAngles &eulerAngles){
 	Quaternion qx, qy, qz, qr;
 
-	qx.w= cosf(eulerAngles.x/2.0f);
-	qx.v= Vec3f(sinf(eulerAngles.x/2.0f), 0.0f, 0.0f);
+	qx.w= streflop::cosf(eulerAngles.x/2.0f);
+	qx.v= Vec3f(streflop::sinf(eulerAngles.x/2.0f), 0.0f, 0.0f);
 
-	qy.w= cosf(eulerAngles.y/2.0f);
-	qy.v= Vec3f(0.0f, sinf(eulerAngles.y/2.0f), 0.0f);
+	qy.w= streflop::cosf(eulerAngles.y/2.0f);
+	qy.v= Vec3f(0.0f, streflop::sinf(eulerAngles.y/2.0f), 0.0f);
 
-	qz.w= cosf(eulerAngles.z/2.0f);
-	qz.v= Vec3f(0.0f, 0.0f, sinf(eulerAngles.z/2.0f));
+	qz.w= streflop::cosf(eulerAngles.z/2.0f);
+	qz.v= Vec3f(0.0f, 0.0f, streflop::sinf(eulerAngles.z/2.0f));
 	
 	qr= qx*qy*qz;
 
@@ -91,7 +92,7 @@ void Quaternion::setEuler(const EulerAngles &eulerAngles){
 }
 
 float Quaternion::length(){
-	return sqrt(w*w+v.x*v.x+v.y*v.y+v.z*v.z);
+	return streflop::sqrt(w*w+v.x*v.x+v.y*v.y+v.z*v.z);
 }
 
 Quaternion Quaternion::conjugate(){
@@ -183,7 +184,7 @@ Matrix4f Quaternion::toMatrix4() const{
 
 AxisAngle Quaternion::toAxisAngle() const{
 	float scale= 1.0f/(v.x*v.x + v.y*v.y + v.z*v.z);
-	return AxisAngle(v*scale, 2*acosf(w));
+	return AxisAngle(v*scale, 2*streflop::acosf(w));
 }
 
 Vec3f Quaternion::getLocalXAxis() const{

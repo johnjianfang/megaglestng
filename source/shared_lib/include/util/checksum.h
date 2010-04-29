@@ -13,6 +13,7 @@
 #define _SHARED_UTIL_CHECKSUM_H_
 
 #include <string>
+#include <map>
 
 #include "types.h"
 
@@ -32,11 +33,14 @@ private:
 	int32	r;
     int32	c1;
     int32	c2;
+	std::map<string,int32> fileList;
+
+	void addFileToSum(const string &path);
 
 public:
 	Checksum();
 
-	int32 getSum() const	{return sum;}
+	int32 getSum();
 
 	void addByte(int8 value);
 	void addString(const string &value);

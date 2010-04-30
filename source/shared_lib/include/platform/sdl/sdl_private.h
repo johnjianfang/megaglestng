@@ -14,7 +14,7 @@
 // This header contains things that should not be used outside the platform/sdl
 // directory
 
-namespace Shared{ namespace Platform{ namespace Private{
+namespace Shared{ namespace PlatformCommon { namespace Private {
 
 extern bool shouldBeFullscreen;
 extern int ScreenWidth;

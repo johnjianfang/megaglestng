@@ -16,6 +16,8 @@
 #include "sound_player.h"
 #include "window.h"
 #include "vec.h"
+#include "simple_threads.h"
+#include "platform_common.h"
 
 namespace Glest{ namespace Game{
 
@@ -23,6 +25,7 @@ using Shared::Sound::StrSound;
 using Shared::Sound::StaticSound;
 using Shared::Sound::SoundPlayer;
 using Shared::Graphics::Vec3f;
+using namespace Shared::PlatformCommon;
 
 // =====================================================
 // 	class SoundRenderer
@@ -30,7 +33,7 @@ using Shared::Graphics::Vec3f;
 ///	Wrapper to acces the shared library sound engine
 // =====================================================
 
-class SoundRenderer{
+class SoundRenderer : public SimpleTaskCallbackInterface {
 public:
 	static const int ambientFade;
 	static const float audibleDist;
@@ -51,6 +54,7 @@ public:
 	static SoundRenderer &getInstance();
 	void init(Window *window);
 	void update();
+	virtual void simpleTask() { update(); }
 	SoundPlayer *getSoundPlayer() const	{return soundPlayer;}
 
 	//music

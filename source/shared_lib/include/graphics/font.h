@@ -44,7 +44,8 @@ public:
 
 class Font{
 public:
-	static const int charCount;
+	static int charCount;
+	static std::string fontTypeName;
 	
 public:
 	enum Width{

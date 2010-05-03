@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -31,15 +31,17 @@ class Map;
 class WaterSplash{
 private:
 	Vec2f pos;
+	int size;
 	float anim;
 	bool enabled;
 
 public:
-	WaterSplash(const Vec2f &pos);
+	WaterSplash(const Vec2f &pos, int size);
 
 	void update(float amount);
 
 	const Vec2f &getPos() const	{return pos;}
+	const int &getSize() const	{return size;}
 	float getAnim() const		{return anim;}
 	bool getEnabled() const		{return enabled;}
 };
@@ -65,7 +67,7 @@ public:
 
 	float getAmin() const	{return anim;}
 
-	void addWaterSplash(const Vec2f &pos);
+	void addWaterSplash(const Vec2f &pos, int size);
 	int getWaterSplashCount() const					{return waterSplashes.size();}
 	const WaterSplash *getWaterSplash(int i) const	{return &waterSplashes[i];}
 };

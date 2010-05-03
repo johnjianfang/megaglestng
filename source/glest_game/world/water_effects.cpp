@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -21,8 +21,9 @@ namespace Glest{ namespace Game{
 //	class WaterSplash
 // =====================================================
 
-WaterSplash::WaterSplash(const Vec2f &pos){
+WaterSplash::WaterSplash(const Vec2f &pos, int size){
 	this->pos= pos;
+	this->size=1+(size-1)/2;
 	anim= 0.f;
 	enabled= true;
 
@@ -30,7 +31,7 @@ WaterSplash::WaterSplash(const Vec2f &pos){
 
 void WaterSplash::update(float amount){
 	if(enabled){
-		anim+= amount;
+		anim+= amount/size;
 		if(anim>1.f){
 			enabled= false;
 		}
@@ -55,14 +56,14 @@ void WaterEffects::update(){
 	}
 }
 
-void WaterEffects::addWaterSplash(const Vec2f &pos){
+void WaterEffects::addWaterSplash(const Vec2f &pos, int size){
 	for(int i=0; i<waterSplashes.size(); ++i){
 		if(!waterSplashes[i].getEnabled()){
-			waterSplashes[i]= WaterSplash(pos);
+			waterSplashes[i]= WaterSplash(pos,size);
 			return;
 		}
 	}
-	waterSplashes.push_back(WaterSplash(pos));
+	waterSplashes.push_back(WaterSplash(pos,size));
 }
 
 }}//end namespace

@@ -25,11 +25,11 @@ int UndoPoint::w = 0;
 int UndoPoint::h = 0;
 
 UndoPoint::UndoPoint() 
-		: height(0)
+		: change(ctNone)
 		, surface(0)
 		, object(0)
-		, resource(0) 
-		, change(ctNone) {
+		, resource(0)
+		, height(0) {
 	w = Program::map->getW();
 	h = Program::map->getH();
 }

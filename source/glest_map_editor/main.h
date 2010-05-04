@@ -50,7 +50,6 @@ enum StatusItems {
 	siCOUNT
 };
 
-
 const char *object_descs[] = {
 	"None (Erase)",
 	"Tree",
@@ -116,6 +115,8 @@ private:
 		miMiscAbout,
 		miMiscHelp,
 
+		toolPlayer,
+
 		miBrushHeight,
 		miBrushGradient = miBrushHeight + heightCount + 1,
 		miBrushSurface = miBrushGradient + heightCount + 1,
@@ -131,6 +132,8 @@ private:
 	Program *program;
 	int lastX, lastY;
 
+	wxPanel *panel;
+	
 	wxTimer *timer;
 
 	wxMenuBar *menuBar;
@@ -171,8 +174,10 @@ public:
 	void init(string fname);
 
 	void onClose(wxCloseEvent &event);
-	void onMouseDown(wxMouseEvent &event);
-	void onMouseMove(wxMouseEvent &event);
+
+	void onMouseDown(wxMouseEvent &event, int x, int y);
+	void onMouseMove(wxMouseEvent &event, int x, int y);
+
 	void onPaint(wxPaintEvent &event);
 	void onKeyDown(wxKeyEvent &e);
 
@@ -205,6 +210,8 @@ public:
 	void onMenuBrushResource(wxCommandEvent &event);
 	void onMenuBrushStartLocation(wxCommandEvent &event);
 	void onMenuRadius(wxCommandEvent &event);
+	
+	void onToolPlayer(wxCommandEvent &event);
 
 	void onTimer(wxTimerEvent &event);
 
@@ -228,7 +235,7 @@ private:
 	DECLARE_EVENT_TABLE()
 
 public:
-	GlCanvas(MainWindow *mainWindow, int *args);
+	GlCanvas(MainWindow *mainWindow, wxWindow *parent, int *args);
 
 	void onMouseDown(wxMouseEvent &event);
 	void onMouseMove(wxMouseEvent &event);

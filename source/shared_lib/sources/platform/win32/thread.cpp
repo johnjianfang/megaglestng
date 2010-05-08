@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -61,6 +61,28 @@ void Mutex::p(){
 
 void Mutex::v(){
     LeaveCriticalSection(&mutex);
+}
+
+// =====================================================
+//	class Semaphore
+// =====================================================
+
+Semaphore::Semaphore(Uint32 initialValue) {
+	semaphore = SDL_CreateSemaphore(initialValue);
+}
+
+Semaphore::~Semaphore() {
+	SDL_DestroySemaphore(semaphore);
+	semaphore = NULL;
+}
+
+void Semaphore::signal() {
+	SDL_SemPost(semaphore);
+}
+
+int Semaphore::waitTillSignalled() {
+	int semValue = SDL_SemWait(semaphore);
+	return semValue;
 }
 
 }}//end namespace

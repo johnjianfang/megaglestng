@@ -64,4 +64,26 @@ void Mutex::v() {
 	SDL_mutexV(mutex);
 }
 
+// =====================================================
+//	class Semaphore
+// =====================================================
+
+Semaphore::Semaphore(Uint32 initialValue) {
+	semaphore = SDL_CreateSemaphore(initialValue);
+}
+
+Semaphore::~Semaphore() {
+	SDL_DestroySemaphore(semaphore);
+	semaphore = NULL;
+}
+
+void Semaphore::signal() {
+	SDL_SemPost(semaphore);
+}
+
+int Semaphore::waitTillSignalled() {
+	int semValue = SDL_SemWait(semaphore);
+	return semValue;
+}
+
 }}//end namespace

@@ -62,6 +62,21 @@ public:
 	void v();
 };
 
+// =====================================================
+//	class Semaphore
+// =====================================================
+
+class Semaphore {
+private:
+	SDL_sem* semaphore;
+
+public:
+	Semaphore(Uint32 initialValue = 0);
+	~Semaphore();
+	void signal();
+	int waitTillSignalled();
+};
+
 }}//end namespace
 
 #endif

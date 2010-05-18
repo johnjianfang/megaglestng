@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -14,8 +14,10 @@
 
 #include "element_type.h"
 #include "checksum.h"
+#include "conversion.h"
 
 using Shared::Util::Checksum;
+using namespace Shared::Util;
 
 namespace Glest{ namespace Game{
 
@@ -47,6 +49,21 @@ public:
 	int getAttackRange() const		{return attackRange;}
 	int getMoveSpeed() const		{return moveSpeed;}
 	int getProdSpeed() const		{return prodSpeed;}
+
+	std::string toString() const {
+		std::string result = "";
+
+		result += "maxHp = " + intToStr(maxHp);
+		result += " sight = " + intToStr(sight);
+		result += " maxEp = " + intToStr(maxEp);
+		result += " armor = " + intToStr(armor);
+		result += " attackStrength = " + intToStr(attackStrength);
+		result += " attackRange = " + intToStr(attackRange);
+		result += " moveSpeed = " + intToStr(moveSpeed);
+		result += " prodSpeed = " + intToStr(prodSpeed);
+
+		return result;
+	}
 };
 
 // ===============================

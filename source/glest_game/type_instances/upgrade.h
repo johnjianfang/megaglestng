@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -13,6 +13,7 @@
 #define _GLEST_GAME_UPGRADE_H_
 
 #include <vector>
+#include <string>
 
 using std::vector;
 
@@ -56,6 +57,8 @@ private:
 
 	//set
 	void setState(UpgradeState state);
+
+	std::string toString() const;
 };
 
 
@@ -80,6 +83,8 @@ public:
 	bool isUpgrading(const UpgradeType *upgradeType) const;
 	bool isUpgradingOrUpgraded(const UpgradeType *upgradeType) const;
 	void computeTotalUpgrade(const Unit *unit, TotalUpgrade *totalUpgrade) const;
+
+	std::string toString() const;
 };
 
 }}//end namespace

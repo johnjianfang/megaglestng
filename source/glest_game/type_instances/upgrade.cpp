@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -16,6 +16,7 @@
 #include "unit.h"
 #include "util.h"
 #include "upgrade_type.h"
+#include "conversion.h"
 #include "leak_dumper.h"
 
 using namespace std;
@@ -51,6 +52,17 @@ const UpgradeType * Upgrade::getType() const{
 
 void Upgrade::setState(UpgradeState state){
      this->state= state;
+}
+
+std::string Upgrade::toString() const {
+	std::string result = "";
+
+	result += " state = " + intToStr(state) + " factionIndex = " + intToStr(factionIndex);
+	if(type != NULL) {
+		result += " type = " + type->getReqDesc();
+	}
+
+	return result;
 }
 
 
@@ -139,6 +151,14 @@ void UpgradeManager::computeTotalUpgrade(const Unit *unit, TotalUpgrade *totalUp
 			totalUpgrade->sum((*it)->getType());	
 	}
 
+}
+
+std::string UpgradeManager::toString() const {
+	std::string result = "UpgradeCount: " + intToStr(this->getUpgradeCount());
+	for(int idx = 0; idx < upgrades.size(); idx++) {
+		result += " index = " + intToStr(idx) + " " + upgrades[idx]->toString();
+	}
+	return result;
 }
 
 }}// end namespace

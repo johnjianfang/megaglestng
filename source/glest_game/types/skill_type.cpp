@@ -68,7 +68,8 @@ void SkillType::load(const XmlNode *sn, const string &dir, const TechTree *tt, c
 				const XmlNode *particleFileNode= particleNode->getChild("particle-file", i);
 				string path= particleFileNode->getAttribute("path")->getRestrictedValue();
 				UnitParticleSystemType *unitParticleSystemType= new UnitParticleSystemType();
-				unitParticleSystemType->load(dir,  dir + "/" + path);
+
+				unitParticleSystemType->load(dir,  dir + "/" + path, Renderer::getInstance().newTexture2D(rsGame));
 				unitParticleSystemTypes.push_back(unitParticleSystemType);
 			}
 		}

@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -29,8 +29,8 @@ bool strToFloat(const string &s, float *f);
 string boolToStr(bool b);
 string intToStr(int i);
 string intToHex(int i);
-string floatToStr(float f);
-string doubleToStr(double f);
+string floatToStr(float f,int precsion=2);
+string doubleToStr(double f,int precsion=2);
 
 }}//end namespace
 

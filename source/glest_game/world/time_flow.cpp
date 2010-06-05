@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -14,7 +14,10 @@
 #include "sound_renderer.h"
 #include "config.h"
 #include "game_constants.h"
+#include "util.h"
 #include "leak_dumper.h"
+
+using namespace Shared::Util;
 
 namespace Glest{ namespace Game{
 
@@ -31,15 +34,19 @@ void TimeFlow::init(Tileset *tileset){
 	time= dawn+1.5f;
 	lastTime= time;
 	Config &config= Config::getInstance();
-	timeInc= 24.f*(1.f/config.getFloat("DayTime"))/GameConstants::updateFps;
+	timeInc= 24.f * (1.f / config.getFloat("DayTime")) / GameConstants::updateFps;
+
+	SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line %d] timeInc = %f\n",__FILE__,__FUNCTION__,__LINE__,timeInc);
 }
 
-void TimeFlow::update(){
+void TimeFlow::update() {
+
+	//SystemFlags::OutputDebug(SystemFlags::debugSystem,"In [%s::%s Line %d] timeInc = %f, time = %f\n",__FILE__,__FUNCTION__,__LINE__,timeInc,time);
 	
 	//update time
-	time+= isDay()? timeInc: timeInc*2;
-	if(time>24.f){
-		time-= 24.f;
+	time += isDay()? timeInc: timeInc*2;
+	if(time > 24.f){
+		time -= 24.f;
 	}
 
 	//sounds

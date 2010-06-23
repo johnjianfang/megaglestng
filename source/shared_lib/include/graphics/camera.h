@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -30,6 +30,9 @@ public:
 
 	Vec3f getPosition() const			{return position;}
 	Quaternion getOrientation() const	{return orientation;}
+
+	const Vec3f & getConstPosition() const			{return position;}
+	const Quaternion & getConstOrientation() const	{return orientation;}
 
 	void setPosition(const Vec3f &position)				{this->position= position;}
 	void setOrientation(const Quaternion &orientation)	{this->orientation= orientation;}

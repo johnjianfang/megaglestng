@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -42,6 +42,8 @@ public:
 
 	void init();
 	void end();
+	void endModel(Model *model,bool mustExistInList=false);
+	void endLastModel(bool mustExistInList=false);
 
 	void setTextureManager(TextureManager *textureManager)	{this->textureManager= textureManager;}
 };

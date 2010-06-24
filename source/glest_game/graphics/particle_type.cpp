@@ -14,7 +14,7 @@
 #include "util.h"
 #include "core_data.h"
 #include "xml_parser.h"
-#include "renderer.h"
+#include "model.h"
 #include "config.h"
 #include "game_constants.h"
 
@@ -29,20 +29,20 @@ namespace Glest{ namespace Game{
 // 	class ParticleSystemType
 // =====================================================
 
-ParticleSystemType::ParticleSystemType(){
+ParticleSystemType::ParticleSystemType() {
 	teamcolorNoEnergy=false;
 	teamcolorEnergy=false;
+	texture=NULL;
+	model=NULL;
 }
 
-void ParticleSystemType::load(const XmlNode *particleSystemNode, const string &dir){
-	
-	Renderer &renderer= Renderer::getInstance();
-
+void ParticleSystemType::load(const XmlNode *particleSystemNode, const string &dir,RendererInterface *renderer) {
 	//texture
 	const XmlNode *textureNode= particleSystemNode->getChild("texture");
 	bool textureEnabled= textureNode->getAttribute("value")->getBoolValue();
+
 	if(textureEnabled){
-		texture= renderer.newTexture2D(rsGame);
+		texture= renderer->newTexture2D(rsGame);
 		if(textureNode->getAttribute("luminance")->getBoolValue()){
 			texture->setFormat(Texture::fAlpha);
 			texture->getPixmap()->init(1);
@@ -52,16 +52,17 @@ void ParticleSystemType::load(const XmlNode *particleSystemNode, const string &d
 		}
 		texture->load(dir + "/" + textureNode->getAttribute("path")->getRestrictedValue());
 	}
-	else{
+	else {
 		texture= NULL;
 	}
 	
 	//model
 	const XmlNode *modelNode= particleSystemNode->getChild("model");
 	bool modelEnabled= modelNode->getAttribute("value")->getBoolValue();
-	if(modelEnabled){
+	if(modelEnabled) {
 		string path= modelNode->getAttribute("path")->getRestrictedValue();
-		model= renderer.newModel(rsGame);
+		model= renderer->newModel(rsGame);
+
 		model->load(dir + "/" + path);
 	}
 	else{
@@ -140,7 +141,6 @@ void ParticleSystemType::load(const XmlNode *particleSystemNode, const string &d
 	{
 		mode="normal";
 	}
-	
 }
 
 void ParticleSystemType::setValues(AttackParticleSystem *ats){
@@ -166,14 +166,14 @@ void ParticleSystemType::setValues(AttackParticleSystem *ats){
 //	class ParticleSystemTypeProjectile
 // ===========================================================
 
-void ParticleSystemTypeProjectile::load(const string &dir, const string &path){
+void ParticleSystemTypeProjectile::load(const string &dir, const string &path,RendererInterface *renderer) {
 
 	try{
 		XmlTree xmlTree;
 		xmlTree.load(path);
 		const XmlNode *particleSystemNode= xmlTree.getRootNode();
 		
-		ParticleSystemType::load(particleSystemNode, dir);
+		ParticleSystemType::load(particleSystemNode, dir, renderer);
 
 		//trajectory values
 		const XmlNode *tajectoryNode= particleSystemNode->getChild("trajectory");
@@ -206,7 +206,7 @@ void ParticleSystemTypeProjectile::load(const string &dir, const string &path){
 	}
 }
 
-ProjectileParticleSystem *ParticleSystemTypeProjectile::create(){
+ProjectileParticleSystem *ParticleSystemTypeProjectile::create() {
 	ProjectileParticleSystem *ps=  new ProjectileParticleSystem();
 
 	ParticleSystemType::setValues(ps);
@@ -223,14 +223,14 @@ ProjectileParticleSystem *ParticleSystemTypeProjectile::create(){
 //	class ParticleSystemTypeSplash
 // ===========================================================
 
-void ParticleSystemTypeSplash::load(const string &dir, const string &path){
+void ParticleSystemTypeSplash::load(const string &dir, const string &path,RendererInterface *renderer) {
 
 	try{
 		XmlTree xmlTree;
 		xmlTree.load(path);
 		const XmlNode *particleSystemNode= xmlTree.getRootNode();
 		
-		ParticleSystemType::load(particleSystemNode, dir);
+		ParticleSystemType::load(particleSystemNode, dir, renderer);
 
 		//emission rate fade
 		const XmlNode *emissionRateFadeNode= particleSystemNode->getChild("emission-rate-fade");

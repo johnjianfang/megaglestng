@@ -19,8 +19,10 @@
 #include "texture.h"
 #include "vec.h"
 #include "xml_parser.h"
+#include "graphics_interface.h"
 
 using std::string;
+using namespace Shared::Graphics;
 
 namespace Glest{ namespace Game{
 
@@ -63,10 +65,13 @@ protected:
 
 public:
 	ParticleSystemType();
-	void load(const XmlNode *particleSystemNode, const string &dir);
+	void load(const XmlNode *particleSystemNode, const string &dir,RendererInterface *renderer);
+	void setValues(AttackParticleSystem *ats);
+	bool hasTexture() const { return(texture != NULL); }
+	bool hasModel() const { return(model != NULL); }
 
 protected:
-	void setValues(AttackParticleSystem *ats);
+
 };
 
 // ===========================================================
@@ -81,8 +86,9 @@ private:
 	float trajectoryFrequency;
 
 public:
-	void load(const string &dir, const string &path);
+	void load(const string &dir, const string &path,RendererInterface *renderer);
 	ProjectileParticleSystem *create();
+
 };
 
 // ===========================================================
@@ -91,7 +97,7 @@ public:
 
 class ParticleSystemTypeSplash: public ParticleSystemType{
 public:
-	void load(const string &dir, const string &path);
+	void load(const string &dir, const string &path,RendererInterface *renderer);
 	SplashParticleSystem *create();
 
 private:

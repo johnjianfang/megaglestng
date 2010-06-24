@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -32,10 +32,15 @@ void TextRenderer2DGl::begin(const Font2D *font){
 	this->font= static_cast<const Font2DGl*>(font);
 }
 
-void TextRenderer2DGl::render(const string &text, int x, int y, bool centered){
+void TextRenderer2DGl::render(const string &text, int x, int y, bool centered, Vec3f color) {
 	assert(rendering);
 	
 	assertGl();
+
+	if(color.x >= 0) {
+		glPushAttrib(GL_CURRENT_BIT);
+		glColor3fv(color.ptr());
+	}
 
 	int line=0;
 	int size= font->getSize();
@@ -68,6 +73,9 @@ void TextRenderer2DGl::render(const string &text, int x, int y, bool centered){
 		}
 	}
 
+	if(color.x >= 0) {
+		glPopAttrib();
+	}
 	assertGl();
 }
 

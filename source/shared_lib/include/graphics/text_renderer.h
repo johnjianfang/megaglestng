@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -30,7 +30,7 @@ public:
 	virtual ~TextRenderer2D(){};
 
 	virtual void begin(const Font2D *font)= 0;
-	virtual void render(const string &text, int x, int y, bool centered= false)= 0;
+	virtual void render(const string &text, int x, int y, bool centered= false,Vec3f color=Vec3f(-1.0))= 0;
 	virtual void end()= 0;
 };
 

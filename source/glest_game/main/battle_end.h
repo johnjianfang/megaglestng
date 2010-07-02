@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -27,6 +27,14 @@ class BattleEnd: public ProgramState{
 private:
 	Stats stats;
 
+	GraphicButton buttonExit;
+	int mouseX;
+	int mouseY;
+	int mouse2d;
+	GraphicMessageBox mainMessageBox;
+
+	void showMessageBox(const string &text, const string &header, bool toggle);
+
 public:
 	BattleEnd(Program *program, const Stats *stats);
 	~BattleEnd();
@@ -34,6 +42,7 @@ public:
 	virtual void render();
 	virtual void keyDown(char key);
 	virtual void mouseDownLeft(int x, int y);
+	virtual void mouseMove(int x, int y, const MouseState *ms);
 };
 
 }}//end namespace

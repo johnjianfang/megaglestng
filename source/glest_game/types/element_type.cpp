@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -42,15 +42,22 @@ DisplayableType::DisplayableType(){
 string RequirableType::getReqDesc() const{
 	bool anyReqs= false;
 
-	string reqString;
+	string reqString="";
 	for(int i=0; i<getUnitReqCount(); ++i){
+		if(getUnitReq(i) == NULL) {
+			throw runtime_error("getUnitReq(i) == NULL");
+		}
         reqString+= getUnitReq(i)->getName();
         reqString+= "\n";
 		anyReqs= true;
     }
 
     for(int i=0; i<getUpgradeReqCount(); ++i){
-        reqString+= getUpgradeReq(i)->getName();
+		if(getUpgradeReq(i) == NULL) {
+			throw runtime_error("getUpgradeReq(i) == NULL");
+		}
+
+    	reqString+= getUpgradeReq(i)->getName();
         reqString+= "\n";
 		anyReqs= true;
     }

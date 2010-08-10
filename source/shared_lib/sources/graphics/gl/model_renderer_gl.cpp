@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -68,6 +68,15 @@ void ModelRendererGl::begin(bool renderNormals, bool renderTextures, bool render
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
+/*
+	glHint( GL_LINE_SMOOTH_HINT, GL_FASTEST );
+	glHint( GL_FRAGMENT_SHADER_DERIVATIVE_HINT, GL_FASTEST );
+	glHint( GL_GENERATE_MIPMAP_HINT, GL_FASTEST );
+	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );
+	glHint( GL_POINT_SMOOTH_HINT, GL_FASTEST );
+	glHint( GL_POLYGON_SMOOTH_HINT, GL_FASTEST );
+	glHint( GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST );
+*/
 	//assertions
 	assertGl();
 }
@@ -203,10 +212,11 @@ void ModelRendererGl::renderMesh(const Mesh *mesh){
 }
 
 void ModelRendererGl::renderMeshNormals(const Mesh *mesh){
+
 	glBegin(GL_LINES);
 	for(int i= 0; i<mesh->getIndexCount(); ++i){
-		Vec3f vertex= mesh->getInterpolationData()->getVertices()[mesh->getIndices()[i]];
-		Vec3f normal= vertex + mesh->getInterpolationData()->getNormals()[mesh->getIndices()[i]];
+		const Vec3f &vertex= mesh->getInterpolationData()->getVertices()[mesh->getIndices()[i]];
+		const Vec3f &normal= vertex + mesh->getInterpolationData()->getNormals()[mesh->getIndices()[i]];
 	
 		glVertex3fv(vertex.ptr());
 		glVertex3fv(normal.ptr());

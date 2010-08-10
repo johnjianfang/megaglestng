@@ -42,34 +42,57 @@ PathFinder::PathFinder(){
 }
 
 PathFinder::PathFinder(const Map *map){
-	init(map);
 	nodePool= NULL;
+	init(map);
 }
 
 void PathFinder::init(const Map *map){
+	if(nodePool != NULL) {
+		delete [] nodePool;
+		nodePool = NULL;
+	}
 	nodePool= new Node[pathFindNodesMax];
 	this->map= map;
 }
 
 PathFinder::~PathFinder(){
 	delete [] nodePool;
+	nodePool = NULL;
 }
 
-PathFinder::TravelState PathFinder::findPath(Unit *unit, const Vec2i &finalPos){
+TravelState PathFinder::findPath(Unit *unit, const Vec2i &finalPos){
 	
 	//route cache
-	UnitPath *path= unit->getPath();
-	if(finalPos==unit->getPos()){
+	UnitPathInterface *path= unit->getPath();
+	if(finalPos==unit->getPos()) {
 		//if arrived
 		unit->setCurrSkill(scStop);
 		return tsArrived;
 	}
-	else if(!path->isEmpty()){
-		//route cache
-		Vec2i pos= path->pop();
-		if(map->canMove(unit, unit->getPos(), pos)){
-			unit->setTargetPos(pos);
-			return tsOnTheWay;
+	else {
+		if(path->isEmpty() == false) {
+			if(dynamic_cast<UnitPathBasic *>(path) != NULL) {
+				//route cache
+				UnitPathBasic *basicPath = dynamic_cast<UnitPathBasic *>(path);
+				Vec2i pos= basicPath->pop();
+				if(map->canMove(unit, unit->getPos(), pos)) {
+					unit->setTargetPos(pos);
+					return tsMoving;
+				}
+			}
+			else if(dynamic_cast<UnitPath *>(path) != NULL) {
+				UnitPath *advPath = dynamic_cast<UnitPath *>(path);
+				//route cache
+				Vec2i pos= advPath->peek();
+				if(map->canMove(unit, unit->getPos(), pos)) {
+					advPath->pop();
+					unit->setTargetPos(pos);
+					return tsMoving;
+				}
+			}
+			else {
+				throw runtime_error("unsupported or missing path finder detected!");
+			}
 		}
 	}
 		
@@ -82,14 +105,34 @@ PathFinder::TravelState PathFinder::findPath(Unit *unit, const Vec2i &finalPos){
 	case tsArrived:
 		unit->setCurrSkill(scStop);
 		break;
-	case tsOnTheWay:
-		Vec2i pos= path->pop();
-		if(map->canMove(unit, unit->getPos(), pos)){
-			unit->setTargetPos(pos);
-		}
-		else{
-			unit->setCurrSkill(scStop);
-			return tsBlocked;
+	case tsMoving:
+		{
+			if(dynamic_cast<UnitPathBasic *>(path) != NULL) {
+				UnitPathBasic *basicPath = dynamic_cast<UnitPathBasic *>(path);
+				Vec2i pos= basicPath->pop();
+				if(map->canMove(unit, unit->getPos(), pos)) {
+					unit->setTargetPos(pos);
+				}
+				else {
+					unit->setCurrSkill(scStop);
+					return tsBlocked;
+				}
+			}
+			else if(dynamic_cast<UnitPath *>(path) != NULL) {
+				UnitPath *advPath = dynamic_cast<UnitPath *>(path);
+				Vec2i pos= advPath->peek();
+				if(map->canMove(unit, unit->getPos(), pos)) {
+					advPath->pop();
+					unit->setTargetPos(pos);
+				}
+				else {
+					unit->setCurrSkill(scStop);
+					return tsBlocked;
+				}
+			}
+			else {
+				throw runtime_error("unsupported or missing path finder detected!");
+			}
 		}
 		break;
 	}
@@ -99,7 +142,7 @@ PathFinder::TravelState PathFinder::findPath(Unit *unit, const Vec2i &finalPos){
 // ==================== PRIVATE ==================== 
 
 //route a unit using A* algorithm
-PathFinder::TravelState PathFinder::aStar(Unit *unit, const Vec2i &targetPos){
+TravelState PathFinder::aStar(Unit *unit, const Vec2i &targetPos){
 	
 	nodePoolCount= 0;
 	const Vec2i finalPos= computeNearestFreePos(unit, targetPos);
@@ -183,7 +226,7 @@ PathFinder::TravelState PathFinder::aStar(Unit *unit, const Vec2i &targetPos){
 
 	//check results of path finding
 	TravelState ts;
-	UnitPath *path= unit->getPath();
+	UnitPathInterface *path= unit->getPath();
 	if(pathFound==false || lastNode==firstNode){
 		//blocked
 		ts= tsBlocked;
@@ -191,7 +234,7 @@ PathFinder::TravelState PathFinder::aStar(Unit *unit, const Vec2i &targetPos){
 	}
 	else {
 		//on the way
-		ts= tsOnTheWay;
+		ts= tsMoving;
 
 		//build next pointers
 		Node *currNode= lastNode;

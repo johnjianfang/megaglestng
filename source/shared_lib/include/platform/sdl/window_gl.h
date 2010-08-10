@@ -28,7 +28,7 @@ private:
 	ContextGl context;
 
 public:
-	void initGl(int colorBits, int depthBits, int stencilBits);
+	void initGl(int colorBits, int depthBits, int stencilBits,bool hardware_acceleration, bool fullscreen_anti_aliasing);
 	void makeCurrentGl();
 	void swapBuffersGl();
 };

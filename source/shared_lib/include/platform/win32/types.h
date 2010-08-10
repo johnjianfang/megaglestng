@@ -12,6 +12,7 @@
 #ifndef _SHARED_PLATFORM_TYPES_H_
 #define _SHARED_PLATFORM_TYPES_H_
 
+#define NOMINMAX
 #include <windows.h>
 
 namespace Shared{ namespace Platform{

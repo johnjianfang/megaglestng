@@ -15,11 +15,12 @@
 #include "vec.h"
 
 #include <vector>
+#include "game_constants.h"
 
 using std::vector;
 using Shared::Graphics::Vec2i;
 
-namespace Glest{ namespace Game{
+namespace Glest { namespace Game {
 
 class Map;
 class Unit;
@@ -30,13 +31,8 @@ class Unit;
 ///	Finds paths for units using a modification of the A* algorithm
 // =====================================================
 
-class PathFinder{
+class PathFinder {
 public:
-	enum TravelState{
-		tsArrived,
-		tsOnTheWay,
-		tsBlocked
-	};
 	struct Node{
 		Vec2i pos;
 		Node *next;

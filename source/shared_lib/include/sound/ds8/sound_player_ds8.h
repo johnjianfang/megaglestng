@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -111,7 +111,7 @@ private:
 
 public:
 	SoundPlayerDs8();
-	virtual void init(const SoundPlayerParams *params);
+	virtual bool init(const SoundPlayerParams *params);
 	virtual void end();
 	virtual void play(StaticSound *staticSound);
 	virtual void play(StrSound *strSound, int64 fadeOn=0);

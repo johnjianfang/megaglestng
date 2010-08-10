@@ -90,11 +90,13 @@ XmlNode *XmlIo::load(const string &path){
 #if XERCES_VERSION_MAJOR < 3		
  		DOMBuilder *parser= (static_cast<DOMImplementationLS*>(implementation))->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
  		parser->setErrorHandler(&errorHandler);
+ 		parser->setFeature(XMLUni::fgXercesSchema, true);
  		parser->setFeature(XMLUni::fgXercesSchemaFullChecking, true);
  		parser->setFeature(XMLUni::fgDOMValidation, true);
 #else		
 		DOMLSParser *parser = (static_cast<DOMImplementationLS*>(implementation))->createLSParser(DOMImplementationLS::MODE_SYNCHRONOUS, 0);
  		DOMConfiguration  *config = parser->getDomConfig();
+ 		config->setParameter(XMLUni::fgXercesSchema, true);
 		config->setParameter(XMLUni::fgXercesSchemaFullChecking, true);
 		config->setParameter(XMLUni::fgDOMValidate, true);
 #endif		

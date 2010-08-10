@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -20,6 +20,9 @@ namespace Shared{ namespace Graphics{
 // =====================================================
 //	class FontManager
 // =====================================================
+FontManager::FontManager(){
+	fonts.clear();
+}
 
 FontManager::~FontManager(){
 	end();
@@ -39,14 +42,18 @@ Font3D *FontManager::newFont3D(){
 
 void FontManager::init(){
 	for(size_t i=0; i<fonts.size(); ++i){
-		fonts[i]->init();
+		if(fonts[i] != NULL) {
+			fonts[i]->init();
+		}
 	}
 } 
 
 void FontManager::end(){
 	for(size_t i=0; i<fonts.size(); ++i){
-		fonts[i]->end();
-		delete fonts[i];
+		if(fonts[i] != NULL) {
+			fonts[i]->end();
+			delete fonts[i];
+		}
 	}
 	fonts.clear();
 }

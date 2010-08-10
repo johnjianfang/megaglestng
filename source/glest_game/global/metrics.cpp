@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -12,7 +12,10 @@
 #include "metrics.h"	
 
 #include "element_type.h"
+#include <stdexcept>
 #include "leak_dumper.h"
+
+using namespace std;
 
 namespace Glest{ namespace Game{
 
@@ -47,14 +50,23 @@ const Metrics &Metrics::getInstance(){
 }
 
 float Metrics::getAspectRatio() const{
+	if(screenH == 0) {
+		throw runtime_error("div by 0 screenH == 0");
+	}
 	return static_cast<float>(screenW)/screenH;
 }
 
 int Metrics::toVirtualX(int w) const{
+	if(screenW == 0) {
+		throw runtime_error("div by 0 screenW == 0");
+	}
 	return w*virtualW/screenW;
 }
 
 int Metrics::toVirtualY(int h) const{
+	if(screenH == 0) {
+		throw runtime_error("div by 0 screenH == 0");
+	}
 	return h*virtualH/screenH;
 }
 

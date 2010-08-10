@@ -2,13 +2,23 @@
 Mega-Glest Game License
 ==============================
 
-Except where otherwise noted, all of the documentation, multimedia and software included in the Mega-Glest Game setup package is copyrighted by The Mega-Glest Team.
+You can redistribute this code and/or modify it under the terms of the GNU 
+General Public License as published by the Free Software Foundation; either 
+version 2 of the License, or (at your option) any later version.
+
+Except where otherwise noted, all of the documentation, multimedia and software 
+included in the Mega-Glest Game setup package is copyrighted by The Mega-Glest 
+Team.
 
 Copyright (C) 2001-2010 The Mega-Glest Team. All rights reserved.
 
-This software is provided without any express or implied warranty. In no event shall the author be held liable for any damages arising from the use of this software.
+This software is provided without any express or implied warranty. In no event 
+shall the author be held liable for any damages arising from the use of this 
+software.
 
-This software may be redistributed freely, but all redistributions must retain all occurences of the above copyright notice and web site addresses that are currently in place.
+This software may be redistributed freely, but all redistributions must retain 
+all occurences of the above copyright notice and web site addresses that are 
+currently in place.
 
 
 Authors:

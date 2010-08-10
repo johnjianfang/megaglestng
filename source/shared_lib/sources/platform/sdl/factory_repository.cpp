@@ -34,6 +34,9 @@ SoundFactory *FactoryRepository::getSoundFactory(const string &name) {
 	if(name == "OpenAL") {
 		return &soundFactoryOpenAL;
 	}
+	else if(name == "" || name == "None") {
+		return &soundFactoryNone;
+	}
 
 	throw runtime_error("Unknown sound factory: " + name);
 }

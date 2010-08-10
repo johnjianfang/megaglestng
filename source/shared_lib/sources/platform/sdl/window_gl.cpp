@@ -22,10 +22,12 @@ namespace Shared{ namespace Platform{
 //	class WindowGl
 // =====================================================
 
-void WindowGl::initGl(int colorBits, int depthBits, int stencilBits){
+void WindowGl::initGl(int colorBits, int depthBits, int stencilBits,bool hardware_acceleration, bool fullscreen_anti_aliasing){
 	context.setColorBits(colorBits);
 	context.setDepthBits(depthBits);
 	context.setStencilBits(stencilBits);
+	context.setHardware_acceleration(hardware_acceleration);
+	context.setFullscreen_anti_aliasing(fullscreen_anti_aliasing);
 	
 	context.init();
 }

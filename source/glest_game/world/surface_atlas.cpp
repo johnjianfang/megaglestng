@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -29,7 +29,7 @@ namespace Glest{ namespace Game{
 //	class PixmapInfo
 // =====================================================
 
-SurfaceInfo::SurfaceInfo(const Pixmap2D *lu, const Pixmap2D *ru, const Pixmap2D *ld, const Pixmap2D *rd){
+SurfaceInfo::SurfaceInfo(const Pixmap2D *lu, const Pixmap2D *ru, const Pixmap2D *ld, const Pixmap2D *rd) {
 	this->leftDown= ld;
 	this->leftUp= lu;
 	this->rightDown= rd;
@@ -37,7 +37,7 @@ SurfaceInfo::SurfaceInfo(const Pixmap2D *lu, const Pixmap2D *ru, const Pixmap2D 
 	center= NULL;
 }
 
-SurfaceInfo::SurfaceInfo(const Pixmap2D *center){
+SurfaceInfo::SurfaceInfo(const Pixmap2D *center) {
 	this->leftDown= NULL;
 	this->leftUp= NULL;
 	this->rightDown= NULL;
@@ -45,7 +45,7 @@ SurfaceInfo::SurfaceInfo(const Pixmap2D *center){
 	this->center= center;
 }
 
-bool SurfaceInfo::operator==(const SurfaceInfo &si) const{
+bool SurfaceInfo::operator==(const SurfaceInfo &si) const {
 	return 
 		this->center == si.getCenter() &&
 		this->leftDown == si.getLeftDown() &&
@@ -58,14 +58,17 @@ bool SurfaceInfo::operator==(const SurfaceInfo &si) const{
 // 	class SurfaceAtlas
 // ===============================
 
-SurfaceAtlas::SurfaceAtlas(){
+SurfaceAtlas::SurfaceAtlas() {
 	surfaceSize= -1;
 }
 
-void SurfaceAtlas::addSurface(SurfaceInfo *si){
+void SurfaceAtlas::addSurface(SurfaceInfo *si) {
+	if(si == NULL) {
+		throw runtime_error("Bad surface info (NULL)");
+	}
 	
 	//check dimensions
-	if(si->getCenter()!=NULL){
+	if(si->getCenter() != NULL){
 		checkDimensions(si->getCenter());
 	}
 	else{
@@ -76,10 +79,13 @@ void SurfaceAtlas::addSurface(SurfaceInfo *si){
 	}
 
 	//add info
-	SurfaceInfos::iterator it= find(surfaceInfos.begin(), surfaceInfos.end(), *si);
-	if(it==surfaceInfos.end()){
+	SurfaceInfos::iterator it = find(surfaceInfos.begin(), surfaceInfos.end(), *si);
+	if(it == surfaceInfos.end()) {
 		//add new texture
 		Texture2D *t= Renderer::getInstance().newTexture2D(rsGame);
+		if(t == NULL) {
+			throw runtime_error("Could not create new texture (NULL)");
+		}
 		t->setWrapMode(Texture::wmClampToEdge);
 		t->getPixmap()->init(surfaceSize, surfaceSize, 3);
 		
@@ -101,15 +107,18 @@ void SurfaceAtlas::addSurface(SurfaceInfo *si){
 	}
 }
 
-float SurfaceAtlas::getCoordStep() const{
+float SurfaceAtlas::getCoordStep() const {
 	return 1.f;
 }
 
-void SurfaceAtlas::checkDimensions(const Pixmap2D *p){
-	if(surfaceSize==-1){
+void SurfaceAtlas::checkDimensions(const Pixmap2D *p) {
+	if(p == NULL) {
+		throw runtime_error("Bad surface texture pixmap (NULL)");
+	}
+	else if(surfaceSize == -1){
 		surfaceSize= p->getW();
 	}
-	else if(p->getW()!=surfaceSize || p->getH()!=surfaceSize){
+	else if(p->getW() != surfaceSize || p->getH() != surfaceSize) {
 		throw runtime_error("Bad surface texture dimensions");
 	}
 }

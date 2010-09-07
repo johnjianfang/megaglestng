@@ -12,6 +12,7 @@
 #define _SHARED_PLATFORM_TYPES_H_
 
 #include <SDL_types.h>
+#include "leak_dumper.h"
 
 namespace Shared{ namespace Platform{
 

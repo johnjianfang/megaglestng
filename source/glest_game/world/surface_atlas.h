@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -14,9 +14,9 @@
 
 #include <vector>
 #include <set>
-
 #include "texture.h"
 #include "vec.h"
+#include "leak_dumper.h"
 
 using std::vector;
 using std::set;

@@ -14,8 +14,8 @@
 
 #include <string>
 #include <vector>
-
 #include <xercesc/util/XercesDefs.hpp>
+#include "leak_dumper.h"
 
 using std::string;
 using std::vector;

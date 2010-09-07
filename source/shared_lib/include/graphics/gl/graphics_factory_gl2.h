@@ -15,6 +15,7 @@
 #include "font_gl.h"
 #include "shader_gl.h"
 #include "shader_manager.h"
+#include "leak_dumper.h"
 
 namespace Shared{ namespace Graphics{ namespace Gl{
 

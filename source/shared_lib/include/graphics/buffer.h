@@ -2,6 +2,7 @@
 #define _SHARED_GRAPHICS_BUFFER_H_
 
 #include <string>
+#include "leak_dumper.h"
 
 using std::string;
 

@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2005 Martiño Figueroa
+//	Copyright (C) 2001-2005 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -19,6 +19,7 @@
 #include "model_gl.h"
 #include "texture_gl.h"
 #include "font_gl.h"
+#include "leak_dumper.h"
 
 namespace Shared{ namespace Graphics{ namespace Gl{
 

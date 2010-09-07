@@ -22,6 +22,7 @@
 #include "factory.h"
 #include "sound_container.h"
 #include "particle.h"
+#include "leak_dumper.h"
 
 using Shared::Sound::StaticSound;
 using Shared::Xml::XmlNode;

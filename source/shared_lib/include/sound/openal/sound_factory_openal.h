@@ -11,6 +11,7 @@
 
 #include "sound_factory.h"
 #include "sound_player_openal.h"
+#include "leak_dumper.h"
 
 namespace Shared{ namespace Sound{ namespace OpenAL{
 

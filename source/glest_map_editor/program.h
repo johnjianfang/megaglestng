@@ -12,12 +12,14 @@
 #ifndef _MAPEDITOR_PROGRAM_H_
 #define _MAPEDITOR_PROGRAM_H_
 
-#include "map.h"
+//#include "map.h"
+#include "map_preview.h"
 #include "renderer.h"
 
 #include <stack>
 
 using std::stack;
+using namespace Shared::Map;
 
 namespace MapEditor {
 
@@ -91,7 +93,8 @@ private:
 	Renderer renderer;
 	int ofsetX, ofsetY;
 	int cellSize;
-	static Map *map;
+	//static Map *map;
+	static MapPreview *map;
 	friend class UndoPoint;
 
 	ChangeStack undoStack, redoStack;
@@ -139,7 +142,7 @@ public:
 
 	int getObject(int x, int y);
 	int getResource(int x, int y);
-	static const Map *getMap() {return map;}
+	static const MapPreview *getMap() {return map;}
 };
 
 }// end namespace

@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest Shared Library (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martio Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -19,10 +19,13 @@ namespace Shared{ namespace Graphics{
 //	class Context
 // =====================================================
 
-Context::Context(){
+Context::Context() {
 	colorBits= 32;
 	depthBits= 24;
 	stencilBits= 0;
+	hardware_acceleration=0;
+	fullscreen_anti_aliasing=0;
+
 }
 
 }}//end namespace

@@ -24,11 +24,14 @@ using Platform::PlatformContextGl;
 //	class ContextGl
 // =====================================================
 
-class ContextGl: public Context{
+class ContextGl: public Context {
 protected:
 	PlatformContextGl pcgl;
 
 public:
+	ContextGl();
+	virtual ~ContextGl(){}
+
 	virtual void init();
 	virtual void end();
 	virtual void reset(){};

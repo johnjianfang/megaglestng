@@ -41,6 +41,7 @@ AC_ARG_ENABLE(oggtest, [  --disable-oggtest       Do not try to compile and run 
     ac_save_CFLAGS="$CFLAGS"
     ac_save_LIBS="$LIBS"
     CFLAGS="$CFLAGS $OGG_CFLAGS"
+    CPPFLAGS="$CFLAGS $OGG_CFLAGS"
     LIBS="$LIBS $OGG_LIBS"
 dnl
 dnl Now check if the installed Ogg is sufficiently new.

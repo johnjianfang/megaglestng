@@ -46,6 +46,7 @@ AC_ARG_ENABLE(vorbistest, [  --disable-vorbistest    Do not try to compile and r
     ac_save_CFLAGS="$CFLAGS"
     ac_save_LIBS="$LIBS"
     CFLAGS="$CFLAGS $VORBIS_CFLAGS $OGG_CFLAGS"
+    CPPFLAGS="$CFLAGS $VORBIS_CFLAGS $OGG_CFLAGS"
     LIBS="$LIBS $VORBIS_LIBS $VORBISENC_LIBS $OGG_LIBS"
 dnl
 dnl Now check if the installed Vorbis is sufficiently new.

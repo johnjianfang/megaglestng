@@ -62,6 +62,26 @@ for p in $paths ; do
     else
         AC_MSG_RESULT([no])
     fi
+#  another test for finding lua on FreeBSD
+    AC_MSG_CHECKING([for lua.hpp in ${p}/include/lua51])
+    if test -f ${p}/include/lua51/lua.hpp; then
+        AC_MSG_RESULT([yes])
+        save_CFLAGS=$CFLAGS
+        save_LDFLAGS=$LDFLAGS
+        CFLAGS="$CFLAGS" 
+        LDFLAGS="-L${p}/lib/lua51 $LDFLAGS $lib_m"
+        AC_CHECK_LIB(lua, luaL_newstate,
+            [
+            LUA_AVAILABLE=yes
+            LUA_LIBS="-L${p}/lib/lua51 -llua"
+            LUA_CFLAGS="-I${p}/include/lua51"
+            ])
+        CFLAGS=$save_CFLAGS
+        LDFLAGS=$save_LDFLAGS
+        break
+    else
+        AC_MSG_RESULT([no])
+    fi
     AC_MSG_CHECKING([for lua.hpp in ${p}/include])
     if test -f ${p}/include/lua.hpp; then
         AC_MSG_RESULT([yes])

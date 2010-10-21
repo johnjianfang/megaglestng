@@ -68,7 +68,7 @@ bool ShaderProgramGl::link(string &messages){
 	assertGl();
 
 	//bind attributes
-	for(int i=0; i<attributes.size(); ++i){
+	for(unsigned int i=0; i<attributes.size(); ++i){
 		int a= attributes[i].second;
 		string s= attributes[i].first;
 		glBindAttribLocationARB(handle, attributes[i].second, attributes[i].first.c_str());
@@ -186,7 +186,7 @@ bool ShaderGl::compile(string &messages){
 	messages= "Compiling shader: " + source.getPathInfo() + "\n";
 
 	//load source
-	GLint length= source.getCode().size();
+	GLint length= (GLint)source.getCode().size();
 	const GLcharARB *csource= source.getCode().c_str();
 	glShaderSourceARB(handle, 1, &csource, &length);
 

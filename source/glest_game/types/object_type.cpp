@@ -1,7 +1,7 @@
 // ==============================================================
 //	This file is part of Glest (www.glest.org)
 //
-//	Copyright (C) 2001-2008 Martiño Figueroa
+//	Copyright (C) 2001-2008 Martiï¿½o Figueroa
 //
 //	You can redistribute this code and/or modify it under 
 //	the terms of the GNU General Public License as published 
@@ -30,11 +30,20 @@ void ObjectType::loadModel(const string &path){
 	Model *model= Renderer::getInstance().newModel(rsGame);
 	model->load(path);
 	color= Vec3f(0.f);
-	if(model->getMeshCount()>0 && model->getMesh(0)->getTexture(0)!=NULL){
+	if(model->getMeshCount()>0 && model->getMesh(0)->getTexture(0) != NULL) {
 		const Pixmap2D *p= model->getMesh(0)->getTexture(0)->getPixmap();
 		color= p->getPixel3f(p->getW()/2, p->getH()/2);
 	}
 	models.push_back(model);
+}
+
+void ObjectType::deletePixels() {
+	for(int i = 0; i < models.size(); ++i) {
+		Model *model = models[i];
+		if(model != NULL) {
+			model->deletePixels();
+		}
+	}
 }
 
 }}//end namespace

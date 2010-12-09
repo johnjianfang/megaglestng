@@ -3,9 +3,9 @@
 //
 //	Copyright (C) 2001-2008 Martiño Figueroa
 //
-//	You can redistribute this code and/or modify it under 
-//	the terms of the GNU General Public License as published 
-//	by the Free Software Foundation; either version 2 of the 
+//	You can redistribute this code and/or modify it under
+//	the terms of the GNU General Public License as published
+//	by the Free Software Foundation; either version 2 of the
 //	License, or (at your option) any later version
 // ==============================================================
 
@@ -19,6 +19,7 @@
 #include "xml_parser.h"
 #include "util.h"
 #include "game_constants.h"
+#include "game_util.h"
 #include "leak_dumper.h"
 
 using namespace Shared::Util;
@@ -36,9 +37,10 @@ MenuBackground::MenuBackground(){
 	Renderer &renderer= Renderer::getInstance();
 
 	//load data
-	
+	string data_path = getGameReadWritePath(GameConstants::path_data_CacheLookupKey);
+
 	XmlTree xmlTree;
-	xmlTree.load("data/core/menu/menu.xml");
+	xmlTree.load(data_path + "data/core/menu/menu.xml");
 	const XmlNode *menuNode= xmlTree.getRootNode();
 
 	//water
@@ -50,7 +52,7 @@ MenuBackground::MenuBackground(){
 		//water texture
 		waterTexture= renderer.newTexture2D(rsMenu);
 		waterTexture->getPixmap()->init(4);
-		waterTexture->getPixmap()->load("data/core/menu/textures/water.tga");
+		waterTexture->getPixmap()->load(data_path + "data/core/menu/textures/water.tga");
 	}
 
 	//fog
@@ -80,7 +82,7 @@ MenuBackground::MenuBackground(){
 
 	//camera
 	const XmlNode *cameraNode= menuNode->getChild("camera");
-	
+
 	//position
 	const XmlNode *positionNode= cameraNode->getChild("start-position");
 	Vec3f startPosition;
@@ -96,18 +98,18 @@ MenuBackground::MenuBackground(){
 	startRotation.y= rotationNode->getAttribute("y")->getFloatValue();
 	startRotation.z= rotationNode->getAttribute("z")->getFloatValue();
 	camera.setOrientation(Quaternion(EulerAngles(
-		degToRad(startRotation.x), 
-		degToRad(startRotation.y), 
+		degToRad(startRotation.x),
+		degToRad(startRotation.y),
 		degToRad(startRotation.z))));
 
 	//load main model
 	mainModel= renderer.newModel(rsMenu);
-	mainModel->load("data/core/menu/main_model/menu_main.g3d");
+	mainModel->load(data_path + "data/core/menu/main_model/menu_main.g3d");
 
 	//models
 	for(int i=0; i<5; ++i){
 		characterModels[i]= renderer.newModel(rsMenu);
-		characterModels[i]->load("data/core/menu/about_models/character"+intToStr(i)+".g3d");
+		characterModels[i]->load(data_path + "data/core/menu/about_models/character"+intToStr(i)+".g3d");
 	}
 
 	//about position
@@ -116,7 +118,7 @@ MenuBackground::MenuBackground(){
 	aboutPosition.y= positionNode->getAttribute("y")->getFloatValue();
 	aboutPosition.z= positionNode->getAttribute("z")->getFloatValue();
 	rotationNode= cameraNode->getChild("about-rotation");
-	
+
 	targetCamera= NULL;
 	t= 0.f;
 	fade= 0.f;

@@ -1,9 +1,10 @@
-
 MegaGlest Source Code License
 
 You can redistribute this code and/or modify it under the terms of the GNU
 General Public License as published by the Free Software Foundation; either
 version 3 of the License, or (at your option) any later version.
+The complete License is contained in this distribution in the file 
+'gnu_gpl_3.0.txt' and also available online at
 http://www.gnu.org/licenses/gpl.html
 
 Except where otherwise noted, all of the documentation, multimedia and software
@@ -18,21 +19,6 @@ software.
 This software may be redistributed freely, but all redistributions must retain
 all occurences of the above copyright notice and web site addresses that are
 currently in place and must provide full source code with ALL modifications.
-
-
-* Authors *
-
-Titus Tscharntke (info@titusgames.de)
-Mark Vejvoda (www.soft-haus.com - mark_vejvoda@hotmail.com)
-
-
-* The MegaGlest Team *
-
-Programmers: Titus Tscharntke (titi)
-             Mark Vejvoda (SoftCoder)
-
-Website:     http://megaglest.org/
-E-mail:      contact@megaglest.org
 
 
 

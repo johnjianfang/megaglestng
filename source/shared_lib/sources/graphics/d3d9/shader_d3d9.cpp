@@ -175,10 +175,10 @@ bool VertexShaderD3d9::compile(string &messages){
 	}
 
 	//create shader
-	D3DCALL(d3dDevice->CreateVertexShader((DWORD*) code->GetBufferPointer(), &d3dVertexShader));
-
-	//release
 	if(code!=NULL){
+	    D3DCALL(d3dDevice->CreateVertexShader((DWORD*) code->GetBufferPointer(), &d3dVertexShader));
+
+	    //release
 		code->Release();
 	}
 	if(errors!=NULL){
@@ -231,11 +231,11 @@ bool PixelShaderD3d9::compile(string &messages){
 		return false;
 	}
 
-	//create shader
-	D3DCALL(d3dDevice->CreatePixelShader((DWORD*) code->GetBufferPointer(), &d3dPixelShader));
+	if(code!=NULL) {
+		//create shader
+		D3DCALL(d3dDevice->CreatePixelShader((DWORD*) code->GetBufferPointer(), &d3dPixelShader));
 
-	//release
-	if(code!=NULL){
+		//release
 		code->Release();
 	}
 	if(errors!=NULL){

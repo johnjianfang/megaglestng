@@ -14,7 +14,7 @@ string d3dErrorToStr(HRESULT result){
 	case D3DERR_OUTOFVIDEOMEMORY: return "D3DERR_OUTOFVIDEOMEMORY";
 	case E_OUTOFMEMORY: return "E_OUTOFMEMORY";
 	default:
-		return "Unkown D3D error";
+		return "Unknown D3D error";
 	}
 }
 

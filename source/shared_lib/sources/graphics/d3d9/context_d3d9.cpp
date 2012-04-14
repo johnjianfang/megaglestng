@@ -25,7 +25,7 @@ void ContextD3d9::init(){
 	//create object
 	d3dObject= Direct3DCreate9(D3D_SDK_VERSION);
 	if(d3dObject==NULL){
-		throw runtime_error("Direct3DCreate9==NULL");
+		throw megaglest_runtime_error("Direct3DCreate9==NULL");
 	}
 
 	//present parameters

@@ -25,7 +25,7 @@ void Font2DD3d9::init(){
 
 	HRESULT result= D3DXCreateFont(d3dDevice, hFont, &d3dFont);
 	if(result!=D3D_OK){
-		throw runtime_error("FontD3d9::init() -> Can't create D3D font");
+		throw megaglest_runtime_error("FontD3d9::init() -> Can't create D3D font");
 	}
 	DeleteObject(hFont);
 }
